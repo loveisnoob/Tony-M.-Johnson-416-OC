@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UIU Secure Terminal</title>
+    <title>OWL Secure Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         body {
             font-family: 'Courier Prime', 'Courier New', Courier, monospace;
@@ -128,19 +126,6 @@
             to { opacity: 1; }
         }
 
-        #generic-modal .modal-content {
-            max-height: 80vh;
-        }
-        
-        .legal-doc {
-            background-color: #fdfdfd;
-            color: #333;
-            font-family: 'Times New Roman', Times, serif;
-            padding: 2rem;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-
         #sound-toggle {
             position: fixed;
             top: 10px;
@@ -151,81 +136,6 @@
             color: #fff;
             padding: 8px 16px;
             font-size: 12px;
-        }
-
-        .radio-transcript {
-            background: #1a1a1a;
-            border: 2px solid #dc2626;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        
-        .radio-line {
-            margin: 0.5rem 0;
-        }
-        
-        .radio-speaker {
-            color: #00ff00;
-            font-weight: bold;
-        }
-        
-        .radio-static {
-            color: #888;
-            font-style: italic;
-        }
-        
-        .radio-urgent {
-            color: #ff4444;
-            font-weight: bold;
-        }
-
-        .video-container {
-            position: relative;
-            background: #000;
-            border: 2px solid #444;
-            margin: 1rem 0;
-        }
-        
-        .video-container video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        #radio-playback-screen {
-            background: linear-gradient(to bottom, #000000, #0a0a0a);
-            padding: 2rem;
-        }
-
-        .radio-playback-line {
-            text-shadow: 0 0 5px currentColor;
-            animation: fadeInText 0.3s ease-in;
-            margin-bottom: 0.5rem;
-        }
-
-        @keyframes fadeInText {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .radio-video-frame {
-            border: 2px solid #fbbf24;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
-            overflow: hidden;
-            margin: 1.5rem 0;
-            max-width: 100%;
-        }
-
-        .radio-video-frame video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .radio-static-effect {
-            opacity: 0.7;
         }
 
         .bg-box {
@@ -247,13 +157,6 @@
     <div class="custom-cursor" id="custom-cursor"></div>
     <div class="fixed inset-0 bg-black bg-opacity-20 z-[-1]"></div>
 
-    <div id="generic-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[60] p-4">
-        <div id="modal-content-container" class="relative bg-gray-900 border-2 border-yellow-600 p-6 shadow-xl w-full max-w-3xl overflow-y-auto">
-            <button id="modal-close-button" class="absolute top-2 right-2 text-white text-2xl font-bold hover:text-yellow-400">&times;</button>
-            <div id="modal-content-body"></div>
-        </div>
-    </div>
-
     <div id="remote-access-screen" class="flex flex-col items-center justify-center p-8 h-full w-full fixed inset-0 bg-black z-[80] text-white">
         <svg class="computer-icon mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7 21H17M12 17V21M3 12C3 4.58172 4.58172 3 12 3C19.4183 3 21 4.58172 21 12M4 17H20M5 14H7M9 14H11" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -265,7 +168,7 @@
     </div>
 
     <div id="bios-screen" class="hidden flex-col items-start justify-start p-8 h-full w-full fixed inset-0 bg-black z-40 text-white">
-        <p class="terminal-text text-lg">Powered by USOCNET</p>
+        <p class="terminal-text text-lg">Powered by OWL Network</p>
         <div id="bios-text" class="mt-8 text-sm w-full"></div>
     </div>
     
@@ -278,8 +181,8 @@
     
     <div id="login-popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]">
         <div class="bg-gray-900 border-2 border-yellow-600 p-8 shadow-xl text-left w-full max-w-md">
-            <h2 class="text-xl text-yellow-500 mb-4 font-bold">UIU AUTHENTICATION REQUIRED</h2>
-            <p>Please enter your Designated UIU Clearance Code:</p>
+            <h2 class="text-xl text-yellow-500 mb-4 font-bold">OWL AUTHENTICATION REQUIRED</h2>
+            <p>Please enter your Designated OWL Clearance Code:</p>
             <div class="bg-black p-2 mt-2 h-8">
                 <span id="login-code"></span><span class="animate-ping">_</span>
             </div>
@@ -290,15 +193,11 @@
         <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/assets_task_01k7n8gyf7f7nrqynthtchbceh_1760576470_img_0.webp" alt="MEMETIC KILL AGENT ACTIVATED" class="max-w-full max-h-full object-contain">
     </div>
 
-    <div id="radio-playback-screen" class="hidden fixed inset-0 bg-black flex items-start justify-start z-[75] overflow-y-auto">
-        <div id="radio-playback-content" class="w-full max-w-6xl mx-auto p-8 text-white text-lg"></div>
-    </div>
-
     <div id="main-terminal" class="hidden h-full flex flex-col">
         <div class="w-full bg-gray-700 bg-opacity-80 p-3 text-gray-200 flex items-center flex-shrink-0" style="border-bottom: 2px solid rgba(255, 255, 255, 0.5);">
-            <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/Logo_SCP_Foundation-removebg-preview.png" alt="UIU Logo" class="h-8 w-8 mr-4">
-            <span class="mr-6">ID: UIU-TERM-03</span>
-            <span class="mr-6">LOCATION: PENTAGRAM</span>
+            <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/OWL%20Logo.png" alt="OWL Logo" class="h-8 w-8 mr-4">
+            <span class="mr-6">ID: OWL-TERM-07</span>
+            <span class="mr-6">LOCATION: OWL HEADQUARTERS</span>
             <span id="timestamp"></span>
         </div>
 
@@ -310,7 +209,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const { jsPDF } = window.jspdf;
             const remoteAccessScreen = document.getElementById('remote-access-screen');
             const remoteProgressBar = document.getElementById('remote-progress-bar');
             const remoteStatus = document.getElementById('remote-status');
@@ -324,106 +222,16 @@
             const errorMessage = document.getElementById('error-message');
             const loginPopup = document.getElementById('login-popup');
             const loginCode = document.getElementById('login-code');
-            const genericModal = document.getElementById('generic-modal');
-            const modalContentBody = document.getElementById('modal-content-body');
-            const modalCloseButton = document.getElementById('modal-close-button');
             const soundToggle = document.getElementById('sound-toggle');
 
             let audioCtx = null;
             let ambientSound = null;
             let soundEnabled = true;
-            let radioStaticSource = null;
-            let radioStaticGain = null;
 
             function initAudio() {
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     startAmbientSound();
-                }
-            }
-
-            function playRadioStatic() {
-                if (!soundEnabled || !audioCtx) return;
-                
-                try {
-                    stopRadioStatic();
-                    
-                    const bufferSize = audioCtx.sampleRate * 2;
-                    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                    const output = noiseBuffer.getChannelData(0);
-                    
-                    for (let i = 0; i < bufferSize; i++) {
-                        output[i] = Math.random() * 2 - 1;
-                    }
-                    
-                    radioStaticSource = audioCtx.createBufferSource();
-                    radioStaticSource.buffer = noiseBuffer;
-                    radioStaticSource.loop = true;
-                    
-                    const bandpass = audioCtx.createBiquadFilter();
-                    bandpass.type = 'bandpass';
-                    bandpass.frequency.value = 3000;
-                    bandpass.Q.value = 1;
-                    
-                    const highpass = audioCtx.createBiquadFilter();
-                    highpass.type = 'highpass';
-                    highpass.frequency.value = 1000;
-                    
-                    radioStaticGain = audioCtx.createGain();
-                    radioStaticGain.gain.value = 0.03;
-                    
-                    radioStaticSource.connect(bandpass);
-                    bandpass.connect(highpass);
-                    highpass.connect(radioStaticGain);
-                    radioStaticGain.connect(audioCtx.destination);
-                    
-                    radioStaticSource.start();
-                } catch (e) {
-                    console.log('Radio static error:', e);
-                }
-            }
-
-            function stopRadioStatic() {
-                if (radioStaticSource) {
-                    try {
-                        radioStaticSource.stop();
-                    } catch (e) {}
-                    radioStaticSource = null;
-                    radioStaticGain = null;
-                }
-            }
-
-            function playStaticBurst() {
-                if (!soundEnabled || !audioCtx) return;
-                
-                try {
-                    const bufferSize = audioCtx.sampleRate * 0.3;
-                    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                    const output = noiseBuffer.getChannelData(0);
-                    
-                    for (let i = 0; i < bufferSize; i++) {
-                        output[i] = Math.random() * 2 - 1;
-                    }
-                    
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = noiseBuffer;
-                    
-                    const bandpass = audioCtx.createBiquadFilter();
-                    bandpass.type = 'bandpass';
-                    bandpass.frequency.value = 2500;
-                    
-                    const gainNode = audioCtx.createGain();
-                    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-                    
-                    source.connect(bandpass);
-                    bandpass.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                    
-                    source.start();
-                    source.stop(audioCtx.currentTime + 0.3);
-                } catch (e) {
-                    console.log('Static burst error:', e);
                 }
             }
 
@@ -517,18 +325,6 @@
                 }
             }, { once: true });
 
-            function showModal(content) {
-                modalContentBody.innerHTML = content;
-                genericModal.classList.remove('hidden');
-            }
-            
-            function hideModal() {
-                genericModal.classList.add('hidden');
-                modalContentBody.innerHTML = '';
-            }
-            
-            modalCloseButton.addEventListener('click', hideModal);
-
             document.addEventListener('mousemove', e => {
                 customCursor.style.left = e.clientX + 'px';
                 customCursor.style.top = e.clientY + 'px';
@@ -568,36 +364,30 @@
                 
                 personnelFileScreen.innerHTML = `
                     <div class="mb-6">
-                         <h2 class="text-2xl text-yellow-400">PERSONNEL FILE: ADAMS, MICHAEL</h2>
+                         <h2 class="text-2xl text-yellow-400">PERSONNEL FILE: JOHNSON, TONY M.</h2>
                     </div>
 
                     <div id="pdf-content" class="text-sm">
                          <div class="flex border-b border-gray-600 mb-6 flex-wrap gap-2">
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white active" data-tab="service-record">Service Record</button>
+                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white active" data-tab="background">Background</button>
                             <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="backstory">Backstory</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="timeline">Timeline</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="tfb-briefing">TFB Briefing</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="operation">Operation</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="glasgow">Glasgow Incident</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="records">Records</button>
                             <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="morph">Morph</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="radio">Radio Log</button>
                         </div>
 
-                        <div id="service-record" class="tab-pane">
+                        <div id="background" class="tab-pane">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                                 <div class="md:col-span-2">
                                     <h3 class="section-title">Biographical & Service Data</h3>
                                     <div class="bg-box border-l-2 border-yellow-600">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                                            <div class="info-item"><strong class="text-yellow-500">Name:</strong> <span class="highlight-text">Michael Adams</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Current Assignment:</strong> <span class="highlight-text">TF-B [REDACTED]</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Date of Birth:</strong> <span class="highlight-text">February 28, 1991</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Security Clearance:</strong> <span class="highlight-text">ΩALPHA</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Age:</strong> <span class="highlight-text">34</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Date of Recruitment:</strong> <span class="highlight-text">██ / ██ / 2024</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Place of Birth:</strong> <span class="highlight-text">Denver, CO, USA</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Parents:</strong> <span class="highlight-text">Florence Adams & John Adams</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Name:</strong> <span class="highlight-text">Tony M. Johnson</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Current Assignment:</strong> <span class="highlight-text">OWL Scout/Intelligence</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Date of Birth:</strong> <span class="highlight-text">August 28, 2005</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Security Clearance:</strong> <span class="highlight-text">LOTUS-3</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Age:</strong> <span class="highlight-text">20</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Date of Recruitment:</strong> <span class="highlight-text">██ / ██ / 2025</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Place of Birth:</strong> <span class="highlight-text">Nova Scotia, Canada</span></div>
+                                            <div class="info-item"><strong class="text-yellow-500">Background:</strong> <span class="highlight-text">Former GOC PHYSICS Division</span></div>
                                             <div class="info-item"><strong class="text-yellow-500">Height:</strong> <span class="highlight-text">6'1" (185 cm)</span></div>
                                             <div class="info-item"><strong class="text-yellow-500">Weight:</strong> <span class="highlight-text">220 lbs (100 kg)</span></div>
                                         </div>
@@ -605,29 +395,29 @@
                                 </div>
                                 <div class="md:col-span-1 flex flex-col items-center justify-center">
                                     <div class="border-2 border-yellow-600 p-2 mb-4 w-64 h-64 bg-gray-800 shadow-lg">
-                                        <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/Personnel%20Portrait.png" alt="Personnel Portrait" class="w-full h-full object-cover">
+                                        <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/Tony%20Portrait.png" alt="Personnel Portrait" class="w-full h-full object-cover">
                                     </div>
                                     <p class="text-xs text-gray-400 text-center">[ CLEARANCE CONFIRMED ]</p>
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="bg-box border-accent border-cyan-400">
-                                    <h4 class="text-lg text-yellow-500 mb-3 font-bold">Progression</h4>
+                                    <h4 class="text-lg text-yellow-500 mb-3 font-bold">Service Progression</h4>
                                     <ul class="list-disc list-inside space-y-2">
-                                        <li><span class="highlight-text">2009 - 2012:</span> Entered Navy SEAL Recruitment, 2 Deployments in Afghanistan</li>
-                                        <li><span class="highlight-text">2013 - 2020:</span> Invited into DEVGRU, performed clandestine operations in Somalia and Yemen</li>
-                                        <li><span class="highlight-text">2020 - 2022:</span> Promoted to NCO in DEVGRU, involved in Operation █████████-████████</li>
-                                        <li><span class="highlight-text">2022 - Present:</span> Currently Positioned within TF-B</li>
+                                        <li><span class="highlight-text">2023 - 2024:</span> Janitor at GOC facility, basic military training</li>
+                                        <li><span class="highlight-text">2024 - 2025:</span> Recruited into GOC PHYSICS Division as scout</li>
+                                        <li><span class="highlight-text">2025:</span> Survived anomalous encounter during church operation</li>
+                                        <li><span class="highlight-text">2025 - Present:</span> Recruited by Order of White Lotus</li>
                                     </ul>
                                 </div>
                                 <div class="bg-box border-accent border-yellow-600">
-                                    <h4 class="text-lg text-yellow-500 mb-3 font-bold">Notable Accomplishments</h4>
+                                    <h4 class="text-lg text-yellow-500 mb-3 font-bold">Specializations</h4>
                                     <ul class="list-disc list-inside space-y-2">
-                                        <li>Racked a total of <span class="text-red-400 font-bold">70 combat kills</span></li>
-                                        <li>Killed a high-valued <span class="highlight-text">Yemeni Al-Qaeda warlord</span></li>
-                                        <li>Achieved the rank of <span class="highlight-text">E-7</span> within DEVGRU</li>
-                                        <li>Involved in the success of Operation <span class="text-red-400">█████████-████████</span></li>
-                                        <li>Nicknamed <span class="text-yellow-500 font-bold">"Dozer"</span> by fellow operatives</li>
+                                        <li>Outdoor Survival & Wilderness Navigation</li>
+                                        <li>Intelligence Gathering & Reconnaissance</li>
+                                        <li>Asymmetrical Warfare Tactics</li>
+                                        <li>Camouflage & Infiltration</li>
+                                        <li>Firearms Proficiency (Pistol/Rifle)</li>
                                     </ul>
                                 </div>
                             </div>
@@ -635,397 +425,62 @@
 
                         <div id="backstory" class="tab-pane hidden">
                             <h3 class="section-title">Personnel Backstory</h3>
-                            <p class="text-gray-300 leading-relaxed">
-                                Subject <span class="highlight-text">"Michael Adams"</span> was born on <span class="highlight-text">the 28th of May 1991</span> to Florence Adams and John Adams in a middle-class household in Denver, CO, USA. Growing up in Colorado, his parents were stern, raising him up to continue the family's farmer lineage. Over the next few years, he was taught how to raise cattle, collect grains, and manage the farm. He wasn't the smartest in his class, scoring average grades all-around, but he was much more mighty athletically. By 14, he was already in the Schools premier football team, and 5'9'' growing to become 6'1'' while also competing with kids 3 years older in the State Championships. He carried his team to continuous victory, an opposing player remarked <span class="text-cyan-300">"He's tough alright, seems like he's been taught farmer's mentality, I can't complain though, he's gonna win."</span> And win they did, securing their place as first within the State Championships.
-                                <br/><br/>
-                                Through all this illustrious success however, lies an untold darkness. His mother started to develop increasingly worrying migraines, and his father just couldn't keep up, so he had to balance all of this while trying to help his father pay for the medicine. In next year's May, everything was starting to brighten, he secured a scholarship to play for a nearby varsity football team, and he started to perform better in academics as well. Yet even so, God continued his test. On one fateful day, an <span class="text-red-400">EF4.3 Tornado</span> swashed through the plains, destroying everything in its path. Unfortunately for him, it was on a straight collision-course to his father's barn.
-                                <br/><br/>
-                                He was out playing football with his friends in the university's campus, when that one fateful notification, that one fateful sound, a message, a message that means everything has changed.
-                                <br/><br/>
-                                <span class="text-yellow-500 font-bold">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-                                <br/><br/>
-                                It's now 2009, one year after the incident.
-                                <br/>
-                                His mental state has deteriorated, his grades are plummeting and with that comes his shape and form. Following his parents' death, he started illegally drinking and eating, his motivation to live felt non-existent.
-                                <br/><br/>
-                                One day, he received a message from his varsity's football team. It reads:
-                            </p>
-                            
-                            <div class="my-6 bg-box border-accent border-cyan-400 italic">
-                                <p class="text-gray-200">"Dear Michael, I know life has been tough for you son, but you have to move on, you can't keep staying in this condition, you need to let it go, through hardships a man must break through, and I believe you're in that phase.</p>
-                                <p class="text-gray-200 mt-2">I have done whatever I could to keep you in the team, but if you continue to leave matches and our routine practices, I'm forced to kick you out. Son, I know what you feel like now, but whatever it is, God's given you a test, and you have to persevere through it. -Your dear coach"</p>
-                            </div>
-                            
-                            <p class="text-gray-300 leading-relaxed">
-                                At that moment, his tears wanted to burst. He lost his family, and now he's going to lose the only thing that matters to him? He can feel the water drip from his eyes, and then he screamed, he cried and rolled around his bed the entire night.
-                                <br/><br/>
-                                <span class="text-yellow-500 font-semibold">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-                                <br/><br/>
-                                A desire, a want to change.
-                                <br/>
-                                For ever since that incident, he felt something inside him. It wasn't hope or belief, at least not yet, but the faint echo of the man he wants to become. The boy who carried a football team on his back. The son who held a farm together when his family needed it.
-                                <br/><br/>
-                                That night, after hours of crying, he bravely stood up, walked to the bathroom, and stared at the reflection looking back at him. He almost gave up again.
-                                <br/>
-                                But he could hear two words go out of his mouth:
-                                <br/><br/>
-                                <span class="text-yellow-500 text-lg font-bold">"No more."</span>
-                                <br/><br/>
-                                Over the next weeks, he forced himself to change. The drinking slowed. The all nighters stopped. He dragged himself out of bed at sunrise and started running again. At first he started with a mile, then two, then four. His body fought back at him, but he pushed back harder.
-                                <br/>
-                                His coach noticed.
-                                <br/>
-                                His professors noticed.
-                                <br/>
-                                Eventually, he noticed.
-                                <br/>
-                                Yet even through all of this, it didn't feel 'right' for him. He wanted something where he could push himself to the hardest, he wanted something where he could show who he truly is. Something where the fight mattered.
-                                <br/>
-                                One fateful evening, after a five mile run, he passed by a Navy recruitment office. The posters in the window showed divers, ships. But he only noticed one, a NAVY Seal emerging from the water, rifle raised, serving his country
-                                <br/>
-                                He stopped.
-                                <br/>
-                                And stares.
-                                <br/>
-                                Then he felt something click.
-                                <br/>
-                                The next morning, he walked inside and enlisted.
-                                <br/><br/>
-                                <span class="text-yellow-500 font-semibold">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-                                <br/><br/>
-                                One! Two! Three! Four! … The day of hell has come.
-                                <br/>
-                                He knew becoming a SEAL wasn't easy, definitely not. He's heard from all the documentaries and shows there were and the only word that reverberated through all of them was, "Hell."
-                                <br/>
-                                And now, he was straight in it, BUD/S. For those six grueling months he heard only the shouts and screams from his instructor, yet he persevered, and he fought back the hell that it was.
-                                <br/><br/>
-                                Three years later, he went through hell, the deeper pits of hell, and the even deeper pits of hell again. He participated in two deployments in Afghanistan, where he tallied over 25 confirmed combat kills, one of the highest amongst his regiment.
-                                <br/>
-                                And one day amidst his second deployment during 2013, his senior officer came into his barracks, approached him, and told him to exit the barracks. Initially he felt hesitant, after all he hadn't done anything wrong, and there's only a few reasons a senior officer would come up to you directly.
-                                <br/>
-                                He stood still and the senior officer leaned forward, mumbling something directly next to his ears.
-                                <br/>
-                                He knew what it meant.
-                                <br/>
-                                He then sent an application email, where he then waited and waited for weeks, until a response finally came up right before he slept after a grueling firefight. He was accepted.
-                                <br/>
-                                Six once again grueling months, he went through the Green Team trials and evaluations, utilising every single combat experience he's learnt, and developing some new ones on the go, he managed to rank top of his class.
-                                <br/><br/>
-                                Following his enrollment into DEVGRU, he was re-assigned and deployed in numerous clandestine operations throughout the middle east, including an operation involving the killing of a Yemeni Al-Qaeda warlord during 2017.
-                                <br/>
-                                His favourite weapon was the M250, due to its bulky yet powerful dump, being able to silence entire lines of infantry with just a single magazine, and due to his heavy stature, the big weapon wasn't a hassle to carry.
-                                <br/>
-                                Using this weapon, he mowed down entire opposing infantry entrenchements and suppressed fire for his fellow operatives, leading to him being called <span class="text-yellow-500 font-semibold">"Dozer"</span> for his bulky and tanky nature.
-                                <br/><br/>
-                                He continued his highly secretive service up to 2024, where he was allowed leave after an exhausting 7-day training exercise with other Navy regiments. And decided to meet one of his E-Squadron mates he performed an operation alongside with in Britain, where fate has decided another test for him.
-                                <br/><br/>
-                                <span class="text-red-500 font-bold">Operation, Declassified.</span>
-                                <br/>
-                                <span class="text-red-500">Designated: IR-4001 Post-Response Operation</span>
-                                <br/>
-                                <span class="text-red-500 italic">Mortuos Caede, Paraneutrales Occide</span>
-                                <br/><br/>
-                                Michael's records were almost fully wiped out from every United States Military Records following the operation, the only remaining proof of his participation in the Operation lies within the Records page, alongside other agents.
-                                <br/><br/>
-                                He was then re-indoctrinated into the <span class="highlight-text">〈 3-14233 〉 - N'Nono Warrior Crèche - 〈 3-14233 〉</span>
-                            </p>
-                        </div>
-                        
-                        <div id="timeline" class="tab-pane hidden">
-                            <h3 class="section-title">Career Timeline</h3>
-                            <div class="relative border-l-2 border-gray-600 pl-8 space-y-8 ml-4">
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-yellow-500"></div>
-                                    <p class="font-semibold">February 28, 1991</p>
-                                    <p class="text-gray-300">Born in Denver, Colorado.</p>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-cyan-300"></div>
-                                    <p class="font-semibold">2009 - 2012</p>
-                                    <p class="text-gray-300">Completed BUD/S training. Participated in 2 deployments in Afghanistan with 25+ confirmed kills.</p>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-cyan-300"></div>
-                                    <p class="font-semibold">2013</p>
-                                    <p class="text-gray-300">Invited into DEVGRU. Completed Green Team trials, ranking top of his class.</p>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-cyan-300"></div>
-                                    <p class="font-semibold">2013 - 2020</p>
-                                    <p class="text-gray-300">Performed clandestine operations in Somalia and Yemen. Killed high-valued Yemeni Al-Qaeda warlord (2017).</p>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-green-500"></div>
-                                    <p class="font-semibold">2020 - 2022</p>
-                                    <p class="text-gray-300">Promoted to NCO (E-7) within DEVGRU. Involved in Operation █████████-████████.</p>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-red-500"></div>
-                                    <p class="font-semibold">2024</p>
-                                    <p class="text-gray-300">Participated in IR-4001 Post-Response Operation. Records wiped from military databases.</p>
-                                </div>
-                                <div class="relative">
-                                    <div class="absolute -left-[35px] top-1 h-4 w-4 rounded-full bg-yellow-500"></div>
-                                    <p class="font-semibold">2024 - Present</p>
-                                    <p class="text-gray-300">Re-indoctrinated into UIU Task Force Blade. Assigned to N'Nono Warrior Crèche.</p>
-                                </div>
-                            </div>
-                        </div>
+                            <div class="text-gray-300 leading-relaxed space-y-4">
+                                <p>Tony was born 28th August 2005 into an abusive household clinging to whatever money they had left. His father constantly overlooked him, always belittling him with remarks, and was an alcohol addict who always let out a tantrum for even the slightest of mistakes. His mother, a young woman who carried the majority of the financial duty in his family, had neither the time nor power to give the slightest hint of care towards him, but when she did, it was like heaven to him. His father used to be a successful salesman at a local furniture store; however, due to rising competition from big box retailers, they unfortunately had to shut down. His mother, a school teacher working in the nearby elementary school, struggled to make ends meet with her meagre salary, and even so, she tried her best burdening herself with his education and their family expenses all at once. Yet even so, his father constantly harassed and sometimes physically confronted his mother violently. She couldn't take it anymore, and it seems even the neighbours couldn't take the unceasing violence happening in their house. One fateful night, his father returned home drunk from his never-ending consumption of alcohol. His mother glared at him, showing the quintessential example of fatigued resignation, barely looking up from the bills scattered across the kitchen table, and finally snapped. She yelled at him, "I can't take it anymore, I can't take your useless," she paused, "excuses anymore!" Then she continued, "The bills are stacking, and I can't handle it all alone. Tony needs an education, and with all your useless habits, we're going to lose the house!" Then and there, his father cracked in a jolt of confused anger and rage, pinning his mother to the wall. His neighbours heard the commotion and dialled 999. When the officers arrived, his father was still drunk and belligerent, his mother sporting a fresh bruise on her cheek. Tony woke up from all the commotion and watched from his bedroom doorway as the officers handcuffed his father, who was still mumbling incoherently about "that woman" and "his rights". His mother stood silently by the kitchen table, her hand pressed against the red mark on her neck, answering the officer's questions in barely audible whispers. "Is there somewhere safe where you and your son can stay tonight?" the officer asked gently. His mother glanced towards Tony before responding, "We'll be fine here. I know what you're about to say, however we don't have anywhere else to go." "Mum?" Tony whispered. She didn't look at him. "Go to bed, Tony. You have school tomorrow."</p>
 
-                        <div id="tfb-briefing" class="tab-pane hidden">
-                            <div class="flex mt-4 items-start gap-6">
-                                <div class="flex-grow">
-                                    <h3 class="section-title">Task Force Briefing: Task Force Blade (TF-B)</h3>
-                                    <p class="mb-4"><strong>Primary Directive:</strong> Protective detail for UIU directorate and VIPs, hostage rescue, and emergency recontainment operations.</p>
-                                    
-                                    <div class="bg-red-900 bg-opacity-40 border-2 border-red-500 p-4 my-6 rounded-lg">
-                                        <p class="text-red-200 font-semibold mb-2">⚠ FOUNDATIONAL RECORD - CLASSIFIED</p>
-                                        <p class="text-red-200">Due to recent tribulations and "Incidents" (The attempted murder of the Current Director of Unusual Incident Unit "Flanker" and the Acting Director of Unusual Incident Unit "Surge") associating TF-B and UIU, TF-B was purged under order "Post-Mortem" by majority vote conducted by the ODNOI [Office of Directorate of National Occult Intelligence] and directors of the Unusual Incidents Unit.</p>
-                                        <p class="text-red-200 mt-2">Adams was recruited during reformation and structural reorganization of TF-B, which has yet performed any recorded military and clandestine operations.</p>
-                                    </div>
+                                <p>Skip forward a few years. Ever since that incident, his mother divorced his father, and his father eventually landed himself in jail after a freak car crash accident. They never saw him again after that. His mother, now having some sense of freedom, spent more time with him, and Tony's mental health slowly improved year by year. His mother could now slowly guide Tony through his academics, where his grades slowly rose, but his mother received a job offer at a higher-paying private school down south. The only thing was, it was extremely far away. Faced with this tough decision, his mother eventually left Tony with her aunt and uncle. Tony's uncle had no desire to care for him just like his father; however, at least he cared for his education. His aunt was more similar to his mother. His aunt worked 2 jobs, which left her with minimal time to care for Tony. Tony grew up just fine, but his education slowly declined. Tony's uncle had a heart disease which worsened right after his arrival at the household, which reduced the time he had to care for him. Even so, he still tried his best in school. Yet still, even there he faced more and more hardships. Tony was bullied by his classmates for his weak arms and thin build, and was constantly made fun of because his father was an alcohol addict and he now lived in his uncle's house. And to make things worse, the teachers couldn't care less since the bullies' parents were bribing them to get higher scores on tests. Because of this, as he grew up, he learned that ignoring his teachers and other authority figures was the best way to manage his stress and all the harassment he'd faced in his life. During junior high school when he turned 14, he was the shy, timid kid no one talked to, and he also didn't want to talk with anyone, ignoring people when the opportunity arose. He failed multiple classes, yet he didn't care because he had no figure, no person to guide him through his life, and then he remembered his mother. What had happened to her? After the school bell rang, he walked back to his uncle's house, and then he asked: "Uncle," Tony said quietly, setting down his backpack. "Have you heard from my mum?" His uncle looked up, his face pale and tired. "She called last week while you were at school. Says the new job is keeping her busy, longer hours than she expected." "When is she coming back?" His uncle's expression softened slightly. "I don't know, kid. She's trying to save up enough money to get you both a decent place. Says the pay is good but..." He trailed off, coughing. "But what?" "But it might be a while." "..." Tony considered what his uncle just said, but his curiosity dimmed. He said in his mind, "Sigh, the only one who really ever cared for me can't even do the job they're supposed to do. Life is useless. I might as well enjoy it as I can."</p>
 
-                                    <h4 class="text-lg text-yellow-500 mb-2 mt-6 font-bold">Task Force History</h4>
-                                    <p class="text-gray-300 mb-3">Following the events of IR-4001, a significant amount of infrastructure, records, and personnel within government agencies perished. This spurred the United States Government to issue an executive order to restructure their anomalous agencies especially. The previously severely underfunded Unusual Incidents Unit benefitted from gaining equipment and volunteers sent by the Central Intelligence Agency, allowing for the creation of new specialized divisions within the FBIUIU:</p>
-                                    <p class="text-gray-300 mb-4"><span class="highlight-text">Task Force "Blade"</span> is the UIU's guarding and MP task force. They provide security to UIU's directorate and VIPs, such as American executives when they visit our areas of operations.</p>
-                                    <h4 class="text-lg text-yellow-500 mb-2 mt-6 font-bold">N'Nono Warrior Crèche 〈 3-14233 〉</h4>
-                                    <p class="text-gray-300 mb-3">N'Nono Warrior Crèche is Blade's dedicated frontline recontainment element, specializing in combating SCP-class anomalies, emergency recontainment, and protection of High Command and critical assets during breach events and interviews. Each N'Nono element is operated by one Captain and one Field Officer, who share responsibility for mission command, rules-of-engagement decisions, and the controlled handoff to specialist or long-term containment teams.</p>
-                                    <p class="text-gray-300 mb-2"><strong>Composition:</strong> A relatively large team, composed of those who're just joining Blade and those who wish to remain as the 'RCU' for Blade.</p>
-                                    <p class="text-gray-300 mb-2"><strong>Assignment:</strong> Automatically placed into N'Nono upon arrival into Blade.</p>
-                                    <p class="text-gray-300"><strong>Equipment:</strong> Due to his massive stature and size, Michael Adams was allocated with TFB's own heavy weaponry including an XM250.</p>
-                                </div>
-                                <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/BUREAU%20OF%20(8).png" alt="TFB Logo" class="h-24 w-24 flex-shrink-0">
-                            </div>
-                        </div>
+                                <p>The next day, an interesting man approached him. "Hey kid, you seem like you need a job. Wanna have a try at janitorial duties...?" He was bored, but he was dying to earn whatever meagre wage he could so he could at least afford some snacks he could enjoy at school. "Yeah, sure, old geezer," he responded. "Alright, duty starts next week. Meet me at the library Saturday, 6:00 AM sharp." That Saturday morning, Tony dragged himself to the library expecting another disappointing experience. The man handed him the janitorial uniform and a set of professional cleaning tools. "Welcome to the team, Tony! I'm Frank." He pondered, "That's the first time ever that someone has greeted me with their first name." As Frank showed him the supply closet organised with military precision and explained how each tool had its purpose, Tony felt something unexpected, a small flutter of interest. The work seemed... methodical. Peaceful, even. No teachers ignoring him, no bullies around, just him and the simple satisfaction of making something clean. "This... this actually isn't that bad," Tony said under his breath, surprised by his own reaction. Frank smiled. "Most people don't get it, but there's something honest about this work."</p>
 
-                         <div id="operation" class="tab-pane hidden">
-                            <div class="text-center mb-6">
-                                <h2 class="text-2xl text-yellow-400 mb-2">Lore Operation, Declassified.</h2>
-                                <p class="text-red-500 font-bold text-xl">Mortuos Caede, Paraneutrales Occide</p>
-                            </div>
-                            
-                            <div class="text-sm text-gray-300 space-y-4">
-                                <div class="bg-box border-accent border-red-500">
-                                    <p><strong>From:</strong> ███. █████████████████</p>
-                                    <p><strong>To:</strong> POTUS and the Director of FBI.</p>
-                                    <p><strong>Subject:</strong> Operation █████████-████████</p>
-                                    <p><strong>Classification:</strong> <span class="text-red-400">TS/SCI</span>, Protected under the 18 U.S. Code § 798. Eyes only</p>
-                                    <p><strong>Date:</strong> ██-██-████</p>
-                                </div>
+                                <p>Skip forward when he turns 20. Frank and Tony had a close-knit relationship. For the first time ever, Tony had a person whom he could truly call a "friend". They tidied up the library, and the librarian even gave them some time to enjoy and read some books, since she had a good impression of both of them. Over the years, Tony and Frank grew an interest in hunting and camping. They read and read, slowly growing their now insatiable desire to do at least one camping trip together. Luckily for them, over the years Tony and Frank had access to the library's numerous books and survival guides, and through sheer mental memorisation and passion, they learned how to make a fire by going to the woods, creating embers, finding birch, and setting up a small fire in the winter. They learned how to use firearms via the widespread YouTube tutorials and gun guides in the library, and even found a survival guide by John "Lofty" Wiseman on the SAS survival guide, quite a crazy find in their opinion. Tony said to Frank, "Hey, 4 years of minimum wage, it's enough to get us a handgun and at least some mags. How about you say we try camping in the nearby forest during the winter?" Frank responded, "Oh yeah, sounds amazing bro. The problem is, you got a gun licence...?" Tony muttered, "Oh nah, don't worry bro, we'll just bribe the gunsmith. What's the worst that can happen?"</p>
 
-                                <h3 class="section-title">1) Briefing and Overview</h3>
-                                <p>Operation Illuminati Confirmed is a coordinated operation between the Unusual Incidents Unit's Task Force Blade (BLADE) and the U.S. Department of the ██████ and ████████████ ████████ (█████) and the British Occult Service, Under Her Majesty's Department of Arcane Affairs. The mission's primary objective is the neutralization or capture of an occult threat nicknamed "The ██████," currently resurrecting Illuminati-inspired esoteric CAN.</p>
+                                <p>After years of preparing, they finally decided on a 1-week camping trip in the nearby forest in winter. Tony buys the gun, while Frank buys the camping equipment. The equipment they bought wasn't exactly tip-top quality, but what works, works. Finally, the faint and gentle drop of snowflakes fell on their area, and once it had built up, they went on their way. Before Tony left, he told his uncle, "Hey uncle, I'm gonna go camping with my friend Frank. You know how long I've been preparing for this. I'll see you in 3 days!" Although his uncle hesitated, in his mind he silently said, "That kid's got steel. It seems he's finally found what he wants in life." Tony met Frank at an unpatched strip of land in the middle of the forest. Knowing what to do, they both quickly set up camp near a pine tree, made a small fire which they used to cook a squirrel Tony had trapped, and both slowly headed to sleep as they dozed off due to the fatigue they'd just had. But then suddenly, there was a noise coming from the nearby bushes. Something was moving fast, quick, its steps rapid like a wolf, however as light as a chicken. Both Frank and Tony jumped up, their survival instincts kicking in. Tony grabbed the Glock 19, a light firearm capable of punching a decent-sized hole through any adversary. Frank rushed to the bowie knife he'd kept in his bag, holding a ready stance while Tony swung his Glock 19, trying to identify the location of the animal. But then the sound stopped, it vanished, disappearing into thin air. Still, Frank and Tony went into alert mode the entire night. They were too paranoid to even catch a single minute of sleep, worrying that the creature which they feared was a pack of wolves was waiting for the right moment to strike. "What the hell was that?!" Frank whispered to Tony. "I have no idea. The steps were so light I could barely hear it." "A wolf maybe? But no... a wolf wouldn't have steps as silent as that, and it would go in a pack, but this one sounded like it was alone.... And the noise it made wasn't anything similar to a wolf...." During the morning, Frank and Tony bravely gathered the courage to exit the tent. Frank went first since he had the knife; Tony would cover since he had the gun. However, they only saw footsteps that resembled an avian's, but much larger. "This area is giving me the creeps now. I think we should go..." mumbled Tony. They slowly unpacked their camp and moved to a more hidden location within the woods, where they cautiously camped for the next 2 days, finally deciding to return on the third day as planned. However, this time, they'd report the incident to local authorities, since no normal bird would leave a footprint that big... Tony invited Frank to come to his uncle's house, but on their way there, they noticed that the town was eerie, quiet, forcefully hushed... Doors were left open as if the people living inside their houses tried to escape in a panic, but there was no trace of violence... No trace of anything... not even a single car had moved. As Tony and Frank grew ever closer to his uncle's house, this eerie quiet grew to an ever more anxious weight pressing down on their chests. The silence wasn't just absence of sound, it was wrong, like the air itself had been drained of life. Frank's footsteps echoed too loudly on the empty pavement, each step seeming to mock the eerie stillness. "Tony," he whispered, his voice cracking even despite his effort to stay calm, "has the town always been this empty?"
 
-                                <h3 class="section-title">2) Rules of Engagement</h3>
-                                <div class="ml-6 space-y-2">
-                                    <p><strong class="text-yellow-500">Use of Force:</strong> Lethal or non‑lethal depending on threat level.</p>
-                                    <p><strong class="text-yellow-500">Civilian Shielding:</strong> Agents are ordered to avoid civilian interaction.</p>
-                                </div>
+Their uncle's door was left open, and as they drew closer, they heard an unnatural sound coming from within, like an animal eating its delicious prey... Tony raged, he cried, he felt an emotion so new he couldn't describe it in one word. Someone that at least supported him in his childhood was just... brutally murdered... eaten... What was left were bones and meat, to the point where you could no longer distinguish if it had been a person. He screamed, screamed so loud the entire neighbourhood could've heard him. This continued for a few minutes, until his eyes had no emotion left, no cry, no pride, just the hollow depth of black within his pupils. "WHY? WHY? WHY? WHY? WHY? WHY? WHY? WHY?" The words reverberated in his mind. His mind began to fracture. Thump… Thump… Thump… His heart began racing, chest pounding, mind fracturing. His hands began to shake. The Glock felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. He can feel tears dropping out of his pupils, his hand began to numb, slowly the control over his own body started to sway. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness. Frank told him, "We HAVE TO GO. If there are more of them, we're dead meat!" Yet all he heard was the sombre silence. He said to Tony, "Tony, are you here with me? Tony! WE HAVE TO GO." Then Tony's body collapsed, "TONY!? ARE YOU OK? TONY?" Out of options, he frantically searched for somewhere to hide them both, checking every door in the building one after the other, but found nothing. When all hope seemed lost, he heard a sound from above him, he'd hoped it was god, but it seems even god couldn't protect them at this very moment. Then, hope stirred in his mind, "What? What is that?" He'd grab a chair and touch the ceiling, and a ladder magically dropped, as if it was waiting for their very arrival. Frank rushed downstairs as he'd dragged Tony and whatever supplies he could get his hands on, it felt impossibly heavy, but through sheer perseverance and adrenaline, he'd manage to pull everything inside, as he finally pulled the ladder back into the attic.</p>
 
-                                <h3 class="section-title">3) Timeline & Status</h3>
-                                <div class="ml-6 space-y-2">
-                                    <p><strong class="text-yellow-500">Execution Window:</strong> July ██-████, ██.30</p>
-                                    <p><strong class="text-yellow-500">Current Positioning:</strong></p>
-                                    <div class="ml-6">
-                                        <p>→ Assets: Strike Team "██████"</p>
-                                        <p>→ ETA to LZ if authorized, 16 Hours.</p>
-                                    </div>
-                                    <p><strong class="text-yellow-500">Pre-Op Checkpoint:</strong> July 14, morning final Intel review at the ████████ HQ.</p>
-                                </div>
+                                <p>Tony woke up in a dark room, hollow of life, then he heard a voice, it wasn't Frank's voice, no it couldn't be, it was too thin, too innocent to be Frank's voice, then he regained himself. It's hers. "I'll come back for you Tony. I promise." The memory hit him hard. He was eight years old again, standing in the same doorway watching his mother pack her suitcase. Her back turned to him, always her back turned to him. "The new job will be good for us, sweetheart. I'll save up money and we'll have our own place." But she never came back. "Did she ever think about me? Did she ever wonder if I was okay? Did she know about the abuse, the loneliness, the bullying, did she know about ANYTHING?" Tony's the type of person that is unaware of his environment, when a murder sprouts up in his local news channel, he'd never react like he was scared, he'd just continue wandering aimlessly or playing with his toys, just showing off an indifferent shrug. But this time, it's different. The questions he'd try to bury for years clawed their way back to the surface. Every Christmas I wait for that gift. Every birthday waiting for that call. Every night he'd spent wondering if he'd done something wrong, if he was unlovable, if everyone would just abandon him like she did. "Uncle's dead. Frank's the only one left. And he'll leave too. Everyone always leaves me alone." Frank's voice cuts through the memory. "Tony, Tony? You're awake! Thank God."</p>
 
-                                <h3 class="section-title">4) Presidential Directives</h3>
-                                <div class="ml-6 space-y-2">
-                                    <p>[ ] Authorization for lethal force if warranted</p>
-                                    <p>[ ] Approval of full USDMS, UIU budget allocation</p>
-                                    <p>[ ] Authorization to terminate any anomalies</p>
-                                    <p>[ ] The rescue of entrapped US and British Operatives facing the anomaly</p>
-                                </div>
+                                <p>Skip forward to Frank and Tony's hiding. A few days after Tony woke up, they decided they'll stay here until rescue arrives. They chilled for a while, eating bags of crisps and instant ramen using the one burner they had. But Tony acted differently, his hands started shaking all day until he slept. Whenever they finished eating, he'd just corner himself and look down at the floor, sometimes Frank could swear he heard cries when he was trying to sleep. Finally, Frank gathered up the courage to talk to Tony whilst they were eating together. "Tony… Are you ok?" Frank whispered to him. Tony didn't reply. "Tony, I know things haven't been going your way lately, and I understand." Frank said once more. Tony stopped for a bit, then he set his spoon down into the empty ramen cup. He set it down slowly, still not looking up. "Do you?" His voice could barely be heard. "Do you really understand?" Frank tried to reply, "I, I know losing your uncle was..." Tony's cut pierced through the air, "Do you really know? Do you know what I've been through? It's not just him. It's everyone. Everyone always leaves me." They both staggered for a bit, then Frank said softly, "Do you remember that first day at the library? You called me an 'old geezer'." Despite everything that's just unfolded, Tony twitched slightly. "You were so angry at the world, so angry at everything, really." Frank continued on. "Yet you still showed up, every Saturday morning. Six AM sharp. Even when you didn't want to." Tony finally looked up, his eyes were red. "That was different." "Was it, really?" Frank patted his back. "You'd thought I'd be just another disappointment. Another adult who'd just let you down. But I kept showing up too, didn't I? I kept showing up with a smile even when my body seemed to give up, even when my uniform was still not dried." Frank carried on, "Remember what I told you that very first day? 'There's something honest about this work.' Clean something dirty, make it better. Simple. Maybe that's what we do, Tony. Clean up the world, clean up the mess people start, no matter how insignificant or useless it might be. One piece at a time." "We could start here," Frank said in his usual monotonal voice. "This attic. Make it feel less like we're hiding and more like well… like we're living in it. What do you say?"</p>
 
-                                <div class="mt-6 bg-box border-t-2 border-gray-600">
-                                    <p class="mb-2"><strong>Prepared by:</strong></p>
-                                    <p>███. ████████████████</p>
-                                    <p class="text-cyan-300">The United States Department of the Occult and Metaphysical Sciences.</p>
-                                    <p class="mt-4 text-sm">Under authority of</p>
-                                    <p class="text-cyan-300">U.S. Department of the ██████ and ████████████ ████████</p>
-                                    <p class="text-center my-2">&</p>
-                                    <p class="text-cyan-300">Her Majesty's Department of Arcane Affairs.</p>
-                                </div>
+                                <p>Skip 3 weeks. The attic, once full of cobwebs and rot and abandoned items, was finally looking like a place to live in. Every time Tony cleaned a patch of dust, it felt like his memories were being cleared up, like a window in his life he'd never seen before. The trauma he'd just faced felt more natural. As he wiped away years of accumulated dust and abandoned memorabilia, Tony realised something profound. This dust has been ignored for so long, pushed aside with no one to take care of it, forgotten, left to settle in the dark corners of the earth where no one had bothered to search for it. Just like the pain people carry in their day-to-day lives. Just like his own buried memories of abandonment and abuse. Every speck of dust had once been something, pieces of the world that had broken down, destroyed, burnt and eventually drifted all the way here to be forgotten. Yet even in the most neglected corners of earth, the memories and events that people pretend never existed, eventually demand attention, just like anything else would. The dust, the trauma, the hate, the anger, the rage, the eagerness for revenge. It doesn't disappear if you just ignore it. It accumulates, weighs down the air, makes your breath slow, your lungs gasping for air, and your heart boils. People are the same way. They sweep trauma under thick rugs and blankets, shove their pain into mental corners like a prison's solitary confinement, convince themselves if it doesn't exist, if it's buried deep as a fossil within the earth, if it would never be found again if you throw it in the ocean, if it had never happened, if it wasn't possible, it isn't there. But eventually, just like this attic, just like every corner, every patch of dust, every microcosm and every bacterium, everything needs to be cleaned, turned into something else. The ignored parts of life, the dusty corners of the human heart, they all require someone to finally pick up a cloth and do the hard work of making things clear again, make things as clear as a window after a heavy rain. The trauma he'd just faced felt more natural, and even death felt natural, not something to fear, but something to accept and clean around, like dust that gathers in every corner of existence. Frank was right. There was something honest about this work. Suddenly they noticed military Humvees strolling down the street. They thought it was an emergency rescue, so they rushed out and asked for help since their water supply had run out. The driver said they were on a military mission and couldn't stop. Tony and Frank decided to move into the town south of the city. There were people, just not that many. He remembered there being way more people in the town, since both had visited it on a school trip. He and Frank convinced themselves they were just crazy and tried to find food. By June 2025, his town had been covered by plant growth within the year. Their temporary shelter was only powered by the backup generators since the solar panels had gone dusty and no one knew how to repair them. Suddenly another armoured truck came down the street, this time stopping.</p>
 
-                                <div class="mt-6 text-center border-2 border-yellow-600 p-4 bg-yellow-900 bg-opacity-40">
-                                    <p class="text-yellow-300 mb-3">⬥ For your eyes only. ⬥</p>
-                                    <p class="mb-2"><strong>Sign here:</strong></p>
-                                    <p class="mb-1">___________________________, President of the United States</p>
-                                    <p>___________________________, Director of the FBI</p>
-                                </div>
+                                <p>The armoured truck had no military insignia or emblem, nevertheless the driver stepped out, and told Frank and Tony that they were being transferred to a more "safe" location. During the journey to aforementioned location, the security officer in the truck interviewed both of them: The Security Officer coughed, "Ahem, so Gentlemen, are you both named Tony Johnson and… Frank … Phipps?" Tony replied, "Slight pause doubting why they were here. Yes… we are." "Great! Both of you are getting a job, get in. We've been monitoring you very closely the past year." mumbled the Officer. Frank replied, "Why have you been monitoring us…?" "Oh, that's nothing, we just found that you had some… excellent expertise in.. Janitorial duties, yes!" the Officer muttered. "That's beside the point anyway" the Officer added. The Security Officer continued, "Well then… Since none of you are talking… You both will be getting a janitor position here then. You have no military experience, Tony, you're a dropout and.. Frank was it? You got the lowest grade in the entirety of your class, and you didn't even finish high school. This is all we can do." Tony curiously asked, "Will it pay better than the old job? Will it have free food?" The officer replied, "Ahem… Yes, it will!" Finally the officer questioned, "Do you accept this position?" Frank whispered to Tony, "You in?" Tony replied to Frank, "Whatever gets me the hell out of that mess." Both finally say, "Deal." The GOC's real interest was in him terminating an anomaly, what the Foundation called SCP-3199. The GOC expected some sort of experienced military combat, considering the deep gashes, bullet wounds, and a precise targeted shot on an artery. He thought to himself, they'd be decent janitors, at least they know how to handle a gun, when push comes to shove.</p>
 
-                                <p class="text-center mt-4 text-red-500 font-bold text-xl">Mortuos Caede, Paraneutrales Occide</p>
-                                
-                                <div class="mt-6 bg-red-900 bg-opacity-40 border-2 border-red-500 p-4">
-                                    <p class="text-red-200"><strong>POST-OPERATION NOTE:</strong></p>
-                                    <p class="text-red-200 mt-2">Michael Adams was imperative in the termination of the CAN, providing suppressive fire and aiding TFB agents and civilians alike. He rescued a wounded TFB agent and transported them to a nearby field clinic before returning to the battlefield. Upon arrival, his actions were spontaneous: lunging towards the esoteric CAN and engaging it in brutal hand-to-hand combat, repeatedly stabbing it in the heart even amidst ongoing gunfire.</p>
-                                    <p class="text-red-200 mt-2">The CAN was brutalized. It attempted to resist but was met by the sheer power and force of Michael's body, eventually succumbing to death following 23 counts of stabbing, a deep gash in its shoulder, and 4 bullet holes from an M9.</p>
-                                    <p class="text-red-200 mt-2">He was last seen near the field hospital, where TF-B agents escorted him out, leading to where he is today.</p>
-                                    <p class="text-red-200 mt-4">Michael Adams' records were almost fully wiped out from every United States Military Records following the operation. The only remaining proof of his participation in the Operation lies within the Records page, alongside other agents.</p>
-                                </div>
-                                
-                                <div class="mt-4 text-xs text-gray-500 italic text-center">
-                                    <p>Note: Most information in this document is classified. Full access requires UIU server clearance.</p>
-                                </div>
-                            </div>
-                        </div>
+                                <h3 class="section-title mt-6">Chapter 2: The GOC</h3>
 
-                         <div id="glasgow" class="tab-pane hidden">
-                            <div class="text-center mb-6">
-                                <h2 class="text-2xl text-red-400 mb-2">The Glasgow Incident</h2>
-                                <p class="text-gray-400 text-sm">July 8, 2024 | Glasgow, Scotland, UK</p>
-                                <p class="text-yellow-500 font-bold mt-2">The Day Everything Changed</p>
-                            </div>
-                            
-                            <div class="text-sm text-gray-300 space-y-4 leading-relaxed">
-                                <div class="bg-box border-accent border-cyan-400">
-                                    <p class="text-cyan-300 font-bold mb-2">Arrival - 07:45 Local Time</p>
-                                    <p>Adams arrived at the relatively calm town of Glasgow on July 8th, 2024, a relatively peaceful town with heart-warming people. He strolls around the cities' shops for some time, taking in the city's atmosphere and warmth - an escape from all the brutal and dry combat environment of Afghanistan.</p>
-                                </div>
+                                <p>"Hello?" "Hello?" The camera flickers to life "Yea so uhm, we've been stuck on this site of theirs for quite a while and there's nothing really of interest here except some basic military training they've provided us. I can't really remember how we got here, my head feels so all over the place, but from what I can recall, we arrived as soon as we entered the armoured vehicle, so I think we're still near Nova Scotia, or at least, Canada." Maybe it had just been a coincidence, but every day the air around them was as heavy as a lorry; they could barely even breathe properly. The recording continued, "We've also been assigned these boring janitorial positions, and all we've been doing is cleaning some questionable looking red paintings on the wall, they said it was just some crazy artist's work but I digress. Can't really say much here anyway." He paused slightly, then continued, "So the reason I've started this little recording today was because I've been told that I will be transferred to a military arm of theirs as a scout, they say I'd be useful because of my past experiences, they called it PHYSICS or whatever, I always found that name absurd." The recording went on, "Maybe I'd check on this after a few years, I'll just upload it to the terminal because I've no place to upload it other than there. Oh yea, Frank, he's been doing alright, he got transferred to a secret Island somewhere in the Atlantic, I don't think I'm supposed to know that but, who cares, I'm just a simple little janitor, right?" As he said, the day was obnoxiously bland, like every single day at the site. It was the usual: cleaning up the "waste", basic military combat, and even some live-fire practice from time to time. Today he'd been introduced to the PHYSICS Entrees Examination, where they examined his psychological and physical capabilities to assess compatibility and probable efficiency in UNGOC's PHYSICS Division. He said it went quite well, he passed most of the tests including the live-fire examination with ease, the instructor even said he'd a knack for a best-shot. Over the course of several days, he was examined and taught to perform basic scouting duties including: camouflage, positioning, intelligence, and infiltration. It was.. "Alright" he mumbled, he'd always look exhausted after those specific examinations. The scene cut back to Tony, "Ah well, It doesn't really matter I presume, maybe I'd check up on this little thing of mine when I'm out of this hell" he laughs, the little window he had on his room allowed a small gleam of light, man.</p>
 
-                                <p>He turns around a corner and spots a cab that's right about to leave, but he catches the driver in time. <span class="text-cyan-300">"That was fast mate, if you were a second slower I would've left ya,"</span> The driver mumbles. Adams simply responded <span class="text-green-400">"That's not my biggest concern, I can barely fit in here."</span> They chat for a bit while the driver navigates his way through the urban center of Glasgow.</p>
+                                <p>Skip forward a few years. The unending rolling of the armoured vehicle tyres grinds to a halt, everything looked so monotonous after everything, the cold reality of inevitable existence hit him hard. He'd open the side door, unholstering his weapon. "What's the mission now?" He'd mumble through the black balaclava. "Kill." A grand church in the middle of absolutely bloody nowhere. "Why the hell would they make such a useless church?" Tony pondered to himself. They slowly approached through the dense bushes, weapons at the ready, and halted on a nearby incline where they could see the entire plain. Him and his fellow operative hunkered down there whilst they waited for the main unit to arrive. "How's the weather? Pretty cold ain't it?" "Why do you always talk about the weather, it's the middle of the night blimey." Tony Responded. "Can't you see I'm trying to lighten the mood? Always with that Tony." The man in a balaclava let out a small chuckle. The dullness of the night was halted by a flame lit in the church, "Oh come on, we'd actually have to act now?" Whilst he was scanning the perimeter, he saw an owl, a pale-white owl that was almost indistinguishable from the snow that covered the region. Tony pointed at it, "Doesn't it look like a lotus?" "I don't know, I'm not a flower maniac." "You don't need to be a flower maniac to know what a lotus is" The owl then opened its wings, gliding through the dense forest with utmost ease. It even showed a small glance at Tony. "Weird." Then, the cracks of branches catch their attention. Tony's weapon slings to his right. "The hell is that?" "Seems they've finally arrived." He responded. The main convoy of the PHYSICS Division arrived, "It's time to engage." The stomps of heavy boots came to their attention, that's the signal. Tony and the other Operative followed in pursuit, guarding their flanks as the main breach unit entered. "Night Vision on." Suddenly, the unit in front of them vanished into complete darkness, even in the light-lit room. "Bravo, do you copy? Bravo, where the hell did you go?" Only silence responded. Both operatives approached slowly, awaiting an answer. Then that same darkness swallowed them whole. Tony entered a gothic-era enclosure, the ones you'd only see in stories and films. His partner was right behind him, guarding the rear. A plea, a cry, a scream of desperation filled the room, then an unending chorus in an unknown language. "What the fuck is happening?" He'd mumble, "Like I'd bloody know?" The operative responded. They'd turn the corner. A cold sweat came from both operatives. "What. The. Hell." Devilish paintings, blood, it was a summoning ritual. Every step revealed a new horror they didn't expect. Crack, crack. Choked. "I can't. Move." A nun came into view, but she didn't look like a nun, she looked like something else. The face then revealed itself. Their heads turned up, and both let out an unholy scream. It turned out they were the bait. Tony awoke in the same house. No. No. No. No. NO. "It can't be. NO." That memory returned, Tony crumbled, he retched. That monster, his uncle, him, Frank. But this time, he didn't give up. He'd try to stand, the pressure fought him, he didn't care. No. Please. No… He then was teleported to a plain field in a fog of smoke, a burning cross was shown in front of him, his friend, Frank. Crucified. NO! His hands began to shake. His hands felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. That same thing. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness.</p>
 
-                                <p><span class="text-green-400">"Right there. The cafe next to the supermarket."</span> The old cab slowly comes to a halt, and Adams gives a small tip to the driver as a sign of good-will. <span class="text-cyan-300">"Enjoy your time here mate,"</span> the driver responds.</p>
+                                <h3 class="section-title mt-6">Chapter Three: The Owl Calls.</h3>
 
-                                <div class="bg-box border-accent border-yellow-600">
-                                    <p class="text-yellow-500 font-bold mb-2">Reunion - 08:15 Local Time</p>
-                                    <p>He enters the little cafe where his friend told him to meet in, and surveys the area before finally finding him. They hug and pat each other, before coming to sit at the table where his friend was sitting with two coffees already ordered.</p>
-                                </div>
+                                <p>He woke up in a hospital bed, visible cuts on his hand and a scar on his face. It felt dizzy, impossibly dizzy, illogically dizzy. He couldn't think straight. "TONY!" There's only one person with that voice. His lips opened, but his body couldn't manage, and he faded back into unconsciousness. Before he did, however, he could mumble one word: "Alive..?" Tony was walking on a plain dirt path, in between a plain of white lotuses that stretched for ages. "What?" He'd see a singular, lone withered tree, with an owl perched on one of its branches. The owl spoke, and somehow Tony felt like it was talking his language. The human language. A loud ringing came to his ears, "Enlighten." Tony stood perplexed, he didn't know how to respond. The owl continued "Truth." He was back in that hospital bed, some of his cuts now miraculously healed, but the scar remained ever-visible. "Tony? Do you hear me? Tony?" Tony's hand moved. "Thank god. You've been unconscious for over 3 weeks now." Tony could mumble a sentence "The.. Other..s..?" "They're here with you, you're all lucky that the Foundation was aware of our activities and used one of their Scranton Reality Anchors to halt the cracks in reality that were forming inside that horrid church." Tony let out a sigh of relief.</p>
 
-                                <p><span class="text-green-400">"Long time no see 'Wraith.'"</span></p>
-                                <p>A response came, <span class="text-blue-300">"You too 'Dozer,'"</span> as he lets off a small giggle.</p>
-                                <p><span class="text-green-400">"It's not that funny of a name,"</span> Adams responded.</p>
+                                <p>Skip 2 weeks. Toronto, Canada. Tony's recovery was extremely quick, quicker than his compatriots who're still in the Hospital. He was now at a park bench, staring at kids playing with a little husky. He was fortunately allowed to leave due to this aforementioned recovery, but he'd felt as if he lost all purpose in life, as any other person would've felt if they went through that. Then that encounter came to mind, the owl, he'd a cold sweat. "Why?" "Who…" Frank cuts in right before he could finish his reflection. "Tony, how are you doing?" "Good." He couldn't imagine any other word at that moment. Frank continued, "I have to go now, appointment with a GOC Official, turns out they hired me into this PSYCHE Division, we deal in the diplomatic side with god knows what you people in PHYSICS encounter." Tony let out a small chuckle. He then recalled an interesting event that happened yesterday, back when he was still in GOC offices. He heard two men talking, and he silently chimed in behind a corner. "There's been rumours spreading that one of the Members of the 108 splintered off from us, I wonder how the higher ups are reacting.." "You mean the Council of 108? Hell, why would they do that?" "I've the same question, why? Although, a person was talking about this Lotus last week and it felt awfully specific.." "I see, something is stirring and we don't know, we need to report this to the higher ups." Tony came back to the present. "Lotus?.." A flower known for its powerful symbolism of rebirth, enlightenment, purity. He felt a sudden impulse to check his phone. A notification rang up from an unknown sender. Tony thought to himself to ignore it, why would anyone respond to an unknown sender? But there was this grasp, this plea of obnoxious morbid curiosity that couldn't be helped. He checked. Date: ██/██/████, ██ : ██ Location: ███████████████████████, ████████████████████ It was just simply a date and a location. But he couldn't shake the feeling that this was the truth, this was his next step forward, this was the path of enlightenment.</p>
 
-                                <div class="bg-box my-4">
-                                    <p class="text-sm text-gray-400 italic">DEVGRU and E-Squadron ran an operation together in Syria back in 2019. A Precision strike on an HVT compound.</p>
-                                </div>
-
-                                <p><span class="text-blue-300">"Still built like a damn tank,"</span> Chen said. <span class="text-blue-300">"How do you even fit in planes anymore?"</span></p>
-                                <p><span class="text-green-400">"The Cargo bay,"</span> Adams replied while laughing hysterically.</p>
-                                <p><span class="text-blue-300">"Four years since Syria, how has it been?"</span></p>
-
-                                <p>Adams nodded, while holding the coffee mug, which was awfully hard to grip since his hand was that much bigger. <span class="text-green-400">"Just finished a seven day combat simulation. It's Brutal. They're rotating new agents, wanting us old-gen to show them how it's done."</span></p>
-
-                                <p><span class="text-blue-300">"Old-gen? You're what, thirty-two? I didn't know you speak like a Gen-Z"</span></p>
-                                <p><span class="text-green-400">"Thirty-three. It feels like fifty sometimes."</span> Adams took a gentle sip at the mug. <span class="text-green-400">"What about you? You're out of 'it', right?"</span></p>
-
-                                <p>Chen paused for a brief second, while Adams became more relaxed as he leaned back, <span class="text-blue-300">"Yeah, been out for about eighteen months. I did my ten years, got my Certificate of Service, and decided to try civilian life. Contract work mostly. Security consulting for corporations, risk assessment. Still pays better, nobody's shooting at me."</span></p>
-
-                                <p><span class="text-green-400">"Miss it?"</span></p>
-                                <p><span class="text-blue-300">"Every goddamn day."</span> Chen's smile faded slightly. <span class="text-blue-300">"But my daughter's seven now. The wife made it clear, Tier-0 or family. Couldn't be both forever."</span></p>
-
-                                <p><span class="text-green-400">"And I thought I was the old one, You have a daughter?"</span></p>
-                                <p><span class="text-blue-300">"Yeah, I kept that one a personal secret. What about you?"</span></p>
-
-                                <p><span class="text-green-400">"Just the Teams. Tried the dating thing between deployments. Doesn't really work when you can't tell them where you've been or where you're going."</span> Adams shrugged. <span class="text-green-400">"Maybe later."</span></p>
-
-                                <p>He stared into his coffee, watching the steam slowly rise. <span class="text-green-400">"I don't know what I'd do, honestly. This is all I've been good at since I was twenty two. BUD/S, Afghanistan, Green Team, DEVGRU. What do guys like us do when we're not doing this?"</span></p>
-
-                                <p><span class="text-blue-300">"We figured it out,"</span> Chen said. <span class="text-blue-300">"Some guys start businesses. Some become cops, firefighters. Some drink themselves to death. It's a mixed bag."</span> He paused. <span class="text-blue-300">"Do you remember Edward from our Syria operation back in 17?"</span></p>
-
-                                <p><span class="text-green-400">"The ranger? Yeah."</span></p>
-                                <p><span class="text-blue-300">"He's been silent for a few months. Three months after he got out of a skirmish in Iran. He's here in Britain somewhere with MI6"</span></p>
-
-                                <p><span class="text-green-400">"That's what war does to people,"</span> Adams muttered.</p>
-                                <p><span class="text-blue-300">"Yeah. Maybe it's your time to go out too."</span></p>
-
-                                <p>Adams nodded slowly. <span class="text-green-400">"I will. Don't worry."</span></p>
-                                <p><span class="text-blue-300">"Good. Anyway, enough of the heavy talk. You're in Glasgow. Let me show you around."</span></p>
-
-                                <p>Both stood up and reared their way to the exit, but right as they were about to exit.</p>
-
-                                <div class="my-6 bg-red-900 bg-opacity-50 border-2 border-red-500 p-6 text-center">
-                                    <p class="text-red-200 text-2xl font-bold mb-2">08:47 LOCAL TIME</p>
-                                    <p class="text-red-300 text-xl">ANOMALOUS DETONATION EVENT</p>
-                                </div>
-
-                                <p class="text-red-300 font-bold">A deafening crack broke the atmosphere as the flame hurled to their location.</p>
-
-                                <p>The explosion hurled Adams back a few dozen feet, he tried to stand up but the overwhelming weight of something was on him. It was Chen. He quickly used every ounce of strength left in his body to stand up, to search for something, anything to stop Chen's bleeding, but it was already too late.</p>
-
-                                <p>Chen whispered in a low voice, <span class="text-blue-300 italic">"Here..? In Glasgow..?"</span> He coughs up blood. He attempted to continue, but his body gave up before he could mutter the next word.</p>
-
-                                <div class="bg-box border-2 border-gray-600 my-4 italic">
-                                    <p class="text-gray-400">Adams was in grief, another brother dead, not in combat, but in British Territory where no war's supposed to happen.</p>
-                                </div>
-
-                                <p>He moved the large chunks of rubble aside with his large body, and saw three UH-60 Blackhawk helicopters descending from the sky.</p>
-
-                                <p>Instinctively, he knew that something horrible had happened, and escorted any civilians he could see out of the area.</p>
-
-                                <p class="text-yellow-500 font-bold">On the last run, he could see an operator soaked in blood, died the fury of battle as the rattling of bullets and machine gun fire continued, he didn't know why he did what he did, but he ran towards it, took the radio and the M250, and lunged right into the scene.</p>
-
-                                <div class="mt-6 bg-yellow-900 bg-opacity-40 border-2 border-yellow-600 p-4">
-                                    <p class="text-yellow-200 font-bold mb-2">AFTERMATH ANALYSIS:</p>
-                                    <p class="text-yellow-200">This incident marked the beginning of Operation █████████-████████ and Michael Adams' first contact with anomalous entities. The death of Chen "Wraith" Wei, former E-Squadron operative, served as the catalyst for Adams' transition from conventional special operations to UIU Task Force Blade.</p>
-                                    <p class="text-yellow-200 mt-2">Chen Wei is memorialized within the UIU's Wall of the Fallen as a civilian casualty of anomalous warfare.</p>
-                                </div>
-
-                                <div class="text-center mt-6">
-                                    <p class="text-cyan-400 italic">"Every operator lost is a brother. Every civilian lost is a failure."</p>
-                                    <p class="text-gray-500 text-sm mt-2">- UIU Task Force Blade Motto</p>
-                                </div>
-                            </div>
-                        </div>
-
-                         <div id="records" class="tab-pane hidden">
-                            <h3 class="section-title">Pre-UIU Records</h3>
-                            <div class="legal-doc">
-                                <div class="text-center mb-8">
-                                    <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/UIU.png" alt="UIU Logo" class="h-40 mx-auto mb-2">
-                                </div>
-                                <h5 class="text-xl underline text-center mb-6">Operation █████████-████████ Personnel Roster</h5>
-                                <h6 class="text-lg text-center mb-4">Partial Extract - IR-4001 Post-Response</h6>
-                                <div class="text-lg space-y-2 max-w-md">
-                                    <p>███████, ██████ - ███████████</p>
-                                    <p>█████████, ████ - ███████████████</p>
-                                    <p>████████, ███████ - ███████████████</p>
-                                    <p>███████, ████ - █████████████████</p>
-                                    <p>████████, ███ - █████████████</p>
-                                    <p id="adams-record-trigger" class="cursor-pointer hover:bg-gray-200 p-1 rounded transition-colors">Michael Adams - DEVGRU NCO E-7</p>
-                                    <p>█████████, ████████ - ████████████████</p>
-                                    <p>███████, ██████ - ████████████████</p>
-                                    <p>███████, ███████ - █████████████████</p>
-                                    <p>█████████, ████ - ████████████████</p>
-                                    <p>████████, ██████ - ████████████████</p>
-                                    <p>█████████, ██████ - ███████████████</p>
-                                    <p>███████, ███ - █████████</p>
-                                </div>
-                                <div class="mt-6 p-4 bg-red-100 border-2 border-red-500">
-                                    <p class="text-red-900 font-bold">CLASSIFICATION NOTICE</p>
-                                    <p class="text-red-900 mt-2">This roster has been extracted from classified military archives. All personnel listed participated in Operation █████████-████████. Following completion, records were expunged from standard military databases per Executive Order ████-█.</p>
-                                </div>
+                                <p>Skip to the meeting. "Welcome" A man appeared from the shadows. Tony instinctively hesitated. "There's no need for that," the man said calmly. He was middle-aged, perhaps in his late forties, with silver-streaked hair and wearing a simple grey suit that seemed deliberately unremarkable. "Who the hell are you?" "Names are… complicated in our line of work, aren't they?" The man gestured to a pair of metal chairs in the centre of the warehouse. "But you can call me Mr. ████████. I represent an organisation that split from the Council of 108 some time ago. We call ourselves the Order of the White Lotus." "The Lotus," Tony said, the word leaving his lips before he could stop it. "You saw the owl?" The man muttered. "Enlightenment," Tony whispered, remembering the owl's words. "Precisely." The man leaned forward. "The Global Occult Coalition believes in termination. It's like a child playing with forces they don't understand, using hammers and cages on problems that require… finesse. The Order of the White Lotus believes in something different." "And what's that?" Enlighten. Truth. "Welcome to the Order of the White Lotus, Brother." "Your path to enlightenment begins now." "The balance must be restored."</p>
                             </div>
                         </div>
 
                         <div id="morph" class="tab-pane hidden">
                             <h3 class="section-title">Appearance & Loadout Configuration (Morph)</h3>
                             <pre class="bg-gray-800 bg-opacity-60 p-4 whitespace-pre-wrap text-sm border border-gray-600"><code>run
-permmorph EchelonInfinity remove
-&unpermall EchelonInfinity
-&clearstartergear EchelonInfinity
-&permhat EchelonInfinity 135888030225374,17558504180,17430938152,jqnvg 255 255 255,111740885429679,130045625518506,99852547995142,15894024628,81310553353684,102709985708573, 105058458471063, 129283584386500
-&permshirt EchelonInfinity 2431710106 
-&permpants EchelonInfinity 101079969037960
-&crtag EchelonInfinity 0 0 0
-&permface EchelonInfinity 406002032
-&cntag EchelonInfinity 0 0 0
-&permrtag EchelonInfinity <font face="Michroma"><font color="#000000">« βLΛDΣ | N'Nono || Heavy Response Unit »</font></font><br /><font face="Michroma"><font color="#FFFFFF">« Unusual Incidents Unit » « USOC »</font></font>
-&permntag EchelonInfinity <font face="Michroma"><font color="#000000"> « [MR] »</font></font><br /><font face="Michroma"><font color="#FFFFFF">« ΩZ-O-23»</font></font>
-&startergear EchelonInfinity XM250,pistol,clip,spray
-&startergear EchelonInfinity medkit 11 black
-&permmaxhealth EchelonInfinity 180
-&permscale EchelonInfinity 1.125</code></pre>
-                            <p class="text-gray-400 text-sm mt-4">Note: Due to operative's heavy weapons specialist role and enhanced physical conditioning, maximum health has been increased to 180. Standard UIU loadout modified for N'Nono Heavy Response Unit configuration with XM250 light machine gun.</p>
-                        </div>
-
-                        <div id="radio" class="tab-pane hidden">
-                            <button id="start-radio-playback" class="bg-red-600 text-white px-6 py-3 text-lg interactive-button border-2 border-white hover:bg-red-700 transition-colors">
-                                ► PLAY RECOVERED TRANSMISSION
-                            </button>
+permmorph TonyJohnson416 remove
+&unpermall TonyJohnson416
+&clearstartergear TonyJohnson416
+&permhat TonyJohnson416 135888030225374,17558504180,17430938152,jqnvg 255 255 255,111740885429679,130045625518506,99852547995142,15894024628,81310553353684,102709985708573, 105058458471063, 129283584386500
+&permshirt TonyJohnson416 2431710106 
+&permpants TonyJohnson416 101079969037960
+&crtag TonyJohnson416 0 0 0
+&permface TonyJohnson416 406002032
+&cntag TonyJohnson416 0 0 0
+&permrtag TonyJohnson416 <font face="Michroma"><font color="#ffffff">« Order of White Lotus »</font></font><br /><font face="Michroma"><font color="#90ee90">« Scout | Intelligence »</font></font>
+&permntag TonyJohnson416 <font face="Michroma"><font color="#ffd700"> « Lotus-3 »</font></font><br /><font face="Michroma"><font color="#ffffff">« Tony M. Johnson »</font></font>
+&startergear TonyJohnson416 rifle,pistol,clip,spray
+&startergear TonyJohnson416 medkit 11 black
+&permmaxhealth TonyJohnson416 150
+&permscale TonyJohnson416 1.05</code></pre>
+                            <p class="text-gray-400 text-sm mt-4">Note: Configured for scout/intelligence role with Order of White Lotus. Standard loadout modified for reconnaissance and infiltration operations. Enhanced stamina and survival capabilities reflected in configuration.</p>
                         </div>
                     </div>
                 `;
@@ -1034,7 +489,7 @@ permmorph EchelonInfinity remove
                 const tabPanes = personnelFileScreen.querySelectorAll('.tab-pane');
                 
                 tabPanes.forEach(pane => {
-                    if (pane.id !== 'service-record') {
+                    if (pane.id !== 'background') {
                         pane.classList.add('hidden');
                     }
                 });
@@ -1051,245 +506,6 @@ permmorph EchelonInfinity remove
                         }
                     });
                 });
-
-                document.getElementById('adams-record-trigger').addEventListener('click', showAdamsRecord);
-
-                const startRadioButton = document.getElementById('start-radio-playback');
-                if (startRadioButton) {
-                    startRadioButton.addEventListener('click', startRadioPlayback);
-                }
-            }
-
-            function startRadioPlayback() {
-                const radioScreen = document.getElementById('radio-playback-screen');
-                const radioContent = document.getElementById('radio-playback-content');
-                
-                if (!audioCtx) {
-                    initAudio();
-                    if (audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                }
-                
-                radioScreen.classList.remove('hidden');
-                radioContent.innerHTML = '';
-                
-                playRadioStatic();
-                
-                const lines = [
-                    { text: "═══════════════════════════════════════════════════", delay: 20 },
-                    { text: "RECOVERED RADIO TRANSMISSION - OPERATION GLASGOW", delay: 50, isTitle: true },
-                    { text: "═══════════════════════════════════════════════════", delay: 20 },
-                    { text: "Classification: TS/SCI | Eyes Only", delay: 50, isHeader: true },
-                    { text: "Date: ██/██/2024 | Location: Glasgow, UK", delay: 50, isHeader: true },
-                    { text: " ", delay: 20 },
-                    { text: "[INITIALIZING PLAYBACK...]", delay: 30, isStatic: true, playBurst: true },
-                    { text: " ", delay: 20 },
-                    { text: "═══ VIDEO FEED ALPHA - OPERATION GLASGOW THEATER ═══", delay: 30, isVideo: true, videoSrc: "https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/istockphoto-619036478-640_adpp_is.mp4" },
-                    { text: " ", delay: 20 },
-                    { text: "Adams: CONTROL, CONTROL, do you hear me?!", delay: 40, speaker: "Adams" },
-                    { text: "[STATIC CRACKLE]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Identify yourself. How did you acquire this frequency?", delay: 40, speaker: "CONTROL" },
-                    { text: "Adams: This is Petty Officer Michael Adams, DEVGRU. I just pulled this radio off a dead operator. What the hell is happening here?!", delay: 40, speaker: "Adams" },
-                    { text: "CONTROL: Adams wait, DEVGRU Adams? Yemen '17? What are you doing in Glasgow?", delay: 40, speaker: "CONTROL" },
-                    { text: "Adams: I'm on goddamn leave! I need to know what I'm shooting at!", delay: 40, speaker: "Adams", isUrgent: true },
-                    { text: "[PAUSE - HEAVY GUNFIRE IN BACKGROUND]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Stand by. Confirming identity... Jesus Christ, it IS you. Okay Adams, listen carefully. You've stumbled into a Tier-Zero classified operation. Hostile entities designated CAN, extremely dangerous, anomalous threats. We have TFB agents engaged but..", delay: 40, speaker: "CONTROL" },
-                    { text: "Adams: The hell is a CAN?!", delay: 40, speaker: "Adams", isUrgent: true },
-                    { text: "CONTROL: Ignore it. We have eyes on your position now. Confirming visual on suppressive fire that M250 is doing work. Effective coverage on hostile entities. TFB agents are advancing under your cover.", delay: 40, speaker: "CONTROL" },
-                    { text: "[PAUSE - HEAVY GUNFIRE IN BACKGROUND]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Adams, we're tracking an Agent going down, southeast of your position, approximately forty meters. He's not moving. Can you…", delay: 40, speaker: "CONTROL" },
-                    { text: "[BRIEF STATIC]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Copy that, Adams. We see you moving to extract. Keep your head down. Hostile is still active and, Jesus, you're fast for someone carrying that beast of a weapon. Okay, you've got him. The field clinic is seventy-five meters north-northwest. Get him there and fall back", delay: 40, speaker: "CONTROL" },
-                    { text: "[PAUSE - 8 SECONDS]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Adams, you're back?! Where the hell are you?", delay: 40, speaker: "CONTROL", isUrgent: true },
-                    { text: "[URGENT TONE]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: ADAMS, NEGATIVE! Do NOT engage the CAN directly! You are not authorized for close-quarters with Adams, STAND DOWN! We have units converging on..", delay: 40, speaker: "CONTROL", isUrgent: true },
-                    { text: "[SHOUTING, OVERLAPPING VOICES IN BACKGROUND]", delay: 30, isStatic: true, playBurst: true },
-                    { text: " ", delay: 20 },
-                    { text: "═══ VIDEO FEED BRAVO - CAN ENGAGEMENT ═══", delay: 30, isVideo: true, videoSrc: "https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/Untitled%20video%20-%20Made%20with%20Clipchamp%20(8).mp4" },
-                    { text: " ", delay: 20 },
-                    { text: "SECONDARY VOICE: Control, requesting Identification on the individual, we don't know who the hell or what the hell he's doing.", delay: 40, speaker: "SECONDARY" },
-                    { text: "CONTROL: Affirmative. Call sign \"Dozer.\" And he's on it. He's… Could someone confirm what I'm seeing?", delay: 40, speaker: "CONTROL" },
-                    { text: "SECONDARY VOICE: Confirmed, Control. Target is in hand-to-hand with the hostile. Multiple stab wounds observed on the CAN. It's attempting to counter but Adams isn't giving it room.", delay: 40, speaker: "SECONDARY" },
-                    { text: "CONTROL: All units, CEASE FIRE! Cease fire, you'll hit Adams! Get those safeties NOW!", delay: 40, speaker: "CONTROL", isUrgent: true },
-                    { text: "[10 SECONDS OF CHAOTIC RADIO CHATTER]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Count... Jesus, he's still going. CAN resistance is weakening. Multiple penetrating wounds to the thoracic cavity. Deep laceration to shoulder observed. Switching to thermal, hostile is losing core temperature.", delay: 40, speaker: "CONTROL" },
-                    { text: "[PAUSE]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: CAN has ceased movement. I repeat, CAN has ceased movement. Confirming termination... twenty-three stab wounds, severe shoulder trauma, four gunshot wounds from what looks like an M9. Adams, the target is neutralized. You can…", delay: 40, speaker: "CONTROL" },
-                    { text: "[BRIEF STATIC]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Adams, the target is down, you can stop now.", delay: 40, speaker: "CONTROL" },
-                    { text: "[PAUSE]", delay: 30, isStatic: true, playBurst: true },
-                    { text: "CONTROL: Hell of a job, Dozer. We'll debrief on the other side, but you've got yourself some explaining to do.", delay: 40, speaker: "CONTROL" },
-                    { text: "[STATIC - TRANSMISSION ENDS]", delay: 30, isStatic: true, playBurst: true },
-                    { text: " ", delay: 20 },
-                    { text: "═══════════════════════════════════════════════════", delay: 20 },
-                    { text: "POST-TRANSMISSION ANALYSIS:", delay: 50, isHeader: true },
-                    { text: "═══════════════════════════════════════════════════", delay: 20 },
-                    { text: " ", delay: 20 },
-                    { text: "This transmission was recovered from Operation Glasgow archives following IR-4001 Post-Response. Subject Adams demonstrated exceptional combat effectiveness and tactical awareness despite zero prior exposure to anomalous entities. His actions resulted in the neutralization of a Class-IV CAN threat and the successful extraction of wounded TFB personnel.", delay: 40 },
-                    { text: " ", delay: 20 },
-                    { text: "Analysis of thermal imaging and audio feeds confirms 23 knife wounds, severe shoulder trauma, and 4 M9 pistol rounds delivered to the hostile entity. Time from initial engagement to neutralization: approximately 47 seconds.", delay: 40 },
-                    { text: " ", delay: 20 },
-                    { text: "Subject Adams was immediately flagged for UIU recruitment following this incident.", delay: 40 },
-                    { text: " ", delay: 20 },
-                    { text: "═══════════════════════════════════════════════════", delay: 20 },
-                    { text: "[END OF TRANSMISSION]", delay: 30, isStatic: true, playBurst: true, isEnd: true }
-                ];
-
-                let currentIndex = 0;
-
-                function displayNextLine() {
-                    if (currentIndex >= lines.length) {
-                        setTimeout(() => {
-                            stopRadioStatic();
-                            radioScreen.style.opacity = '0';
-                            radioScreen.style.transition = 'opacity 1s ease-out';
-                            setTimeout(() => {
-                                radioScreen.classList.add('hidden');
-                                radioScreen.style.opacity = '1';
-                            }, 1000);
-                        }, 3000);
-                        return;
-                    }
-
-                    const line = lines[currentIndex];
-                    const p = document.createElement('p');
-                    p.className = 'radio-playback-line';
-                    
-                    if (line.isTitle) {
-                        p.className += ' text-3xl text-yellow-500 font-bold mb-4';
-                    } else if (line.isHeader) {
-                        p.className += ' text-xl text-cyan-300 mb-2';
-                    } else if (line.isStatic) {
-                        p.className += ' text-gray-500 italic radio-static-effect';
-                        if (line.playBurst) {
-                            playStaticBurst();
-                        }
-                    } else if (line.isUrgent) {
-                        p.className += ' text-red-400 font-bold';
-                    } else if (line.speaker === "Adams") {
-                        p.className += ' text-green-400';
-                    } else if (line.speaker === "CONTROL") {
-                        p.className += ' text-cyan-300';
-                    } else if (line.speaker === "SECONDARY") {
-                        p.className += ' text-blue-300';
-                    }
-
-                    if (line.isVideo) {
-                        p.className += ' text-yellow-400 font-bold my-4 text-2xl';
-                        radioContent.appendChild(p);
-                        typeWriter(p, line.text, line.delay, () => {
-                            const videoContainer = document.createElement('div');
-                            videoContainer.className = 'radio-video-frame';
-                            const video = document.createElement('video');
-                            video.className = 'w-full';
-                            video.autoplay = true;
-                            video.controls = true;
-                            video.muted = false;
-                            video.playsInline = true;
-                            const source = document.createElement('source');
-                            source.src = line.videoSrc;
-                            source.type = 'video/mp4';
-                            video.appendChild(source);
-                            videoContainer.appendChild(video);
-                            radioContent.appendChild(videoContainer);
-                            
-                            // Smooth scroll to video
-                            setTimeout(() => {
-                                videoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }, 100);
-                            
-                            // Handle video end or error
-                            video.addEventListener('ended', () => {
-                                currentIndex++;
-                                displayNextLine();
-                            });
-                            
-                            video.addEventListener('error', (e) => {
-                                console.log('Video error:', e);
-                                // Continue anyway after 3 seconds
-                                setTimeout(() => {
-                                    currentIndex++;
-                                    displayNextLine();
-                                }, 3000);
-                            });
-                            
-                            // Fallback: continue after 30 seconds if video doesn't end
-                            setTimeout(() => {
-                                if (currentIndex === lines.findIndex(l => l.videoSrc === line.videoSrc)) {
-                                    currentIndex++;
-                                    displayNextLine();
-                                }
-                            }, 30000);
-                        });
-                    } else {
-                        radioContent.appendChild(p);
-                        typeWriter(p, line.text, line.delay, () => {
-                            // Smooth scroll to bottom
-                            setTimeout(() => {
-                                p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                            }, 50);
-                            
-                            currentIndex++;
-                            setTimeout(displayNextLine, line.isEnd ? 500 : 100);
-                        });
-                    }
-                }
-
-                displayNextLine();
-            }
-
-            function showAdamsRecord() {
-                const content = `
-                    <div class="bg-white text-black p-6" style="font-family: 'Courier New', monospace; font-size: 14px;">
-                        <pre class="whitespace-pre-wrap">
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// UIU CLASSIFIED PERSONNEL EXTRACT
-// ACCESS... OPERATION_ARCHIVE_DB
-// FILE_ID: OP-IR4001-PR-ADAMS
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-== PERSONAL INFORMATION ==
-OPERATIVE ID:     DEVGRU-E7-ADAMS
-NAME:             Adams, Michael
-DOB:              02/28/1991
-RANK:             E-7 (Chief Petty Officer)
-UNIT:             DEVGRU / SEAL Team Six
-NICKNAME:         "Dozer"
-
-== OPERATIONAL DETAILS ==
-OPERATION:        █████████-████████
-CLASSIFICATION:   TS/SCI - EYES ONLY
-DATE:             ██/██/2024
-LOCATION:         [REDACTED], United Kingdom
-OBJECTIVE:        Neutralization of anomalous threat "The ██████"
-STATUS:           OPERATION COMPLETED
-
-== PARTICIPANT ROLE ==
-POSITION:         Heavy Weapons Specialist
-PRIMARY WEAPON:   M250 Light Machine Gun
-ROLE:             Suppression & Infantry Support
-OUTCOME:          Survived. Records expunged per EO ████-█.
-
-== POST-OPERATION DISPOSITION ==
-Following Operation █████████-████████, subject was transferred to:
-    → UIU Task Force Blade
-    → Assignment: N'Nono Warrior Crèche 〈 3-14233 〉
-    → Clearance: ΩALPHA
-    → All DEVGRU records archived and sealed.
-
-== SYSTEM NOTES ==
-> ██/██/2024: Operation completed. Casualty report classified.
-> ██/██/2024: Personnel transfer to UIU authorized.
-> ██/██/2024: Military service records expunged per executive order.
-> ██/██/2024: Subject re-indoctrinated into anomalous operations.
-
-[END OF EXTRACT]
-                        </pre>
-                    </div>
-                `;
-                showModal(content);
             }
 
             function startRemoteAccessSequence() {
@@ -1324,22 +540,22 @@ Following Operation █████████-████████, subjec
 
             function startBiosSequence() {
                 const lines = [
-                    "USOCNET BIOS v4.5.2", 
-                    "Copyright (c) 1982-2025, USOCNET Consolidated.", 
+                    "OWL Network BIOS v2.8.1", 
+                    "Copyright (c) 2015-2025, Order of White Lotus.", 
                     " ", 
-                    "Main Processor: 2x Foundation-grade Quantum Entanglement Core @ 8.2 THz", 
-                    "Memory Testing: 1024 ZB OK", 
+                    "Main Processor: Lotus Quantum Core @ 5.4 THz", 
+                    "Memory Testing: 512 ZB OK", 
                     " ", 
-                    "Initializing UIU Secure Handshake Protocol...", 
+                    "Initializing OWL Secure Handshake Protocol...", 
                     "Checking NVRAM...", 
-                    "Detecting Primary Master... UIU-DB-OMEGA", 
+                    "Detecting Primary Master... OWL-DB-PRIME", 
                     "Detecting Primary Slave... None", 
-                    "Detecting Secondary Master... REDACTED", 
+                    "Detecting Secondary Master... CLASSIFIED", 
                     "Detecting Secondary Slave... None", 
                     " ", 
                     "Cognitohazard Filters Engaged.", 
                     "Memetic Kill Agent Shielding Active.", 
-                    "Loading UIU OS from Secure Sector...",
+                    "Loading OWL OS from Secure Sector...",
                 ];
                 let lineIndex = 0;
 
@@ -1359,7 +575,7 @@ Following Operation █████████-████████, subjec
                     p.className = "mt-4";
                     biosText.appendChild(p);
                     let progress = 0;
-                    const total = 2867;
+                    const total = 2048;
                     const interval = setInterval(() => {
                         progress += Math.floor(Math.random() * 50) + 25;
                         if (progress > total) progress = total;
@@ -1385,20 +601,20 @@ Following Operation █████████-████████, subjec
                 let currentLine = document.createElement('p');
                 terminalContent.appendChild(currentLine);
 
-                typeWriter(currentLine, 'UIU v3.1 Initialization complete. All systems nominal.', 50, () => {
+                typeWriter(currentLine, 'OWL v3.1 Initialization complete. All systems nominal.', 50, () => {
                     currentLine = document.createElement('p');
                     terminalContent.appendChild(currentLine);
-                    typeWriter(currentLine, 'Verifying connection to USOCNET Global... Secure link established.', 50, () => {
+                    typeWriter(currentLine, 'Verifying connection to OWL Network Global... Secure link established.', 50, () => {
                         currentLine = document.createElement('p');
                         terminalContent.appendChild(currentLine);
-                        typeWriter(currentLine, 'WARNING: This terminal is under constant surveillance by UIU.', 50, () => {
+                        typeWriter(currentLine, 'WARNING: This terminal is under constant surveillance by OWL.', 50, () => {
                             currentLine = document.createElement('p');
                             currentLine.className = "mt-4";
                             terminalContent.appendChild(currentLine);
-                            typeWriter(currentLine, 'The Following file falls under UIU Secure Database OMEGA', 50, () => {
+                            typeWriter(currentLine, 'The Following file falls under OWL Secure Database PRIME', 50, () => {
                                 currentLine = document.createElement('p');
                                 terminalContent.appendChild(currentLine);
-                                typeWriter(currentLine, 'PENTAGRAM Personnel Files', 50, () => {
+                                typeWriter(currentLine, 'OWL Headquarters Personnel Files', 50, () => {
                                     currentLine = document.createElement('p');
                                     currentLine.textContent = 'Please select a network:';
                                     terminalContent.appendChild(currentLine);
@@ -1412,112 +628,77 @@ Following Operation █████████-████████, subjec
             
             function showErrorPopup(message) {
                 errorMessage.textContent = message;
-                errorPopup.classList.remove('hidden');
-                setTimeout(() => { errorPopup.classList.add('hidden'); }, 2000);
-            }
-
-            function triggerMemeticAgent(callback) {
-                loginPopup.classList.add('hidden');
-                let currentLine = document.createElement('p');
-                terminalContent.appendChild(currentLine);
-
-                typeWriter(currentLine, 'Initializing Memetic Kill Agent...', 50, () => {
-                    const memeticAgent = document.getElementById('memetic-agent');
-                    memeticAgent.classList.remove('opacity-0');
-                    memeticAgent.style.pointerEvents = 'auto';
-
-                    setTimeout(() => {
-                        memeticAgent.classList.add('opacity-0');
-                        memeticAgent.style.pointerEvents = 'none';
-                        
-                        setTimeout(() => {
-                            currentLine = document.createElement('p');
-                            terminalContent.appendChild(currentLine);
-                            typeWriter(currentLine, 'Personnel vitals still detected. Access granted.', 50, callback);
-                        }, 1000); 
-                    }, 4000); 
-                });
-            }
-
-            function showLoginPopup() {
-                const natoPhonetics = ['ALPHA', 'BRAVO', 'CHARLIE', 'DELTA', 'ECHO', 'FOXTROT', 'GOLF', 'HOTEL', 'INDIA', 'JULIET', 'KILO', 'LIMA', 'MIKE', 'NOVEMBER', 'OSCAR', 'PAPA', 'QUEBEC', 'ROMEO', 'SIERRA', 'TANGO', 'UNIFORM', 'VICTOR', 'WHISKEY', 'XRAY', 'YANKEE', 'ZULU'];
-                const num1 = Math.floor(Math.random() * 100);
-                const phonetic1 = natoPhonetics[Math.floor(Math.random() * natoPhonetics.length)];
-                const phonetic2 = natoPhonetics[Math.floor(Math.random() * natoPhonetics.length)];
-                const num2 = Math.floor(Math.random() * 100);
-                const num3 = Math.floor(Math.random() * 1000);
-                const randomCode = `${num1}${phonetic1}-${phonetic2}-${num2}-${num3}`;
-                
-                loginPopup.classList.remove('hidden');
-                loginCode.innerHTML = '';
-                typeWriter(loginCode, randomCode, 150, () => {
-                    triggerMemeticAgent(showWelcome);
-                });
+errorPopup.classList.add('flex');
+                setTimeout(() => {
+                    errorPopup.classList.remove('flex');
+                    errorPopup.classList.add('hidden');
+                }, 3000);
             }
 
             function showNetworkOptions() {
-                const networks = { 
-                    'UIU-GUEST': false, 
-                    'UIU-LAN': false, 
-                    'UIU-RESEARCH-SEC': false, 
-                    'PERSONNEL FILES': true 
-                };
-                const container = document.createElement('div');
-                container.className = 'flex flex-wrap gap-4 my-4';
-                
-                for (const net in networks) {
-                    const button = document.createElement('button');
-                    button.textContent = net === 'PERSONNEL FILES' ? net : `[REDACTED]`;
-                    if (networks[net]) {
-                        button.className = 'bg-yellow-600 text-black px-4 py-2 interactive-button border-2 border-white hover:bg-yellow-700 transition-colors';
-                        button.onclick = () => { 
-                            container.remove(); 
-                            showLoginPopup();
-                        };
-                    } else {
-                        button.className = 'bg-gray-600 text-gray-400 px-4 py-2 interactive-button cursor-not-allowed';
-                        button.disabled = true;
-                        const wrapper = document.createElement('div');
-                        wrapper.style.display = 'inline-block';
-                        wrapper.onclick = () => showErrorPopup('Network Unavailable');
-                        wrapper.appendChild(button);
-                        container.appendChild(wrapper);
-                        continue;
-                    }
-                    container.appendChild(button);
+                const p = document.createElement('p');
+                p.className = "mt-4";
+                p.innerHTML = `
+                    <button class="interactive-button text-cyan-300 hover:text-cyan-100 mr-4" onclick="selectNetwork('personnel')">[ PERSONNEL DATABASE ]</button>
+                    <button class="interactive-button text-red-500 hover:text-red-300" onclick="selectNetwork('classified')">[ CLASSIFIED NETWORK ]</button>
+                `;
+                terminalContent.appendChild(p);
+            }
+
+            window.selectNetwork = function(network) {
+                if (network === 'personnel') {
+                    const p = document.createElement('p');
+                    p.className = "mt-4 text-green-400";
+                    terminalContent.appendChild(p);
+                    typeWriter(p, 'Connecting to PERSONNEL DATABASE... Access Granted.', 50, showLoginPrompt);
+                } else if (network === 'classified') {
+                    const p = document.createElement('p');
+                    p.className = "mt-4 text-red-500";
+                    terminalContent.appendChild(p);
+                    typeWriter(p, 'ACCESS DENIED. Clearance level insufficient.', 50, () => {
+                        showErrorPopup('CLASSIFIED NETWORK REQUIRES HIGHER CLEARANCE');
+                    });
                 }
-                terminalContent.appendChild(container);
-            }
-            
-            function showWelcome() {
-                let currentLine = document.createElement('p');
-                terminalContent.appendChild(currentLine);
-                typeWriter(currentLine, 'Welcome, ███████', 50, () => {
-                    currentLine = document.createElement('p');
-                    terminalContent.appendChild(currentLine);
-                    typeWriter(currentLine, 'Would you like to access the Personnel File for ADAMS, MICHAEL?', 50, showAccessOptions);
-                });
+            };
+
+            function showLoginPrompt() {
+                loginPopup.classList.remove('hidden');
+                loginPopup.classList.add('flex');
+                
+                const code = 'LOTUS-3';
+                let index = 0;
+                
+                const interval = setInterval(() => {
+                    if (index < code.length) {
+                        loginCode.textContent += code[index];
+                        playTypingSound();
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            loginPopup.style.opacity = '0';
+                            loginPopup.style.transition = 'opacity 1s ease-out';
+                            setTimeout(() => {
+                                loginPopup.style.display = 'none';
+                                showMemeticAgent();
+                            }, 1000);
+                        }, 1000);
+                    }
+                }, 200);
             }
 
-            function showAccessOptions() {
-                const container = document.createElement('div');
-                container.className = 'flex gap-4 my-4';
-                const yesButton = document.createElement('button');
-                yesButton.textContent = 'Y';
-                yesButton.className = 'text-green-500 border-2 border-green-500 px-4 py-2 interactive-button hover:bg-green-500 hover:text-black transition-colors';
-                yesButton.onclick = showPersonnelFile;
-                const noButton = document.createElement('button');
-                noButton.textContent = 'N';
-                noButton.className = 'text-red-500 border-2 border-red-500 px-4 py-2 interactive-button hover:bg-red-500 hover:text-black transition-colors';
-                container.appendChild(yesButton);
-                container.appendChild(noButton);
-                terminalContent.appendChild(container);
-            }
-
-            function showPersonnelFile() {
-                terminalContent.style.display = 'none';
-                personnelFileScreen.classList.remove('hidden');
-                loadPersonnelFile();
+            function showMemeticAgent() {
+                const memeticAgent = document.getElementById('memetic-agent');
+                memeticAgent.style.pointerEvents = 'auto';
+                memeticAgent.style.opacity = '1';
+                
+                setTimeout(() => {
+                    memeticAgent.style.opacity = '0';
+                    setTimeout(() => {
+                        memeticAgent.style.display = 'none';
+                        loadPersonnelFile();
+                    }, 1000);
+                }, 3000);
             }
 
             startRemoteAccessSequence();
