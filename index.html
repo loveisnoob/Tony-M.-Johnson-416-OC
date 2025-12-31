@@ -607,6 +607,16 @@
         .story-content p {
             margin-bottom: 20px;
         }
+
+        .editor-note {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(74, 158, 255, 0.1);
+            border-left: 3px solid #4a9eff;
+            font-size: 11px;
+            color: #c5c5c5;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -761,7 +771,6 @@
     </div>
 
     <script>
-        // Audio system
         let audioCtx = null;
         let ambientSound = null;
         let soundEnabled = true;
@@ -835,7 +844,6 @@
             }
         }
 
-        // Sound toggle
         document.getElementById('sound-toggle').addEventListener('click', () => {
             soundEnabled = !soundEnabled;
             document.getElementById('sound-toggle').textContent = soundEnabled ? 'SOUND: ON' : 'SOUND: OFF';
@@ -851,7 +859,6 @@
             }
         });
 
-        // Custom cursor
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
@@ -860,7 +867,6 @@
         document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
         document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
 
-        // Initialize audio on first click
         document.addEventListener('click', () => {
             if (!audioCtx) {
                 initAudio();
@@ -870,7 +876,6 @@
             }
         }, { once: true });
 
-        // Update event log times
         function updateEventTimes() {
             const now = new Date();
             const fmt = (d) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -879,7 +884,6 @@
             document.getElementById('time3').textContent = fmt(new Date(now - 120000));
         }
 
-        // Typewriter effect
         function typeWriter(el, txt, speed, cb) {
             let i = 0;
             el.textContent = '';
@@ -898,369 +902,6 @@
             type();
         }
 
-        // Story chapters data
-        const storyChapters = [
-            {
-                title: "CHAPTER 1: ORIGINS",
-                content: `<p>Tony was born 28th August 2005 into an abusive household clinging to whatever money they had left. His father constantly overlooked him, always belittling him with remarks, and was an alcohol addict who always let out a tantrum for even the slightest of mistakes. His mother, a young woman who carried the majority of the financial duty in his family, had neither the time nor power to give the slightest hint of care towards him, but when she did, it was like heaven to him. His father used to be a successful salesman at a local furniture store; however, due to rising competition from big box retailers, they unfortunately had to shut down. His mother, a school teacher working in the nearby elementary school, struggled to make ends meet with her meagre salary, and even so, she tried her best burdening herself with his education and their family expenses all at once. Yet even so, his father constantly harassed and sometimes physically confronted his mother violently. She couldn't take it anymore, and it seems even the neighbours couldn't take the unceasing violence happening in their house.</p>
-
-<p>One fateful night, his father returned home drunk from his never-ending consumption of alcohol. His mother glared at him, showing the quintessential example of fatigued resignation, barely looking up from the bills scattered across the kitchen table, and finally snapped. She yelled at him, "I can't take it anymore, I can't take your useless," she paused, "excuses anymore!" Then she continued, "The bills are stacking, and I can't handle it all alone. Tony needs an education, and with all your useless habits, we're going to lose the house!" Then and there, his father cracked in a jolt of confused anger and rage, pinning his mother to the wall. His neighbours heard the commotion and dialled 999.</p>
-
-<p>When the officers arrived, his father was still drunk and belligerent, his mother sporting a fresh bruise on her cheek. Tony woke up from all the commotion and watched from his bedroom doorway as the officers handcuffed his father, who was still mumbling incoherently about "that woman" and "his rights". His mother stood silently by the kitchen table, her hand pressed against the red mark on her neck, answering the officer's questions in barely audible whispers.</p>
-
-<p>"Is there somewhere safe where you and your son can stay tonight?" the officer asked gently. His mother glanced towards Tony before responding, "We'll be fine here. I know what you're about to say, however we don't have anywhere else to go."</p>
-
-<p>"Mum?" Tony whispered. She didn't look at him. "Go to bed, Tony. You have school tomorrow."</p>
-
-<p>Skip forward a few years. Ever since that incident, his mother divorced his father, and his father eventually landed himself in jail after a freak car crash accident. They never saw him again after that. His mother, now having some sense of freedom, spent more time with him, and Tony's mental health slowly improved year by year. His mother could now slowly guide Tony through his academics, where his grades slowly rose, but his mother received a job offer at a higher-paying private school down south. The only thing was, it was extremely far away. Faced with this tough decision, his mother eventually left Tony with her aunt and uncle.</p>
-
-<p>Tony's uncle had no desire to care for him just like his father; however, at least he cared for his education. His aunt was more similar to his mother. His aunt worked 2 jobs, which left her with minimal time to care for Tony. Tony grew up just fine, but his education slowly declined. Tony's uncle had a heart disease which worsened right after his arrival at the household, which reduced the time he had to care for him. Even so, he still tried his best in school. Yet still, even there he faced more and more hardships. Tony was bullied by his classmates for his weak arms and thin build, and was constantly made fun of because his father was an alcohol addict and he now lived in his uncle's house. And to make things worse, the teachers couldn't care less since the bullies' parents were bribing them to get higher scores on tests. Because of this, as he grew up, he learned that ignoring his teachers and other authority figures was the best way to manage his stress and all the harassment he'd faced in his life.</p>
-
-<p>During junior high school when he turned 14, he was the shy, timid kid no one talked to, and he also didn't want to talk with anyone, ignoring people when the opportunity arose. He failed multiple classes, yet he didn't care because he had no figure, no person to guide him through his life, and then he remembered his mother. What had happened to her? After the school bell rang, he walked back to his uncle's house, and then he asked: "Uncle," Tony said quietly, setting down his backpack. "Have you heard from my mum?"</p>
-
-<p>His uncle looked up, his face pale and tired. "She called last week while you were at school. Says the new job is keeping her busy, longer hours than she expected."</p>
-
-<p>"When is she coming back?"</p>
-
-<p>His uncle's expression softened slightly. "I don't know, kid. She's trying to save up enough money to get you both a decent place. Says the pay is good but..." He trailed off, coughing.</p>
-
-<p>"But what?"</p>
-
-<p>"But it might be a while."</p>
-
-<p>"..."</p>
-
-<p>Tony considered what his uncle just said, but his curiosity dimmed. He said in his mind, "Sigh, the only one who really ever cared for me can't even do the job they're supposed to do. Life is useless. I might as well enjoy it as I can."</p>
-
-<p>The next day, an interesting man approached him. "Hey kid, you seem like you need a job. Wanna have a try at janitorial duties...?" He was bored, but he was dying to earn whatever meagre wage he could so he could at least afford some snacks he could enjoy at school.</p>
-
-<p>"Yeah, sure, old geezer," he responded.</p>
-
-<p>"Alright, duty starts next week. Meet me at the library Saturday, 6:00 AM sharp."</p>
-
-<p>That Saturday morning, Tony dragged himself to the library expecting another disappointing experience. The man handed him the janitorial uniform and a set of professional cleaning tools. "Welcome to the team, Tony! I'm Frank."</p>
-
-<p>He pondered, "That's the first time ever that someone has greeted me with their first name." As Frank showed him the supply closet organised with military precision and explained how each tool had its purpose, Tony felt something unexpected, a small flutter of interest. The work seemed... methodical. Peaceful, even. No teachers ignoring him, no bullies around, just him and the simple satisfaction of making something clean.</p>
-
-<p>"This... this actually isn't that bad," Tony said under his breath, surprised by his own reaction.</p>
-
-<p>Frank smiled. "Most people don't get it, but there's something honest about this work."</p>
-
-<p>Skip forward when he turns 20. Frank and Tony had a close-knit relationship. For the first time ever, Tony had a person whom he could truly call a "friend". They tidied up the library, and the librarian even gave them some time to enjoy and read some books, since she had a good impression of both of them. Over the years, Tony and Frank grew an interest in hunting and camping. They read and read, slowly growing their now insatiable desire to do at least one camping trip together. Luckily for them, over the years Tony and Frank had access to the library's numerous books and survival guides, and through sheer mental memorisation and passion, they learned how to make a fire by going to the woods, creating embers, finding birch, and setting up a small fire in the winter. They learned how to use firearms via the widespread YouTube tutorials and gun guides in the library, and even found a survival guide by John "Lofty" Wiseman on the SAS survival guide, quite a crazy find in their opinion.</p>
-
-<p>Tony said to Frank, "Hey, 4 years of minimum wage, it's enough to get us a handgun and at least some mags. How about you say we try camping in the nearby forest during the winter?"</p>
-
-<p>Frank responded, "Oh yeah, sounds amazing bro. The problem is, you got a gun licence...?"</p>
-
-<p>Tony muttered, "Oh nah, don't worry bro, we'll just bribe the gunsmith. What's the worst that can happen?"</p>
-
-<p>After years of preparing, they finally decided on a 1-week camping trip in the nearby forest in winter. Tony buys the gun, while Frank buys the camping equipment. The equipment they bought wasn't exactly tip-top quality, but what works, works. Finally, the faint and gentle drop of snowflakes fell on their area, and once it had built up, they went on their way. Before Tony left, he told his uncle, "Hey uncle, I'm gonna go camping with my friend Frank. You know how long I've been preparing for this. I'll see you in 3 days!" Although his uncle hesitated, in his mind he silently said, "That kid's got steel. It seems he's finally found what he wants in life."</p>
-
-<p>Tony met Frank at an unpatched strip of land in the middle of the forest. Knowing what to do, they both quickly set up camp near a pine tree, made a small fire which they used to cook a squirrel Tony had trapped, and both slowly headed to sleep as they dozed off due to the fatigue they'd just had. But then suddenly, there was a noise coming from the nearby bushes. Something was moving fast, quick, its steps rapid like a wolf, however as light as a chicken. Both Frank and Tony jumped up, their survival instincts kicking in. Tony grabbed the Glock 19, a light firearm capable of punching a decent-sized hole through any adversary. Frank rushed to the bowie knife he'd kept in his bag, holding a ready stance while Tony swung his Glock 19, trying to identify the location of the animal. But then the sound stopped, it vanished, disappearing into thin air. Still, Frank and Tony went into alert mode the entire night. They were too paranoid to even catch a single minute of sleep, worrying that the creature which they feared was a pack of wolves was waiting for the right moment to strike.</p>
-
-<p>"What the hell was that?!" Frank whispered to Tony.</p>
-
-<p>"I have no idea. The steps were so light I could barely hear it."</p>
-
-<p>"A wolf maybe? But no... a wolf wouldn't have steps as silent as that, and it would go in a pack, but this one sounded like it was alone.... And the noise it made wasn't anything similar to a wolf...."</p>
-
-<p>During the morning, Frank and Tony bravely gathered the courage to exit the tent. Frank went first since he had the knife; Tony would cover since he had the gun. However, they only saw footsteps that resembled an avian's, but much larger.</p>
-
-<p>"This area is giving me the creeps now. I think we should go..." mumbled Tony.</p>
-
-<p>They slowly unpacked their camp and moved to a more hidden location within the woods, where they cautiously camped for the next 2 days, finally deciding to return on the third day as planned. However, this time, they'd report the incident to local authorities, since no normal bird would leave a footprint that big...</p>
-
-<p>Tony invited Frank to come to his uncle's house, but on their way there, they noticed that the town was eerie, quiet, forcefully hushed... Doors were left open as if the people living inside their houses tried to escape in a panic, but there was no trace of violence... No trace of anything... not even a single car had moved. As Tony and Frank grew ever closer to his uncle's house, this eerie quiet grew to an ever more anxious weight pressing down on their chests. The silence wasn't just absence of sound, it was wrong, like the air itself had been drained of life. Frank's footsteps echoed too loudly on the empty pavement, each step seeming to mock the eerie stillness.</p>
-
-<p>"Tony," he whispered, his voice cracking even despite his effort to stay calm, "has the town always been this empty?"</p>
-
-<p>Their uncle's door was left open, and as they drew closer, they heard an unnatural sound coming from within, like an animal eating its delicious prey... Tony raged, he cried, he felt an emotion so new he couldn't describe it in one word. Someone that at least supported him in his childhood was just... brutally murdered... eaten... What was left were bones and meat, to the point where you could no longer distinguish if it had been a person. He screamed, screamed so loud the entire neighbourhood could've heard him. This continued for a few minutes, until his eyes had no emotion left, no cry, no pride, just the hollow depth of black within his pupils.</p>
-
-<p>"WHY? WHY? WHY? WHY? WHY? WHY? WHY? WHY?" The words reverberated in his mind. His mind began to fracture. Thump… Thump… Thump… His heart began racing, chest pounding, mind fracturing. His hands began to shake. The Glock felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. He can feel tears dropping out of his pupils, his hand began to numb, slowly the control over his own body started to sway. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness.</p>
-
-<p>Frank told him, "We HAVE TO GO. If there are more of them, we're dead meat!" Yet all he heard was the sombre silence. He said to Tony, "Tony, are you here with me? Tony! WE HAVE TO GO." Then Tony's body collapsed, "TONY!? ARE YOU OK? TONY?"</p>
-
-<p>Out of options, he frantically searched for somewhere to hide them both, checking every door in the building one after the other, but found nothing. When all hope seemed lost, he heard a sound from above him, he'd hoped it was god, but it seems even god couldn't protect them at this very moment. Then, hope stirred in his mind, "What? What is that?" He'd grab a chair and touch the ceiling, and a ladder magically dropped, as if it was waiting for their very arrival. Frank rushed downstairs as he'd dragged Tony and whatever supplies he could get his hands on, it felt impossibly heavy, but through sheer perseverance and adrenaline, he'd manage to pull everything inside, as he finally pulled the ladder back into the attic.</p>`
-            },
-            {
-                title: "CHAPTER 2: TRIALS",
-                content: `<p>Tony woke up in a dark room, hollow of life, then he heard a voice, it wasn't Frank's voice, no it couldn't be, it was too thin, too innocent to be Frank's voice, then he regained himself. It's hers. "I'll come back for you Tony. I promise." The memory hit him hard. He was eight years old again, standing in the same doorway watching his mother pack her suitcase. Her back turned to him, always her back turned to him. "The new job will be good for us, sweetheart. I'll save up money and we'll have our own place." But she never came back.</p>
-
-<p>"Did she ever think about me? Did she ever wonder if I was okay? Did she know about the abuse, the loneliness, the bullying, did she know about ANYTHING?" Tony's the type of person that is unaware of his environment, when a murder sprouts up in his local news channel, he'd never react like he was scared, he'd just continue wandering aimlessly or playing with his toys, just showing off an indifferent shrug. But this time, it's different. The questions he'd try to bury for years clawed their way back to the surface. Every Christmas I wait for that gift. Every birthday waiting for that call. Every night he'd spent wondering if he'd done something wrong, if he was unlovable, if everyone would just abandon him like she did.</p>
-
-<p>"Uncle's dead. Frank's the only one left. And he'll leave too. Everyone always leaves me alone."</p>
-
-<p>Frank's voice cuts through the memory. "Tony, Tony? You're awake! Thank God."</p>
-
-<p>Skip forward to Frank and Tony's hiding. A few days after Tony woke up, they decided they'll stay here until rescue arrives. They chilled for a while, eating bags of crisps and instant ramen using the one burner they had. But Tony acted differently, his hands started shaking all day until he slept. Whenever they finished eating, he'd just corner himself and look down at the floor, sometimes Frank could swear he heard cries when he was trying to sleep. Finally, Frank gathered up the courage to talk to Tony whilst they were eating together.</p>
-
-<p>"Tony… Are you ok?" Frank whispered to him. Tony didn't reply.</p>
-
-<p>"Tony, I know things haven't been going your way lately, and I understand." Frank said once more.</p>
-
-<p>Tony stopped for a bit, then he set his spoon down into the empty ramen cup. He set it down slowly, still not looking up. "Do you?" His voice could barely be heard. "Do you really understand?"</p>
-
-<p>Frank tried to reply, "I, I know losing your uncle was..."</p>
-
-<p>Tony's cut pierced through the air, "Do you really know? Do you know what I've been through? It's not just him. It's everyone. Everyone always leaves me."</p>
-
-<p>They both staggered for a bit, then Frank said softly, "Do you remember that first day at the library? You called me an 'old geezer'." Despite everything that's just unfolded, Tony twitched slightly. "You were so angry at the world, so angry at everything, really." Frank continued on. "Yet you still showed up, every Saturday morning. Six AM sharp. Even when you didn't want to."</p>
-
-<p>Tony finally looked up, his eyes were red. "That was different."</p>
-
-<p>"Was it, really?" Frank patted his back. "You'd thought I'd be just another disappointment. Another adult who'd just let you down. But I kept showing up too, didn't I? I kept showing up with a smile even when my body seemed to give up, even when my uniform was still not dried."</p>
-
-<p>Frank carried on, "Remember what I told you that very first day? 'There's something honest about this work.' Clean something dirty, make it better. Simple. Maybe that's what we do, Tony. Clean up the world, clean up the mess people start, no matter how insignificant or useless it might be. One piece at a time."</p>
-
-<p>"We could start here," Frank said in his usual monotonal voice. "This attic. Make it feel less like we're hiding and more like well… like we're living in it. What do you say?"</p>
-
-<p>Skip 3 weeks. The attic, once full of cobwebs and rot and abandoned items, was finally looking like a place to live in. Every time Tony cleaned a patch of dust, it felt like his memories were being cleared up, like a window in his life he'd never seen before. The trauma he'd just faced felt more natural. As he wiped away years of accumulated dust and abandoned memorabilia, Tony realised something profound. This dust has been ignored for so long, pushed aside with no one to take care of it, forgotten, left to settle in the dark corners of the earth where no one had bothered to search for it. Just like the pain people carry in their day-to-day lives. Just like his own buried memories of abandonment and abuse. Every speck of dust had once been something, pieces of the world that had broken down, destroyed, burnt and eventually drifted all the way here to be forgotten. Yet even in the most neglected corners of earth, the memories and events that people pretend never existed, eventually demand attention, just like anything else would. The dust, the trauma, the hate, the anger, the rage, the eagerness for revenge. It doesn't disappear if you just ignore it. It accumulates, weighs down the air, makes your breath slow, your lungs gasping for air, and your heart boils. People are the same way. They sweep trauma under thick rugs and blankets, shove their pain into mental corners like a prison's solitary confinement, convince themselves if it doesn't exist, if it's buried deep as a fossil within the earth, if it would never be found again if you throw it in the ocean, if it had never happened, if it wasn't possible, it isn't there. But eventually, just like this attic, just like every corner, every patch of dust, every microcosm and every bacterium, everything needs to be cleaned, turned into something else. The ignored parts of life, the dusty corners of the human heart, they all require someone to finally pick up a cloth and do the hard work of making things clear again, make things as clear as a window after a heavy rain. The trauma he'd just faced felt more natural, and even death felt natural, not something to fear, but something to accept and clean around, like dust that gathers in every corner of existence. Frank was right. There was something honest about this work.</p>
-
-<p>Suddenly they noticed military Humvees strolling down the street. They thought it was an emergency rescue, so they rushed out and asked for help since their water supply had run out. The driver said they were on a military mission and couldn't stop. Tony and Frank decided to move into the town south of the city. There were people, just not that many. He remembered there being way more people in the town, since both had visited it on a school trip. He and Frank convinced themselves they were just crazy and tried to find food. By June 2025, his town had been covered by plant growth within the year. Their temporary shelter was only powered by the backup generators since the solar panels had gone dusty and no one knew how to repair them. Suddenly another armoured truck came down the street, this time stopping.</p>
-
-<p>The armoured truck had no military insignia or emblem, nevertheless the driver stepped out, and told Frank and Tony that they were being transferred to a more "safe" location. During the journey to aforementioned location, the security officer in the truck interviewed both of them:</p>
-
-<p>The Security Officer coughed, "Ahem, so Gentlemen, are you both named Tony Johnson and… Frank …Phipps?"</p>
-
-<p>Tony replied, "Slight pause doubting why they were here. Yes… we are."</p>
-
-<p>"Great! Both of you are getting a job, get in. We've been monitoring you very closely the past year." mumbled the Officer.</p>
-
-<p>Frank replied, "Why have you been monitoring us…?"</p>
-
-<p>"Oh, that's nothing, we just found that you had some… excellent expertise in.. Janitorial duties, yes!" the Officer muttered.</p>
-
-<p>"That's beside the point anyway" the Officer added.</p>
-
-<p>The Security Officer continued, "Well then… Since none of you are talking… You both will be getting a janitor position here then. You have no military experience, Tony, you're a dropout and.. Frank was it? You got the lowest grade in the entirety of your class, and you didn't even finish high school. This is all we can do."</p>
-
-<p>Tony curiously asked, "Will it pay better than the old job? Will it have free food?"</p>
-
-<p>The officer replied, "Ahem… Yes, it will!"</p>
-
-<p>Finally the officer questioned, "Do you accept this position?"</p>
-
-<p>Frank whispered to Tony, "You in?"</p>
-
-<p>Tony replied to Frank, "Whatever gets me the hell out of that mess."</p>
-
-<p>Both finally say, "Deal."</p>
-
-<p>The GOC's real interest was in him terminating an anomaly, what the Foundation called SCP-3199. The GOC expected some sort of experienced military combat, considering the deep gashes, bullet wounds, and a precise targeted shot on an artery. He thought to himself, they'd be decent janitors, at least they know how to handle a gun, when push comes to shove.</p>
-
-<p>"Hello?" "Hello?" The camera flickers to life "Yea so uhm, we've been stuck on this site of theirs for quite a while and there's nothing really of interest here except some basic military training they've provided us. I can't really remember how we got here, my head feels so all over the place, but from what I can recall, we arrived as soon as we entered the armoured vehicle, so I think we're still near Nova Scotia, or at least, Canada." Maybe it had just been a coincidence, but every day the air around them was as heavy as a lorry; they could barely even breathe properly.</p>
-
-<p>The recording continued, "We've also been assigned these boring janitorial positions, and all we've been doing is cleaning some questionable looking red paintings on the wall, they said it was just some crazy artist's work but I digress. Can't really say much here anyway." He paused slightly, then continued, "So the reason I've started this little recording today was because I've been told that I will be transferred to a military arm of theirs as a scout, they say I'd be useful because of my past experiences, they called it PHYSICS or whatever, I always found that name absurd." The recording went on, "Maybe I'd check on this after a few years, I'll just upload it to the terminal because I've no place to upload it other than there. Oh yea, Frank, he's been doing alright, he got transferred to a secret Island somewhere in the Atlantic, I don't think I'm supposed to know that but, who cares, I'm just a simple little janitor, right?"</p>
-
-<p>As he said, the day was obnoxiously bland, like every single day at the site. It was the usual: cleaning up the "waste", basic military combat, and even some live-fire practice from time to time. Today he'd been introduced to the PHYSICS Entrees Examination, where they examined his psychological and physical capabilities to assess compatibility and probable efficiency in UNGOC's PHYSICS Division. He said it went quite well, he passed most of the tests including the live-fire examination with ease, the instructor even said he'd a knack for a best-shot. Over the course of several days, he was examined and taught to perform basic scouting duties including: camouflage, positioning, intelligence, and infiltration. It was.. "Alright" he mumbled, he'd always look exhausted after those specific examinations.</p>
-
-<p>The scene cut back to Tony, "Ah well, It doesn't really matter I presume, maybe I'd check up on this little thing of mine when I'm out of this hell" he laughs, the little window he had on his room allowed a small gleam of light, man."</p>
-
-<p>Skip forward a few years. The unending rolling of the armoured vehicle tyres grinds to a halt, everything looked so monotonous after everything, the cold reality of inevitable existence hit him hard. He'd open the side door, unholstering his weapon. "What's the mission now?" He'd mumble through the black balaclava.</p>
-
-<p>"Kill."</p>
-
-<p>A grand church in the middle of absolutely bloody nowhere. "Why the hell would they make such a useless church?" Tony pondered to himself. They slowly approached through the dense bushes, weapons at the ready, and halted on a nearby incline where they could see the entire plain. Him and his fellow operative hunkered down there whilst they waited for the main unit to arrive.</p>
-
-<p>"How's the weather? Pretty cold ain't it?"</p>
-
-<p>"Why do you always talk about the weather, it's the middle of the night blimey." Tony Responded.</p>
-
-<p>"Can't you see I'm trying to lighten the mood? Always with that Tony." The man in a balaclava let out a small chuckle.</p>
-
-<p>The dullness of the night was halted by a flame lit in the church, "Oh come on, we'd actually have to act now?" Whilst he was scanning the perimeter, he saw an owl, a pale-white owl that was almost indistinguishable from the snow that covered the region. Tony pointed at it, "Doesn't it look like a lotus?"</p>
-
-<p>"I don't know, I'm not a flower maniac."</p>
-
-<p>"You don't need to be a flower maniac to know what a lotus is" The owl then opened its wings, gliding through the dense forest with utmost ease. It even showed a small glance at Tony.</p>
-
-<p>"Weird."</p>
-
-<p>Then, the cracks of branches catch their attention. Tony's weapon slings to his right. "The hell is that?"</p>
-
-<p>"Seems they've finally arrived." He responded.</p>
-
-<p>The main convoy of the PHYSICS Division arrived, "It's time to engage." The stomps of heavy boots came to their attention, that's the signal. Tony and the other Operative followed in pursuit, guarding their flanks as the main breach unit entered.</p>
-
-<p>"Night Vision on."</p>
-
-<p>Suddenly, the unit in front of them vanished into complete darkness, even in the light-lit room. "Bravo, do you copy? Bravo, where the hell did you go?" Only silence responded. Both operatives approached slowly, awaiting an answer. Then that same darkness swallowed them whole.</p>
-
-<p>Tony entered a gothic-era enclosure, the ones you'd only see in stories and films. His partner was right behind him, guarding the rear. A plea, a cry, a scream of desperation filled the room, then an unending chorus in an unknown language. "What the fuck is happening?" He'd mumble, "Like I'd bloody know?" The operative responded. They'd turn the corner. A cold sweat came from both operatives. "What. The. Hell." Devilish paintings, blood, it was a summoning ritual. Every step revealed a new horror they didn't expect. Crack, crack. Choked. "I can't. Move." A nun came into view, but she didn't look like a nun, she looked like something else. The face then revealed itself. Their heads turned up, and both let out an unholy scream.</p>
-
-<p>It turned out they were the bait.</p>
-
-<p>Tony awoke in the same house. No. No. No. No. NO. "It can't be. NO." That memory returned, Tony crumbled, he retched. That monster, his uncle, him, Frank. But this time, he didn't give up. He'd try to stand, the pressure fought him, he didn't care. No. Please. No… He then was teleported to a plain field in a fog of smoke, a burning cross was shown in front of him, his friend, Frank. Crucified. NO! His hands began to shake. His hands felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. That same thing. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness.</p>`
-            },
-            {
-                title: "CHAPTER 3: ENLIGHTENMENT",
-                content: `<p>He woke up in a hospital bed, visible cuts on his hand and a scar on his face. It felt dizzy, impossibly dizzy, illogically dizzy. He couldn't think straight. "TONY!" There's only one person with that voice. His lips opened, but his body couldn't manage, and he faded back into unconsciousness. Before he did, however, he could mumble one word: "Alive..?"</p>
-
-<p>Tony was walking on a plain dirt path, in between a plain of white lotuses that stretched for ages. "What?" He'd see a singular, lone withered tree, with an owl perched on one of its branches. The owl spoke, and somehow Tony felt like it was talking his language. The human language. A loud ringing came to his ears, "Enlighten." Tony stood perplexed, he didn't know how to respond. The owl continued "Truth."</p>
-
-<p>He was back in that hospital bed, some of his cuts now miraculously healed, but the scar remained ever-visible. "Tony? Do you hear me? Tony?" Tony's hand moved. "Thank god. You've been unconscious for over 3 weeks now." Tony could mumble a sentence "The.. Other..s..?" "They're here with you, you're all lucky that the Foundation was aware of our activities and used one of their Scranton Reality Anchors to halt the cracks in reality that were forming inside that horrid church." Tony let out a sigh of relief.</p>
-
-<p>Skip 2 weeks. Toronto, Canada. Tony's recovery was extremely quick, quicker than his compatriots who're still in the Hospital. He was now at a park bench, staring at kids playing with a little husky. He was fortunately allowed to leave due to this aforementioned recovery, but he'd felt as if he lost all purpose in life, as any other person would've felt if they went through that. Then that encounter came to mind, the owl, he'd a cold sweat. "Why?" "Who…"</p>
-
-<p>Frank cuts in right before he could finish his reflection. "Tony, how are you doing?"</p>
-
-<p>"Good." He couldn't imagine any other word at that moment.</p>
-
-<p>Frank continued, "I have to go now, appointment with a GOC Official, turns out they hired me into this PSYCHE Division, we deal in the diplomatic side with god knows what you people in PHYSICS encounter."</p>
-
-<p>Tony let out a small chuckle.</p>
-
-<p>He then recalled an interesting event that happened yesterday, back when he was still in GOC offices. He heard two men talking, and he silently chimed in behind a corner. "There's been rumours spreading that one of the Members of the 108 splintered off from us, I wonder how the higher ups are reacting.."</p>
-
-<p>"You mean the Council of 108? Hell, why would they do that?"</p>
-
-<p>"I've the same question, why? Although, a person was talking about this Lotus last week and it felt awfully specific.."</p>
-
-<p>"I see, something is stirring and we don't know, we need to report this to the higher ups."</p>
-
-<p>Tony came back to the present. "Lotus?.." A flower known for its powerful symbolism of rebirth, enlightenment, purity. He felt a sudden impulse to check his phone. A notification rang up from an unknown sender. Tony thought to himself to ignore it, why would anyone respond to an unknown sender? But there was this grasp, this plea of obnoxious morbid curiosity that couldn't be helped. He checked.</p>
-
-<p>Date: ██/██/████, ██ : ██ Location: ███████████████████████, ████████████████████</p>
-
-<p>It was just simply a date and a location. But he couldn't shake the feeling that this was the truth, this was his next step forward, this was the path of enlightenment.</p>
-
-<p>Skip to the meeting. "Welcome" A man appeared from the shadows. Tony instinctively hesitated. "There's no need for that," the man said calmly. He was middle-aged, perhaps in his late forties, with silver-streaked hair and wearing a simple grey suit that seemed deliberately unremarkable.</p>
-
-<p>"Who the hell are you?"</p>
-
-<p>"Names are… complicated in our line of work, aren't they?" The man gestured to a pair of metal chairs in the centre of the warehouse. "But you can call me Mr. ████████. I represent an organisation that split from the Council of 108 some time ago. We call ourselves the Order of the White Lotus."</p>
-
-<p>"The Lotus," Tony said, the word leaving his lips before he could stop it.</p>
-
-<p>"You saw the owl?" The man muttered.</p>
-
-<p>"Enlightenment," Tony whispered, remembering the owl's words.</p>
-
-<p>"Precisely." The man leaned forward. "The Global Occult Coalition believes in termination. It's like a child playing with forces they don't understand, using hammers and cages on problems that require… finesse. The Order of the White Lotus believes in something different."</p>
-
-<p>"And what's that?"</p>
-
-<p>Enlighten. Truth.</p>
-
-<p>"Welcome to the Order of the White Lotus, Brother."</p>
-
-<p>"Your path to enlightenment begins now."</p>
-
-<p>"The balance must be restored."</p>`
-            }
-        ];
-
-        // Current chapter tracker
-        let currentChapter = 1;
-
-        // Show backstory with chapter navigation
-        window.showBackstory = function() {
-            currentChapter = 1;
-            loadChapter(currentChapter);
-        }
-
-        // Load specific chapter
-        function loadChapter(chapterNumber) {
-            currentChapter = chapterNumber;
-            const chapter = storyChapters[chapterNumber - 1];
-            
-            if (!chapter) return;
-            
-            const content = document.getElementById('terminal-content');
-            content.innerHTML = `
-                <div class="personnel-file">
-                    <div class="file-header">
-                        <div class="file-title">${chapter.title}</div>
-                        <div class="file-subtitle">CHAPTER ${chapterNumber} OF 3 | CLASSIFIED MATERIAL</div>
-                    </div>
-                    
-                    <div class="chapter-nav">
-                        <button class="chapter-btn ${chapterNumber === 1 ? 'active' : ''}" onclick="loadChapter(1)">CHAPTER 1: ORIGINS</button>
-                        <button class="chapter-btn ${chapterNumber === 2 ? 'active' : ''}" onclick="loadChapter(2)">CHAPTER 2: TRIALS</button>
-                        <button class="chapter-btn ${chapterNumber === 3 ? 'active' : ''}" onclick="loadChapter(3)">CHAPTER 3: ENLIGHTENMENT</button>
-                    </div>
-                    
-                    <div class="story-content">
-                        ${chapter.content}
-                    </div>
-                    
-                    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
-                        ${chapterNumber > 1 ? `<button class="btn" onclick="loadChapter(${chapterNumber - 1})">← PREVIOUS CHAPTER</button>` : '<div></div>'}
-                        
-                        <div style="display: flex; gap: 10px;">
-                            ${chapterNumber < 3 ? `<button class="btn" onclick="loadChapter(${chapterNumber + 1})">NEXT CHAPTER →</button>` : ''}
-                            <button class="btn" onclick="loadPersonnelFile()">BACK TO PROFILE</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Show morph config
-        window.showMorph = function() {
-            const content = document.getElementById('terminal-content');
-            content.innerHTML = `
-                <div class="personnel-file">
-                    <div class="file-header">
-                        <div class="file-title">MORPH CONFIGURATION: JOHNSON, TONY M.</div>
-                        <div class="file-subtitle">LOADOUT | APPEARANCE SETTINGS</div>
-                    </div>
-                    <div style="margin-top: 30px; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; font-size: 11px; line-height: 1.8; color: #4ade80; font-family: 'Roboto Mono', monospace;">
-                        <div style="color: #666; margin-bottom: 15px;">// MORPH CONFIGURATION SCRIPT</div>
-                        <div>run</div>
-                        <div>permmorph TonyJohnson416 remove</div>
-                        <div>&unpermall TonyJohnson416</div>
-                        <div>&clearstartergear TonyJohnson416</div>
-                        <div>&permhat TonyJohnson416 135888030225374,17558504180,17430938152,jqnvg 255 255 255,111740885429679,130045625518506,99852547995142,15894024628,81310553353684,102709985708573,105058458471063,129283584386500</div>
-                        <div>&permshirt TonyJohnson416 2431710106</div>
-                        <div>&permpants TonyJohnson416 101079969037960</div>
-                        <div>&crtag TonyJohnson416 0 0 0</div>
-                        <div>&permface TonyJohnson416 406002032</div>
-                        <div>&cntag TonyJohnson416 0 0 0</div>
-                        <div>&permrtag TonyJohnson416 &lt;font face="Michroma"&gt;&lt;font color="#ffffff"&gt;« Order of White Lotus »&lt;/font&gt;&lt;/font&gt;&lt;br /&gt;&lt;font face="Michroma"&gt;&lt;font color="#90ee90"&gt;« Scout | Intelligence »&lt;/font&gt;&lt;/font&gt;</div>
-                        <div>&permntag TonyJohnson416 &lt;font face="Michroma"&gt;&lt;font color="#ffd700"&gt;« Lotus-3 »&lt;/font&gt;&lt;/font&gt;&lt;br /&gt;&lt;font face="Michroma"&gt;&lt;font color="#ffffff"&gt;« Tony M. Johnson »&lt;/font&gt;&lt;/font&gt;</div>
-                        <div>&startergear TonyJohnson416 rifle,pistol,clip,spray</div>
-                        <div>&startergear TonyJohnson416 medkit 11 black</div>
-                        <div>&permmaxhealth TonyJohnson416 150</div>
-                        <div>&permscale TonyJohnson416 1.05</div>
-                        <div style="color: #666; margin-top: 15px;">// END CONFIGURATION</div>
-                    </div>
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(74, 158, 255, 0.1); border-left: 3px solid #4a9eff; font-size: 11px; color: #c5c5c5;">
-                        <strong style="color: #4a9eff;">NOTE:</strong> Configured for scout/intelligence role with Order of White Lotus. Standard loadout modified for reconnaissance and infiltration operations. Enhanced stamina and survival capabilities reflected in configuration.
-                    </div>
-                    <div style="margin-top: 40px; text-align: center;">
-                        <button class="btn" onclick="loadPersonnelFile()">BACK TO PROFILE</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Tab navigation
-        document.querySelectorAll('.terminal-tab').forEach((tab, index) => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.terminal-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                if (index === 0) loadPersonnelFile();
-                else if (index === 1) showBackstory();
-                else if (index === 2) showMorph();
-            });
-        });
-
-        // Sidebar navigation
-        document.querySelectorAll('.sidebar-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-icon').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                
-                const view = this.dataset.view;
-                if (view === 'personnel') {
-                    loadPersonnelFile();
-                }
-            });
-        });
-
-        // Initial loading sequence
         let progress = 0;
         const loadInt = setInterval(() => {
             progress += Math.random() * 15;
@@ -1276,7 +917,6 @@
             }
         }, 150);
 
-        // BIOS sequence
         function startBiosSequence() {
             const biosScreen = document.getElementById('bios-screen');
             biosScreen.style.display = 'block';
@@ -1337,13 +977,12 @@
             displayNext();
         }
 
-        // Login prompt
         function showLoginPrompt() {
             const loginPopup = document.getElementById('login-popup');
             loginPopup.style.display = 'flex';
             loginPopup.classList.remove('hidden');
             
-            const code = 'LOTUS-4-5AZPOMEGA-ALPHA';
+            const code = 'LOTUS-ALPHA-OMEGA37';
             const loginCode = document.getElementById('login-code');
             let idx = 0;
             
@@ -1363,7 +1002,6 @@
             }, 200);
         }
 
-        // Memetic agent
         function showMemeticAgent() {
             const ma = document.getElementById('memetic-agent');
             ma.classList.add('active');
@@ -1380,14 +1018,13 @@
             }, 3000);
         }
 
-        // Load personnel file (initial view)
         function loadPersonnelFile() {
             const content = document.getElementById('terminal-content');
             content.innerHTML = `
                 <div class="personnel-file">
                     <div class="file-header">
                         <div class="file-title">PERSONNEL FILE: JOHNSON, TONY M.</div>
-                        <div class="file-subtitle">CLEARANCE: N/A | ORDER OF THE WHITE LOTUS</div>
+                        <div class="file-subtitle">CLEARANCE: N/A | ORDER OF WHITE LOTUS</div>
                     </div>
 
                     <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/Personnel%20Portrait.png" alt="Personnel Photo" class="personnel-photo">
@@ -1469,6 +1106,429 @@
                 </div>
             `;
         }
+
+        const storyChapters = [
+            {
+                title: "CHAPTER 1: ORIGINS",
+                content: `
+                    <p>Tony was born on 28th August 2005 into an abusive household, clinging to whatever money they had left. His father constantly overlooked him, always belittling him with remarks, and was an alcoholic who always let out a tantrum for even the slightest of mistakes.</p>
+
+                    <p>His mother, a young woman who carried the majority of the financial burden in his family, had neither the time nor the means to show him the slightest hint of care, but when she did, it was like heaven to him. His father once earned a good living selling furniture in a local shop - when the large chain stores moved in, the business closed.</p>
+
+                    <p>His mother taught at the small school down the road. One modest wage had to cover the rent, food and every bill but she still paid his school fees. While she juggled all of that, his father shouted at her daily and, on some days, hit her.</p>
+
+                    <p>She had reached her limit and the neighbours had plainly heard enough of the nightly shouting. That night his father came home drunk again. His mother sat at the kitchen table, bills spread in front of her. She raised her eyes only long enough to shoot him a look of pure exhaustion then burst out:</p>
+
+                    <p>"I've had it - I can't stomach one more of your worthlessness -" She stopped, drew breath, and went on. "The bills keep coming. I pay them alone. Tony needs school. If you keep drinking, we lose the roof over our heads."</p>
+
+                    <p>His father lurched across the room and slammed her against the wall. The neighbours heard the thud but also rang 999.</p>
+
+                    <p>Two officers stepped inside - the father was still drunk and spoiling for a fight. A dark bruise had already bloomed on the mother's cheek. Woken by the noise, peered from his doorway while the officers cuffed the man, who muttered about "that woman" as well as "his rights."</p>
+
+                    <p>The mother stayed by the table, fingertips on the red welt at her throat replying to the officer in a voice so low it was almost lost.</p>
+
+                    <p>"Is there a safe place for you and your boy tonight?" the officer asked.</p>
+
+                    <p>She glanced at Tony. "We'll stay - I know what you're going to tell me. We have nowhere else."</p>
+
+                    <p>"Mum?" Tony whispered. She didn't look at him. "Go to bed, Tony. You have school tomorrow."</p>
+
+                    <p>Skip forward a few years. Ever since that incident, his mother divorced his father, and his father eventually landed himself in jail after a freak car crash accident. They never saw him again after that.</p>
+
+                    <p>His mother, now having some sense of freedom, spent more time with him, and Tony's mental health slowly improved year by year. His mother could now slowly guide Tony through his academics, where his grades slowly rose, but his mother received a job offer at a higher-paying private school down south. The only thing was that it was extremely far away.</p>
+
+                    <p>Faced with this tough decision, his mother eventually left Tony with her aunt and uncle. Tony's uncle had no desire to care for him, just like his father; however, at least he cared for his education. His aunt was more similar to his mother. His aunt worked 2 jobs, which left her with minimal time to care for Tony.</p>
+
+                    <p>Tony grew up just fine, but his education slowly declined. Tony's uncle had heart disease, which worsened right after his arrival at the household, reducing the time Tony had to care for him. Even so, he still tried his best in school.</p>
+
+                    <p>Yet still, even there, he faced more and more hardships. Tony was bullied by his classmates for his weak arms and thin build, and was constantly made fun of because his father was an alcoholic, and he now lived in his uncle's house.</p>
+
+                    <p>And to make things worse, the teachers couldn't care less since the bullies' parents were bribing them to get higher scores on tests. Because of this, as he grew up, he learned that ignoring his teachers and other authority figures was the best way to manage his stress and all the harassment he'd faced in his life.</p>
+
+                    <p>During junior high school, when he turned 14, he was the shy, timid kid no one talked to, and he also didn't want to talk with anyone, ignoring people when the opportunity arose.</p>
+
+                    <p>He failed multiple classes but it did not upset him - no adult steered his life. Then he recalled his mother. Where had she gone? When the bell rang he walked to his uncle's house and, after he dropped his backpack, asked in a low voice, "Uncle, have you had any word from my mum?"</p>
+
+                    <p>His uncle looked up, his face pale and tired. "She called last week while you were at school. Says the new job is keeping her busy, longer hours than she expected."</p>
+
+                    <p>"When is she coming back?"</p>
+
+                    <p>His uncle's expression softened slightly. "I don't know, kid. She's trying to save up enough money to get you both a decent place. Says the pay is good but..." He trailed off, coughing.</p>
+
+                    <p>"But what?"</p>
+
+                    <p>"But it might be a while."</p>
+
+                    <p>Tony considered what his uncle just said, but his curiosity dimmed. He said in his mind, "Sigh, the only one who really ever cared for me can't even do the job they're supposed to do. Life is useless. I might as well enjoy it as I can."</p>
+
+                    <p>The next day, an interesting man approached him. "Hey, kid, you seem like you need a job. Wanna have a try at janitorial duties...?" He was bored, but he was dying to earn whatever meagre wage he could, so he could at least afford some snacks he could enjoy at school.</p>
+
+                    <p>"Yeah, sure, old geezer," he responded.</p>
+
+                    <p>"Alright, duty starts next week. Meet me at the library Saturday, 6:00 AM sharp."</p>
+
+                    <p>That Saturday morning, Tony dragged himself to the library expecting another disappointing experience. The man handed him the janitorial uniform and a set of professional cleaning tools. "Welcome to the team, Tony! I'm Frank."</p>
+
+                    <p>He pondered, "That's the first time ever that someone has greeted me with their first name." As Frank showed him the supply closet organised with military precision and explained how each tool had its purpose, Tony felt something unexpected, a small flutter of interest.</p>
+
+                    <p>The work seemed... methodical. Peaceful, even. No teachers ignoring him, no bullies around, just him and the simple satisfaction of making something clean.</p>
+
+                    <p>"This... this actually isn't that bad," Tony said under his breath, surprised by his own reaction.</p>
+
+                    <p>Frank smiled. "Most people don't get it, but there's something honest about this work."</p>
+
+                    <p>Skip forward when he turns 20. Frank and Tony had a close-knit relationship. For the first time ever, Tony had a person whom he could truly call a "friend". They tidied up the library, and the librarian even gave them some time to enjoy and read some books, since she had a good impression of both of them.</p>
+
+                    <p>Over the years, Tony and Frank grew an interest in hunting and camping. They read and read, slowly growing their now insatiable desire to do at least one camping trip together.</p>
+
+                    <p>Luckily for them, over the years, Tony and Frank had access to the library's numerous books and survival guides, and through sheer mental memorisation and passion, they learned how to make a fire by going to the woods, creating embers, finding birch, and setting up a small fire in the winter.</p>
+
+                    <p>They learned how to use firearms via the widespread YouTube tutorials and gun guides in the library, and even found a survival guide by John "Lofty" Wiseman on the SAS survival guide, quite a crazy find in their opinion.</p>
+
+                    <p>Tony said to Frank, "Hey, 4 years of minimum wage, it's enough to get us a handgun and at least some mags. How about you say we try camping in the nearby forest during the winter?"</p>
+
+                    <p>Frank responded, "Oh yeah, sounds amazing bro. The problem is, you got a gun licence...?"</p>
+
+                    <p>Tony muttered, "Oh nah, don't worry bro, we'll just bribe the gunsmith. What's the worst that can happen?"</p>
+
+                    <p>After years of preparing, they finally decided on a 1-week camping trip in the nearby forest in winter. Tony buys the gun, while Frank buys the camping equipment. The equipment they bought wasn't exactly tip-top quality, but what works, works.</p>
+
+                    <p>Finally, the faint and gentle drop of snowflakes fell on their area, and once it had built up, they went on their way. Before Tony left, he told his uncle, "Hey uncle, I'm gonna go camping with my friend Frank. You know how long I've been preparing for this. I'll see you in 3 days!"</p>
+
+                    <p>Although his uncle hesitated, in his mind he silently said, "That kid's got steel. It seems he's finally found what he wants in life."</p>
+
+                    <p>Tony met Frank at an unpatched strip of land in the middle of the forest. Knowing what to do, they both quickly set up camp near a pine tree, made a small fire which they used to cook a squirrel Tony had trapped, and both slowly headed to sleep as they dozed off due to the fatigue they'd just had.</p>
+
+                    <p>But then suddenly, there was a noise coming from the nearby bushes. Something was moving fast, quick, its steps rapid like a wolf, however, as light as a chicken. Both Frank and Tony jumped up, their survival instincts kicking in.</p>
+
+                    <p>Tony grabbed the Glock 19, a light firearm capable of punching a decent-sized hole through any adversary. Frank rushed to the Bowie knife he'd kept in his bag, holding a ready stance while Tony swung his Glock 19, trying to identify the location of the animal.</p>
+
+                    <p>But then the sound stopped, it vanished, disappearing into thin air. Still, Frank and Tony went into alert mode the entire night. They were too paranoid to even catch a single minute of sleep, worrying that the creature, which they feared was a pack of wolves, was waiting for the right moment to strike.</p>
+
+                    <p>"What the hell was that?!" Frank whispered to Tony.</p>
+
+                    <p>"I have no idea. The steps were so light I could barely hear it."</p>
+
+                    <p>"A wolf maybe? But no... a wolf wouldn't have steps as silent as that, and it would go in a pack, but this one sounded like it was alone.... And the noise it made wasn't anything similar to a wolf...."</p>
+
+                    <p>During the morning, Frank and Tony bravely gathered the courage to exit the tent. Frank went first since he had the knife; Tony would cover since he had the gun. However, they only saw footsteps that resembled an avian's, but much larger.</p>
+
+                    <p>"This area is giving me the creeps now. I think we should go..." mumbled Tony.</p>
+
+                    <p>They slowly unpacked their camp and moved to a more hidden location within the woods, where they cautiously camped for the next 2 days, finally deciding to return on the third day as planned. However, this time, they'd report the incident to local authorities, since no normal bird would leave a footprint that big...</p>
+
+                    <p>Tony invited Frank to come to his uncle's house, but on their way there, they noticed that the town was eerie, quiet, forcefully hushed... Doors were left open as if the people living inside their houses tried to escape in a panic, but there was no trace of violence... No trace of anything... not even a single car had moved.</p>
+
+                    <p>As Tony and Frank grew ever closer to his uncle's house, this eerie quiet grew to an ever more anxious weight pressing down on their chests. The silence wasn't just the absence of sound; it was wrong, like the air itself had been drained of life. Frank's footsteps echoed too loudly on the empty pavement, each step seeming to mock the eerie stillness.</p>
+
+                    <p>"Tony," he whispered, his voice cracking even despite his effort to stay calm, "has the town always been this empty?"</p>
+
+                    <p>Their uncle's door was left open, and as they drew closer, they heard an unnatural sound coming from within, like an animal eating its delicious prey... Tony raged, he cried, he felt an emotion so new he couldn't describe it in one word.</p>
+
+                    <p>Someone who at least supported him in his childhood was just... brutally murdered... eaten... What was left were bones and meat, to the point where you could no longer distinguish if it had been a person.</p>
+
+                    <p>He screamed, screamed so loud the entire neighbourhood could've heard him. This continued for a few minutes, until his eyes had no emotion left, no cry, no pride, just the hollow depth of black within his pupils.</p>
+
+                    <p>"WHY? WHY? WHY? WHY? WHY? WHY? WHY? WHY?" The words reverberated in his mind. His mind began to fracture. Thump… Thump… Thump… His heart began racing, chest pounding, mind fracturing.</p>
+
+                    <p>His hands began to shake. The Glock felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami.</p>
+
+                    <p>Tears slide straight from his eyes, his hand turns numb and bit by bit he loses hold of his own body. The cracks in his sight grow black, narrow like a tunnel as darkness seeps in. His body gives way under the load of it all, as he folds to the ground and slips into total unconsciousness.</p>
+
+                    <p>Frank told him, "We HAVE TO GO. If there are more of them, we're dead meat!" Yet all he heard was the sombre silence. He said to Tony, "Tony, are you here with me? Tony! WE HAVE TO GO."</p>
+
+                    <p>Then Tony's body collapsed, "TONY!? ARE YOU OK? TONY?"</p>
+
+                    <p>Out of options, he frantically searched for somewhere to hide them both, checking every door in the building one after the other, but found nothing. When all hope seemed lost, he heard a sound from above him, he'd hoped it was god, but it seems even god couldn't protect them at this very moment.</p>
+
+                    <p>Hope woke him up. "What? What is that?" He pushed a chair under the ceiling and pressed the plaster - a ladder slid down as if it had waited only for them. Frank ran to the ground floor, caught Tony by the arm, scooped up every tool and bundle he saw. The weight tried to root him to the floor but he hauled it all indoors through nothing more than stubbornness but also a rush of fear then dragged the ladder back into the attic after him.</p>
+
+                    <div class="editor-note">
+                        <strong>EDITOR'S NOTE:</strong> This chapter has been proofread and edited using Grammarly and LanguageTool to correct spelling, punctuation, and grammar errors.
+                    </div>
+                `
+            },
+            {
+                title: "CHAPTER 2: THE GOC",
+                content: `
+                    <p>Tony woke up in a dark room, hollow of life, then he heard a voice, it wasn't Frank's voice, no, it couldn't be, it was too thin, too innocent to be Frank's voice, then he regained himself. It's hers. "I'll come back for you, Tony. I promise."</p>
+
+                    <p>The memory hit him hard. He was eight years old again, standing in the same doorway watching his mother pack her suitcase. Her back turned to him, always her back turned to him. "The new job will be good for us, sweetheart. I'll save up money, and we'll have our own place." But she never came back.</p>
+
+                    <p>"Did she ever think about me? Did she ever wonder if I was okay? Did she know about the abuse, the loneliness, the bullying, did she know about ANYTHING?" Tony's the type of person who is unaware of his environment, when a murder sprouts up in his local news channel, he'd never react like he was scared; he'd just continue wandering aimlessly or playing with his toys, just showing off an indifferent shrug.</p>
+
+                    <p>But this time, it's different. The questions he'd tried to bury for years clawed their way back to the surface. Every Christmas I wait for that gift. Every birthday waiting for that call. Every night he'd spent wondering if he'd done something wrong, if he was unlovable, if everyone would just abandon him as she did.</p>
+
+                    <p>"Uncle's dead. Frank's the only one left. And he'll leave too. Everyone always leaves me alone."</p>
+
+                    <p>Frank's voice cuts through the memory. "Tony, Tony? You're awake! Thank God."</p>
+
+                    <p>Skip forward to Frank and Tony's hiding. A few days after Tony woke up, they decided they would stay here until rescue arrived. They chilled for a while, eating bags of crisps and instant ramen using the one burner they had.</p>
+
+                    <p>But Tony acted differently; his hands started shaking all day until he slept. Whenever they finished eating, he'd just corner himself and look down at the floor, Frank could swear he heard cries when he was trying to sleep.</p>
+
+                    <p>Finally, Frank gathered up the courage to talk to Tony whilst they were eating together. "Tony… Are you ok?" Frank whispered to him. Tony didn't reply.</p>
+
+                    <p>"Tony, I know things haven't been going your way lately, and I understand." Frank said once more.</p>
+
+                    <p>Tony stopped for a bit, then he set his spoon down into the empty ramen cup. He set it down slowly, still not looking up. "Do you?" His voice could barely be heard. "Do you really understand?"</p>
+
+                    <p>Frank tried to reply, "I, I know losing your uncle was..."</p>
+
+                    <p>Tony's cut pierced through the air, "Do you really know? Do you know what I've been through? It's not just him. It's everyone. Everyone always leaves me."</p>
+
+                    <p>They both staggered for a bit, then Frank said softly, "Do you remember that first day at the library? You called me an 'old geezer'." Despite everything that's just unfolded, Tony twitched slightly. "You were so angry at the world, so angry at everything, really." Frank continued on.</p>
+
+                    <p>"Yet you still showed up every Saturday morning. Six AM sharp. Even when you didn't want to."</p>
+
+                    <p>Tony finally looked up; his eyes were red. "That was different."</p>
+
+                    <p>"Was it, really?" Frank patted his back. "You'd thought I'd be just another disappointment. Another adult who'd just let you down. But I kept showing up, too, didn't I? I kept showing up with a smile even when my body seemed to give up, even when my uniform was still not dry."</p>
+
+                    <p>Frank carried on, "Remember what I told you that very first day? 'There's something honest about this work.' Clean something dirty, make it better. Simple. Maybe that's what we do, Tony. Clean up the world, clean up the mess people start, no matter how insignificant or useless it might be. One piece at a time."</p>
+
+                    <p>"We could start here," Frank said in his usual monotonal voice. "This attic. Make it feel less like we're hiding and more like well… like we're living in it. What do you say?"</p>
+
+                    <p>Skip 3 weeks. The attic, once full of cobwebs and rot and abandoned items, was finally looking like a place to live in. Every time Tony cleaned a patch of dust, it felt like his memories were being cleared up, like a window in his life he'd never seen before. The trauma he'd just faced felt more natural.</p>
+
+                    <p>As he wiped away years of accumulated dust and abandoned memorabilia, Tony realised something profound. This dust has been ignored for so long, pushed aside with no one to take care of it, forgotten, left to settle in the dark corners of the earth where no one had bothered to search for it.</p>
+
+                    <p>Just like the pain people carry in their day-to-day lives. Just like his own buried memories of abandonment and abuse. Every speck of dust had once been something, pieces of the world that had broken down, destroyed, burnt and eventually drifted all the way here to be forgotten.</p>
+
+                    <p>Yet even in the most neglected corners of the earth, the memories and events that people pretend never existed eventually demand attention, just like anything else would. The dust, the trauma, the hate, the anger, the rage, the eagerness for revenge. It doesn't disappear if you just ignore it.</p>
+
+                    <p>It accumulates, weighs down the air, makes your breath slow, your lungs gasping for air, and your heart boils. People are the same way. They sweep trauma under thick rugs and blankets, shove their pain into mental corners like a prison's solitary confinement, convince themselves if it doesn't exist, if it's buried deep as a fossil within the earth, if it would never be found again if you throw it in the ocean, if it had never happened, if it wasn't possible, it isn't there.</p>
+
+                    <p>But eventually, just like this attic, just like every corner, every patch of dust, every microcosm and every bacterium, everything needs to be cleaned, turned into something else.</p>
+
+                    <p>The ignored parts of life, the dusty corners of the human heart, they all require someone to finally pick up a cloth and do the hard work of making things clear again, make things as clear as a window after a heavy rain.</p>
+
+                    <p>The trauma he'd just faced felt more natural, and even death felt natural, not something to fear, but something to accept and clean around, like dust that gathers in every corner of existence. Frank was right. There was something honest about this work.</p>
+
+                    <p>Suddenly, they noticed military Humvees strolling down the street. They thought it was an emergency rescue, so they rushed out and asked for help since their water supply had run out. The driver said they were on a military mission and couldn't stop.</p>
+
+                    <p>Tony and Frank decided to move into the town south of the city. There were people, just not that many. He remembered there being way more people in the town, since both had visited it on a school trip. He and Frank convinced themselves they were just crazy and tried to find food.</p>
+
+                    <p>By June 2025, his town had been covered by plant growth within the year. Their temporary shelter was only powered by the backup generators since the solar panels had gone dusty, and no one knew how to repair them. Suddenly, another armoured truck came down the street, this time stopping.</p>
+
+                    <p>The armoured truck had no military insignia or emblem. The driver stepped out and told Frank and Tony that they were being transferred to a safer location.</p>
+
+                    <p>During the journey to the aforementioned location, the security officer in the truck interviewed both of them:</p>
+
+                    <p>The Security Officer coughed, "Ahem, so Gentlemen, are you both named Tony Johnson and… Frank … Phipps?"</p>
+
+                    <p>Tony replied, "Slight pause, doubting why they were here. Yes… We are."</p>
+
+                    <p>"Great! Both of you are getting a job, get in. We've been monitoring you very closely the past year," mumbled the Officer.</p>
+
+                    <p>Frank replied, "Why have you been monitoring us…?"</p>
+
+                    <p>"Oh, that's nothing, we just found that you had some… excellent expertise in.. Janitorial duties, yes!" the Officer muttered.</p>
+
+                    <p>"That's beside the point anyway,” the Officer added.</p>
+
+                    <p>The Security Officer continued, "Well then… Since none of you are talking… You both will be getting a janitor position here then. You have no military experience, Tony, you're a dropout and.. Was Frank, it? You got the lowest grade in the entirety of your class, and you didn't even finish high school. This is all we can do."</p>
+
+                    <p>Tony curiously asked, "Will it pay better than the old job? Will it have free food?"</p>
+
+                    <p>The officer replied, "Ahem… Yes, it will!"</p>
+
+                    <p>Finally, the officer questioned, "Do you accept this position?"</p>
+
+                    <p>Frank whispered to Tony, "You in?"</p>
+
+                    <p>Tony replied to Frank, "Whatever gets me the hell out of that mess."</p>
+
+                    <p>Both finally say, "Deal."</p>
+
+                    <p>The GOC's real interest was in terminating an anomaly, which the Foundation called SCP-3199. The GOC expected some sort of experienced military combat, considering the deep gashes, bullet wounds, and a precise targeted shot on an artery. He thought to himself, they'd be decent janitors, at least they know how to handle a gun, when push comes to shove.</p>
+
+                    <p>"Hello?" "Hello?" The camera flickers to life "Yea so uh, we've been stuck on this site of theirs for quite a while, and there's nothing really of interest here except some basic military training they've provided us. I can't really remember how we got here, my head feels so all over the place, but from what I can recall, we arrived as soon as we entered the armoured vehicle, so I think we're still near Nova Scotia, or at least, Canada."</p>
+
+                    <p>Maybe it had just been a coincidence, but every day the air around them was as heavy as a lorry; they could barely even breathe properly.</p>
+
+                    <p>The recording continued, "We've also been assigned these boring janitorial positions, and all we've been doing is cleaning some questionable-looking red paintings on the wall. They said it was just some crazy artist's work, but I digress. Can't really say much here anyway."</p>
+
+                    <p>He paused slightly, then continued, "So the reason I've started this little recording today was that I've been told that I will be transferred to a military arm of theirs as a scout; they say I'd be useful because of my past experiences, they called it PHYSICS or whatever, I always found that name absurd."</p>
+
+                    <p>The recording went on, "Maybe I'd check on this after a few years. I'll just upload it to the terminal because I have no other place to upload it other than there. Oh yea, Frank, he's been doing alright, he got transferred to a secret Island somewhere in the Atlantic, I don't think I'm supposed to know that but, who cares, I'm just a simple little janitor, right?"</p>
+
+                    <p>As he said, the day was obnoxiously bland, like every single day at the site. It was the usual: cleaning up the "waste", basic military combat, and even some live-fire practice from time to time.</p>
+
+                    <p>Today, he'd been introduced to the PHYSICS Entrees Examination, where they examined his psychological and physical capabilities to assess compatibility and probable efficiency in UNGOC's PHYSICS Division. He said it went quite well, he passed most of the tests, including the live-fire examination with ease, the instructor even said he had a knack for a best-shot.</p>
+
+                    <p>Over the course of several days, he was examined and taught to perform basic scouting duties, including camouflage, positioning, intelligence, and infiltration. It was.. "Alright," he mumbled. He'd always look exhausted after those specific examinations.</p>
+
+                    <p>The scene cut back to Tony, "Ah, well, it doesn't really matter, I presume, maybe I'd check up on this little thing of mine when I'm out of this hell," he laughs, the little window he had on his room allowed a small gleam of light, man."</p>
+
+                    <p>Skip forward a few years. The unending rolling of the armoured vehicle tyres grinds to a halt; everything looked so monotonous after everything, the cold reality of inevitable existence hit him hard.</p>
+
+                    <p>He'd open the side door, unholstering his weapon. "What's the mission now?" He'd mumble through the black balaclava. "Kill."</p>
+
+                    <p>A grand church in the middle of absolutely bloody nowhere. "Why the hell would they make such a useless church?" Tony pondered to himself. They slowly approached through the dense bushes, weapons at the ready, and halted on a nearby incline where they could see the entire plain.</p>
+
+                    <p>He and his fellow operative hunkered down there whilst they waited for the main unit to arrive. "How's the weather? Pretty cold, ain't it?" "Why do you always talk about the weather, it's the middle of the night, blimey." Tony Responded.</p>
+
+                    <p>"Can't you see I'm trying to lighten the mood? Always with that Tony." The man in a balaclava let out a small chuckle.</p>
+
+                    <p>The dullness of the night was halted by a flame lit in the church. "Oh come on, we'd actually have to act now?" Whilst he was scanning the perimeter, he saw an owl, a pale-white owl that was almost indistinguishable from the snow that covered the region. Tony pointed at it, "Doesn't it look like a lotus?"</p>
+
+                    <p>"I don't know, I'm not a flower maniac." "You don't need to be a flower maniac to know what a lotus is" The owl then opened its wings, gliding through the dense forest with utmost ease. It even showed a small glance at Tony. "Weird."</p>
+
+                    <p>Then, the cracks of branches catch their attention. Tony's weapon slings to his right. "The hell is that?" "Seems they've finally arrived." He responded.</p>
+
+                    <p>The main convoy of the PHYSICS Division arrived. "It's time to engage." The stomps of heavy boots came to their attention; that's the signal. Tony and the other Operative followed in pursuit, guarding their flanks as the main breach unit entered. "Night Vision on."</p>
+
+                    <p>Suddenly, the unit in front of them vanished into complete darkness, even in the light-lit room. "Bravo, do you copy? Bravo, where the hell did you go?" Only silence responded. Both operatives approached slowly, awaiting an answer. Then that same darkness swallowed them whole.</p>
+
+                    <p>Tony entered a gothic-era enclosure, the kind you'd only see in stories and films. His partner was right behind him, guarding the rear. A plea, a cry, a scream of desperation filled the room, then an unending chorus in an unknown language. "What the fuck is happening?" He'd mumble, "as I'd bloody know?" The operative responded.</p>
+
+                    <p>They'd turn the corner. A cold sweat came from both operatives. "What. The. Hell." Devilish paintings, blood, it was a summoning ritual. Every step revealed a new horror they didn't expect. Crack, crack. Choked. "I can't. Move." A nun came into view, but she didn't look like a nun; she looked like something else. The face then revealed itself. Their heads turned up, and both let out an unholy scream.</p>
+
+                    <p>It turned out they were the bait. Tony awoke in the same house. No. No. No. No. NO. "It can't be. NO." That memory returned, Tony crumbled, he retched. That monster, his uncle, him, Frank. But this time, he didn't give up. He'd try to stand, but the pressure fought him; he didn't care. No. Please. No… He was then teleported to a plain field in a fog of smoke, and a burning cross was shown in front of him, his friend, Frank. Crucified. NO!</p>
+
+                    <p>His hands began to shake. His hands felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. That same thing. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all; he collapsed as he dozed off into complete unconsciousness.</p>
+                `
+            },
+            {
+                title: "CHAPTER 3: THE OWL CALLS",
+                content: `
+                    <p>He woke up in a hospital bed, with visible cuts on his hand and a scar on his face. It felt dizzy, impossibly dizzy, illogically dizzy. He couldn't think straight. "TONY!" There's only one person with that voice. His lips opened, but his body couldn't manage, and he faded back into unconsciousness. Before he did, however, he could mumble one word: "Alive..?"</p>
+
+                    <p>Tony was walking on a plain dirt path, in between a plain of white lotuses that stretched for ages. "What?" He'd see a singular, lone withered tree, with an owl perched on one of its branches.</p>
+
+                    <p>The owl spoke, and somehow Tony felt like it was talking his language. The human language. A loud ringing came to his ears, "Enlighten." Tony stood perplexed; he didn't know how to respond. The owl continued, "Truth."</p>
+
+                    <p>He was back in that hospital bed, some of his cuts now miraculously healed, but the scar remained ever-visible. "Tony? Do you hear me? Tony?" Tony's hand moved. "Thank god. You've been unconscious for over 3 weeks now." Tony could mumble a sentence, "The.. Other..s..?" "They're here with you, you're all lucky that the Foundation was aware of our activities and used one of their Scranton Reality Anchors to halt the cracks in reality that were forming inside that horrid church." Tony let out a sigh of relief.</p>
+
+                    <p>Skip 2 weeks. Toronto, Canada. Tony's recovery was extremely quick, quicker than his compatriots who are still in the Hospital. He was now at a park bench, staring at kids playing with a little husky. He was fortunately allowed to leave due to this aforementioned recovery, but he'd felt as if he lost all purpose in life, as any other person would've felt if they went through that.</p>
+
+                    <p>Then that encounter came to mind, the owl, he'd a cold sweat. "Why?" "Who…" Frank cuts in right before he could finish his reflection. "Tony, how are you doing?" "Good." He couldn't imagine any other word at that moment.</p>
+
+                    <p>Frank continued, "I have to go now, appointment with a GOC Official, turns out they hired me into this PSYCHE Division, we deal in the diplomatic side with god knows what you people in PHYSICS encounter." Tony let out a small chuckle.</p>
+
+                    <p>He then recalled an interesting event that happened yesterday, back when he was still in the GOC offices. He heard two men talking, and he silently chimed in behind a corner. "There's been rumours spreading that one of the Members of the 108 splintered off from us. I wonder how the higher-ups are reacting." "You mean the Council of 108? Hell, why would they do that?" "I have the same question, why? Although a person was talking about this Lotus last week, and it felt awfully specific." "I see, something is stirring, and we don't know; we need to report this to the higher-ups."</p>
+
+                    <p>Tony came back to the present. "Lotus?.." A flower known for its powerful symbolism of rebirth, enlightenment, and purity. He felt a sudden impulse to check his phone. A notification rang up from an unknown sender.</p>
+
+                    <p>Tony thought to himself to ignore it, why would anyone respond to an unknown sender? But there was this grasp, this plea of obnoxious morbid curiosity that couldn't be helped. He checked.</p>
+
+                    <p>Date: ██/██/████, ██ ██ Location: ███████████████████████, ████████████████████</p>
+
+                    <p>It was just simply a date and a location. But he couldn't shake the feeling that this was the truth, this was his next step forward, this was the path of enlightenment.</p>
+
+                    <p>Skip to the meeting. "Welcome," A man appeared from the shadows. Tony instinctively hesitated. "There's no need for that," the man said calmly. He was middle-aged, perhaps in his late forties, with silver-streaked hair and wearing a simple grey suit that seemed deliberately unremarkable.</p>
+
+                    <p>"Who the hell are you?" "Names are… complicated in our line of work, aren't they?" The man gestured to a pair of metal chairs in the centre of the warehouse. "But you can call me Mr. ████████. I represent an organisation that split from the Council of 108 some time ago. We call ourselves the Order of the White Lotus." "The Lotus," Tony said, the word leaving his lips before he could stop it.</p>
+
+                    <p>"You saw the owl?" The man muttered. "Enlightenment," Tony whispered, remembering the owl's words. "Precisely." The man leaned forward. "The Global Occult Coalition believes in termination. It's like a child playing with forces they don't understand, using hammers and cages on problems that require… finesse. The Order of the White Lotus believes in something different."</p>
+
+                    <p>"And what's that?"</p>
+
+                    <p>Enlighten. Truth.</p>
+
+                    <p>"Welcome to the Order of the White Lotus, Brother." "Your path to enlightenment begins now."</p>
+                `
+            }
+        ];
+
+        let currentChapter = 1;
+
+        window.showBackstory = function() {
+            currentChapter = 1;
+            loadChapter(1);
+        }
+
+        function loadChapter(chap) {
+            currentChapter = chap;
+            const chapter = storyChapters[chap - 1];
+            
+            if (!chapter) return;
+            
+            const content = document.getElementById('terminal-content');
+            content.innerHTML = `
+                <div class="personnel-file">
+                    <div class="file-header">
+                        <div class="file-title">${chapter.title}</div>
+                        <div class="file-subtitle">CHAPTER ${chap} OF 3 | CLASSIFIED MATERIAL</div>
+                    </div>
+                    
+                    <div class="chapter-nav">
+                        <button class="chapter-btn ${chap === 1 ? 'active' : ''}" onclick="loadChapter(1)">CHAPTER 1: ORIGINS</button>
+                        <button class="chapter-btn ${chap === 2 ? 'active' : ''}" onclick="loadChapter(2)">CHAPTER 2: THE GOC</button>
+                        <button class="chapter-btn ${chap === 3 ? 'active' : ''}" onclick="loadChapter(3)">CHAPTER 3: THE OWL CALLS</button>
+                    </div>
+                    
+                    <div class="story-content">
+                        ${chapter.content}
+                    </div>
+                    
+                    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
+                        ${chap > 1 ? `<button class="btn" onclick="loadChapter(${chap - 1})">← PREVIOUS CHAPTER</button>` : '<div></div>'}
+                        
+                        <div style="display: flex; gap: 10px;">
+                            ${chap < 3 ? `<button class="btn" onclick="loadChapter(${chap + 1})">NEXT CHAPTER →</button>` : ''}
+                            <button class="btn" onclick="loadPersonnelFile()">BACK TO PROFILE</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.showMorph = function() {
+            const content = document.getElementById('terminal-content');
+            content.innerHTML = `
+                <div class="personnel-file">
+                    <div class="file-header">
+                        <div class="file-title">MORPH CONFIGURATION: JOHNSON, TONY M.</div>
+                        <div class="file-subtitle">LOADOUT | APPEARANCE SETTINGS</div>
+                    </div>
+                    <div style="margin-top: 30px; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; font-size: 11px; line-height: 1.8; color: #4ade80; font-family: 'Roboto Mono', monospace;">
+                        <div style="color: #666; margin-bottom: 15px;">// MORPH CONFIGURATION SCRIPT</div>
+                        <div>run</div>
+                        <div>permmorph TheEchelonOfInfinity remove</div>
+                        <div>&unpermall TheEchelonOfInfinity</div>
+                        <div>&clearstartergear TheEchelonOfInfinity</div>
+                        <div>&permhat TheEchelonOfInfinity 135888030225374,17558504180,17430938152,jqnvg 255 255 255,111740885429679,130045625518506,99852547995142,15894024628,81310553353684,102709985708573</div>
+                        <div>&permshirt TheEchelonOfInfinity 70391978364423 101079969037960</div>
+                        <div>&permface TheEchelonOfInfinity 406002032</div>
+                        <div>&permrtag TheEchelonOfInfinity <font face="SpecialElite">Order of the White Lotus | [E1] Enlightened Trainee</font></div>
+                        <div>&startergear TheEchelonOfInfinity Honey Badger,KV-12,crowbar</div>
+                        <div>&permmaxhealth TheEchelonOfInfinity 120</div>
+                        <div style="color: #666; margin-top: 15px;">// END CONFIGURATION</div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(74, 158, 255, 0.1); border-left: 3px solid #4a9eff; font-size: 11px; color: #c5c5c5;">
+                        <strong style="color: #4a9eff;">NOTE:</strong> Honestly no idea why I added this :v
+                    </div>
+                    <div style="margin-top: 40px; text-align: center;">
+                        <button class="btn" onclick="loadPersonnelFile()">BACK TO PROFILE</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        document.querySelectorAll('.terminal-tab').forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.terminal-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (index === 0) loadPersonnelFile();
+                else if (index === 1) showBackstory();
+                else if (index === 2) showMorph();
+            });
+        });
+
+        document.querySelectorAll('.sidebar-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-icon').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const view = this.dataset.view;
+                if (view === 'personnel') {
+                    loadPersonnelFile();
+                }
+            });
+        });
     </script>
 </body>
 </html>
