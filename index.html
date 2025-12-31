@@ -3,29 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OWL Secure Terminal</title>
+    <title>OWL Personnel Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-            background-color: #000;
-            color: #FFF;
-            overflow: hidden;
-            background-image: url('https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/Untitled%20video%20-%20Made%20with%20Clipchamp.gif');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             cursor: none !important;
         }
-        button, a, [onclick] {
-            cursor: none !important;
-            pointer-events: auto;
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background: #050505;
+            color: #c5c5c5;
+            overflow: hidden;
         }
+
         body::after {
             content: "";
             position: fixed;
@@ -41,14 +38,10 @@
                 transparent 3px
             );
             pointer-events: none;
-            z-index: 9999;
+            z-index: 9998;
             opacity: 0.8;
         }
 
-        .terminal-text {
-            text-shadow: 0 0 1px #c8c8c8;
-        }
-        
         .custom-cursor {
             position: fixed;
             width: 10px;
@@ -65,65 +58,495 @@
             50% { opacity: 0; }
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #2d3748;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #718096;
+        .custom-cursor.clicking {
+            transform: scale(0.8);
         }
 
-        .interactive-button {
-            transition: all 0.2s ease-in-out;
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9999;
         }
-        .interactive-button:hover:not(:disabled) {
-            transform: scale(1.05);
-            text-shadow: 0 0 5px currentColor;
+
+        .loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #050505;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .owl-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            width: 300px;
+            height: 2px;
+            background: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4a9eff;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        #bios-screen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 90;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        #bios-screen p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #c5c5c5;
+        }
+
+        .popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 95;
+        }
+
+        .popup-content {
+            background: #0a0a0a;
+            border: 2px solid;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .error-popup .popup-content {
+            border-color: #ef4444;
+        }
+
+        .login-popup .popup-content {
+            border-color: #fbbf24;
+        }
+
+        #memetic-agent {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 96;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+
+        #memetic-agent.active {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         #memetic-agent img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
             border: 2px solid white;
-            box-shadow: 0 0 10px white;
-            border-radius: 0.5rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
-        
-        .highlight-text {
-            @apply text-cyan-300;
+
+        .terminal-container {
+            display: grid;
+            grid-template-columns: 60px 1fr 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #121212 100%);
         }
+
+        .sidebar {
+            background: #080808;
+            border-right: 1px solid #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            gap: 20px;
+        }
+
+        .sidebar-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar-icon:hover {
+            color: #fff;
+        }
+
+        .sidebar-icon.active {
+            color: #4a9eff;
+        }
+
+        .sidebar-icon.active::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            width: 3px;
+            height: 100%;
+            background: #4a9eff;
+        }
+
+        .main-terminal {
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .main-terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-terminal::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        .main-terminal::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 50px;
+        }
+
+        .welcome-text {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .welcome-icon {
+            width: 50px;
+            height: 50px;
+        }
+
+        .role-text {
+            font-size: 14px;
+            color: #666;
+            letter-spacing: 4px;
+            margin-top: 10px;
+        }
+
+        .terminal-tabs {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .terminal-tab {
+            padding: 15px 0;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .terminal-tab:hover {
+            color: #fff;
+        }
+
+        .terminal-tab.active {
+            color: #fff;
+        }
+
+        .terminal-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #4a9eff;
+        }
+
+        .personnel-file {
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-header {
+            background: linear-gradient(90deg, #1a1a1a 0%, transparent 100%);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 3px solid #4a9eff;
+        }
+
+        .file-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .file-subtitle {
+            font-size: 11px;
+            color: #666;
+            letter-spacing: 2px;
+        }
+
+        .personnel-photo {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #4a9eff;
+            margin: 20px auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .data-item {
+            background: #0a0a0a;
+            padding: 15px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .data-item-label {
+            font-size: 9px;
+            color: #666;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .data-item-value {
+            font-size: 13px;
+            color: #c5c5c5;
+        }
+
         .section-title {
-            @apply text-yellow-500 text-lg border-b border-gray-600 pb-1 mb-3 mt-5 font-bold uppercase;
-        }
-        .info-grid {
-            @apply grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2;
-        }
-        .info-item strong {
-            @apply text-gray-400;
-        }
-        .tab-button.active {
-            @apply text-yellow-500 border-yellow-500;
+            font-size: 16px;
+            color: #fff;
+            margin: 40px 0 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        #remote-access-screen .computer-icon {
-            width: 80px;
-            height: 80px;
-            stroke: #fff;
-            stroke-width: 1;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #c5c5c5;
+            font-size: 11px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Roboto Mono', monospace;
+            margin: 5px;
         }
 
-        .fade-in {
-            animation: fadeIn 2s forwards;
+        .btn:hover {
+            border-color: #4a9eff;
+            color: #fff;
+            background: rgba(74, 158, 255, 0.1);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .right-panel {
+            background: #080808;
+            border-left: 1px solid #1a1a1a;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .right-panel::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 3px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .info-group {
+            margin-bottom: 25px;
+        }
+
+        .info-label {
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 12px;
+            color: #c5c5c5;
+        }
+
+        .hume-meter {
+            width: 100%;
+            height: 60px;
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hume-value {
+            font-size: 24px;
+            color: #4ade80;
+            font-weight: 700;
+            letter-spacing: 2px;
+            z-index: 2;
+        }
+
+        .hume-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 30%;
+            background: rgba(74, 222, 128, 0.3);
+            width: 78%;
+        }
+
+        .threat-radar {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            position: relative;
+            border: 1px solid #1a1a1a;
+            border-radius: 50%;
+            background: radial-gradient(circle, #0a0a0a 0%, #050505 100%);
+        }
+
+        .radar-circle {
+            position: absolute;
+            border: 1px solid #1a1a1a;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radar-sweep {
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                rgba(74, 158, 255, 0.3) 60deg,
+                transparent 120deg
+            );
+            border-radius: 50%;
+            animation: radarSweep 4s linear infinite;
+        }
+
+        @keyframes radarSweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .event-log {
+            margin-top: 30px;
+        }
+
+        .event-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #0a0a0a;
+            border-left: 2px solid #4a9eff;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .event-time {
+            color: #666;
+            margin-right: 10px;
         }
 
         #sound-toggle {
@@ -136,573 +559,916 @@
             color: #fff;
             padding: 8px 16px;
             font-size: 12px;
+            font-family: 'Roboto Mono', monospace;
+            letter-spacing: 1px;
         }
 
-        .bg-box {
-            background-color: rgba(31, 41, 55, 0.5);
-            padding: 1rem;
-            border: 1px solid #4a5568;
+        #sound-toggle:hover {
+            background: rgba(255,255,255,0.1);
         }
 
-        .border-accent {
-            border-left: 3px solid;
-            padding-left: 1rem;
+        .chapter-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .chapter-btn {
+            padding: 8px 16px;
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            color: #666;
+            font-size: 10px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .chapter-btn:hover {
+            border-color: #4a9eff;
+            color: #fff;
+        }
+
+        .chapter-btn.active {
+            border-color: #4a9eff;
+            color: #4a9eff;
+            background: rgba(74, 158, 255, 0.1);
+        }
+
+        .story-content {
+            line-height: 1.8;
+            color: #c5c5c5;
+            font-size: 13px;
+            max-width: 900px;
+        }
+
+        .story-content p {
+            margin-bottom: 20px;
         }
     </style>
 </head>
-<body class="w-screen h-screen">
+<body>
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="scanline"></div>
+    
+    <button id="sound-toggle" class="btn">SOUND: ON</button>
 
-    <button id="sound-toggle" class="interactive-button">SOUND: ON</button>
-
-    <div class="custom-cursor" id="custom-cursor"></div>
-    <div class="fixed inset-0 bg-black bg-opacity-20 z-[-1]"></div>
-
-    <div id="remote-access-screen" class="flex flex-col items-center justify-center p-8 h-full w-full fixed inset-0 bg-black z-[80] text-white">
-        <svg class="computer-icon mb-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M7 21H17M12 17V21M3 12C3 4.58172 4.58172 3 12 3C19.4183 3 21 4.58172 21 12M4 17H20M5 14H7M9 14H11" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <p id="remote-status" class="text-lg mb-4">Establishing Secure Connection...</p>
-        <div class="w-1/2 max-w-sm bg-gray-700 border-2 border-white h-4">
-            <div id="remote-progress-bar" class="bg-white h-full" style="width: 0%;"></div>
+    <div class="loading-screen" id="initialLoading">
+        <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/BUREAU%20OF%20(8).png" alt="OWL" class="owl-logo">
+        <div class="loading-text">INITIALIZING OWLNET</div>
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progressFill"></div>
         </div>
     </div>
 
-    <div id="bios-screen" class="hidden flex-col items-start justify-start p-8 h-full w-full fixed inset-0 bg-black z-40 text-white">
-        <p class="terminal-text text-lg">Powered by OWL Network</p>
-        <div id="bios-text" class="mt-8 text-sm w-full"></div>
+    <div id="bios-screen" class="hidden" style="display: none;">
+        <p style="font-size: 18px;">Powered by OWLNET OS V.40</p>
+        <div id="bios-text" style="margin-top: 30px;"></div>
     </div>
-    
-    <div id="error-popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]">
-        <div class="bg-gray-800 border-2 border-red-500 p-8 shadow-xl text-center">
-            <h2 class="text-2xl text-red-500 mb-4 font-bold">NETWORK ERROR</h2>
-            <p id="error-message" class="text-lg">Network Unavailable</p>
+
+    <div id="error-popup" class="popup hidden" style="display: none;">
+        <div class="popup-content error-popup">
+            <h2 style="color: #ef4444; font-size: 24px; margin-bottom: 20px; letter-spacing: 2px;">NETWORK ERROR</h2>
+            <p id="error-message" style="font-size: 14px;">Network Unavailable</p>
         </div>
     </div>
-    
-    <div id="login-popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]">
-        <div class="bg-gray-900 border-2 border-yellow-600 p-8 shadow-xl text-left w-full max-w-md">
-            <h2 class="text-xl text-yellow-500 mb-4 font-bold">OWL AUTHENTICATION REQUIRED</h2>
-            <p>Please enter your Designated OWL Clearance Code:</p>
-            <div class="bg-black p-2 mt-2 h-8">
-                <span id="login-code"></span><span class="animate-ping">_</span>
+
+    <div id="login-popup" class="popup hidden" style="display: none;">
+        <div class="popup-content login-popup">
+            <h2 style="color: #fbbf24; font-size: 20px; margin-bottom: 20px; letter-spacing: 2px;">OWL AUTHENTICATION REQUIRED</h2>
+            <p style="margin-bottom: 15px;">Please enter your Designated OWL Clearance Code:</p>
+            <div style="background: #000; padding: 15px; font-size: 16px;">
+                <span id="login-code"></span><span style="animation: blink 1s step-end infinite;">_</span>
             </div>
         </div>
     </div>
 
-    <div id="memetic-agent" class="fixed inset-0 bg-black flex items-center justify-center z-[75] opacity-0 transition-opacity duration-1000 pointer-events-none">
-        <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/assets_task_01k7n8gyf7f7nrqynthtchbceh_1760576470_img_0.webp" alt="MEMETIC KILL AGENT ACTIVATED" class="max-w-full max-h-full object-contain">
+    <div id="memetic-agent">
+        <img src="https://raw.githubusercontent.com/loveisnoob/TF-B-UIU-PERSONAL_FILES-Z-O-23-Michael-Adams/main/assets_task_01k7n8gyf7f7nrqynthtchbceh_1760576470_img_0.webp" alt="MEMETIC KILL AGENT ACTIVATED">
     </div>
 
-    <div id="main-terminal" class="hidden h-full flex flex-col">
-        <div class="w-full bg-gray-700 bg-opacity-80 p-3 text-gray-200 flex items-center flex-shrink-0" style="border-bottom: 2px solid rgba(255, 255, 255, 0.5);">
-            <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/OWL%20Logo.png" alt="OWL Logo" class="h-8 w-8 mr-4">
-            <span class="mr-6">ID: OWL-TERM-07</span>
-            <span class="mr-6">LOCATION: OWL HEADQUARTERS</span>
-            <span id="timestamp"></span>
+    <div class="terminal-container" id="mainTerminal" style="display: none;">
+        <div class="sidebar">
+            <div class="sidebar-icon active" data-view="personnel">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </div>
+            <div class="sidebar-icon" data-view="database">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                </svg>
+            </div>
+            <div class="sidebar-icon" data-view="files">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                    <polyline points="13 2 13 9 20 9"></polyline>
+                </svg>
+            </div>
         </div>
 
-        <div class="flex-grow overflow-hidden" id="terminal-content-wrapper">
-            <div class="p-6 h-full overflow-y-auto" id="terminal-content"></div>
-            <div id="personnel-file-screen" class="hidden h-full overflow-y-auto bg-gray-900 bg-opacity-50 p-6"></div>
+        <div class="main-terminal">
+            <div class="terminal-header">
+                <div>
+                    <div class="welcome-text">
+                        <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/BUREAU%20OF%20(8).png" alt="OWL" class="welcome-icon">
+                        OWL PERSONNEL DATABASE
+                    </div>
+                    <div class="role-text">SECURE ACCESS</div>
+                </div>
+            </div>
+
+            <div class="terminal-tabs">
+                <div class="terminal-tab active">PERSONNEL FILE</div>
+                <div class="terminal-tab">BACKSTORY</div>
+                <div class="terminal-tab">MORPH CONFIG</div>
+            </div>
+
+            <div id="terminal-content"></div>
+        </div>
+
+        <div class="right-panel">
+            <div class="panel-title">OWLNET</div>
+
+            <div class="info-group">
+                <div class="info-label">Organization</div>
+                <div class="info-value">Order of White Lotus</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label">Terminal ID</div>
+                <div class="info-value">OWL-TERM-07</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label">Location</div>
+                <div class="info-value">OWL Headquarters</div>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label">IP Address</div>
+                <div class="info-value">148.70.202.3</div>
+            </div>
+
+            <div class="info-label" style="margin-top: 30px;">HUME METER</div>
+            <div class="hume-meter">
+                <div class="hume-bar"></div>
+                <div class="hume-value">0.78 Hm</div>
+            </div>
+
+            <div class="info-label">THREAT DETECTION</div>
+            <div class="threat-radar">
+                <div class="radar-circle" style="width: 40%; height: 40%;"></div>
+                <div class="radar-circle" style="width: 70%; height: 70%;"></div>
+                <div class="radar-circle" style="width: 100%; height: 100%;"></div>
+                <div class="radar-sweep"></div>
+            </div>
+
+            <div style="text-align: center; font-size: 10px; color: #666; letter-spacing: 1px; margin: 20px 0;">
+                ⸎ LOTUS ⸎ ENLIGHTENMENT ⸎ BALANCE ⸎
+            </div>
+
+            <div class="event-log">
+                <div class="info-label">EVENT LOG</div>
+                <div class="event-item">
+                    <span class="event-time" id="time1">--:--</span>
+                    <span style="color: #4ade80;">⬥</span> ALL SYSTEMS OPERATIONAL
+                </div>
+                <div class="event-item">
+                    <span class="event-time" id="time2">--:--</span>
+                    <span style="color: #4a9eff;">⬥</span> USER AUTHENTICATED
+                </div>
+                <div class="event-item">
+                    <span class="event-time" id="time3">--:--</span>
+                    <span style="color: #fbbf24;">⬥</span> SECURITY SCAN COMPLETE
+                </div>
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #1a1a1a;">
+                <div style="font-size: 11px; color: #666; text-align: center; letter-spacing: 2px;">
+                    PERSONNEL FILE ACCESS
+                </div>
+                <div style="font-size: 13px; color: #c5c5c5; text-align: center; margin-top: 10px;">
+                    CLEARANCE: LOTUS-3
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const remoteAccessScreen = document.getElementById('remote-access-screen');
-            const remoteProgressBar = document.getElementById('remote-progress-bar');
-            const remoteStatus = document.getElementById('remote-status');
+        // Audio system
+        let audioCtx = null;
+        let ambientSound = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                startAmbientSound();
+            }
+        }
+
+        function playTypingSound() {
+            if (!soundEnabled || !audioCtx) return;
+            
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.frequency.value = 800 + Math.random() * 200;
+                osc.type = 'square';
+                
+                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch (e) {}
+        }
+
+        function startAmbientSound() {
+            if (!soundEnabled || ambientSound || !audioCtx) return;
+            
+            try {
+                const o1 = audioCtx.createOscillator();
+                const o2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filt = audioCtx.createBiquadFilter();
+                
+                o1.type = 'sine';
+                o1.frequency.value = 60;
+                o2.type = 'sine';
+                o2.frequency.value = 120;
+                
+                filt.type = 'lowpass';
+                filt.frequency.value = 200;
+                
+                gain.gain.value = 0.015;
+                
+                o1.connect(filt);
+                o2.connect(filt);
+                filt.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                o1.start();
+                o2.start();
+                
+                ambientSound = { o1, o2, gain };
+            } catch (e) {}
+        }
+
+        function stopAmbientSound() {
+            if (ambientSound) {
+                try {
+                    ambientSound.o1.stop();
+                    ambientSound.o2.stop();
+                } catch (e) {}
+                ambientSound = null;
+            }
+        }
+
+        // Sound toggle
+        document.getElementById('sound-toggle').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-toggle').textContent = soundEnabled ? 'SOUND: ON' : 'SOUND: OFF';
+            
+            if (soundEnabled) {
+                initAudio();
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                startAmbientSound();
+            } else {
+                stopAmbientSound();
+            }
+        });
+
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', () => cursor.classList.add('clicking'));
+        document.addEventListener('mouseup', () => cursor.classList.remove('clicking'));
+
+        // Initialize audio on first click
+        document.addEventListener('click', () => {
+            if (!audioCtx) {
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
+        }, { once: true });
+
+        // Update event log times
+        function updateEventTimes() {
+            const now = new Date();
+            const fmt = (d) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+            document.getElementById('time1').textContent = fmt(now);
+            document.getElementById('time2').textContent = fmt(new Date(now - 60000));
+            document.getElementById('time3').textContent = fmt(new Date(now - 120000));
+        }
+
+        // Typewriter effect
+        function typeWriter(el, txt, speed, cb) {
+            let i = 0;
+            el.textContent = '';
+            function type() {
+                if (i < txt.length) {
+                    el.textContent += txt.charAt(i);
+                    if (i % 2 === 0 || Math.random() > 0.5) {
+                        playTypingSound();
+                    }
+                    i++;
+                    setTimeout(type, speed);
+                } else if (cb) {
+                    cb();
+                }
+            }
+            type();
+        }
+
+        // Story chapters data
+        const storyChapters = [
+            {
+                title: "CHAPTER 1: ORIGINS",
+                content: `<p>Tony was born 28th August 2005 into an abusive household clinging to whatever money they had left. His father constantly overlooked him, always belittling him with remarks, and was an alcohol addict who always let out a tantrum for even the slightest of mistakes. His mother, a young woman who carried the majority of the financial duty in his family, had neither the time nor power to give the slightest hint of care towards him, but when she did, it was like heaven to him. His father used to be a successful salesman at a local furniture store; however, due to rising competition from big box retailers, they unfortunately had to shut down. His mother, a school teacher working in the nearby elementary school, struggled to make ends meet with her meagre salary, and even so, she tried her best burdening herself with his education and their family expenses all at once. Yet even so, his father constantly harassed and sometimes physically confronted his mother violently. She couldn't take it anymore, and it seems even the neighbours couldn't take the unceasing violence happening in their house.</p>
+
+<p>One fateful night, his father returned home drunk from his never-ending consumption of alcohol. His mother glared at him, showing the quintessential example of fatigued resignation, barely looking up from the bills scattered across the kitchen table, and finally snapped. She yelled at him, "I can't take it anymore, I can't take your useless," she paused, "excuses anymore!" Then she continued, "The bills are stacking, and I can't handle it all alone. Tony needs an education, and with all your useless habits, we're going to lose the house!" Then and there, his father cracked in a jolt of confused anger and rage, pinning his mother to the wall. His neighbours heard the commotion and dialled 999.</p>
+
+<p>When the officers arrived, his father was still drunk and belligerent, his mother sporting a fresh bruise on her cheek. Tony woke up from all the commotion and watched from his bedroom doorway as the officers handcuffed his father, who was still mumbling incoherently about "that woman" and "his rights". His mother stood silently by the kitchen table, her hand pressed against the red mark on her neck, answering the officer's questions in barely audible whispers.</p>
+
+<p>"Is there somewhere safe where you and your son can stay tonight?" the officer asked gently. His mother glanced towards Tony before responding, "We'll be fine here. I know what you're about to say, however we don't have anywhere else to go."</p>
+
+<p>"Mum?" Tony whispered. She didn't look at him. "Go to bed, Tony. You have school tomorrow."</p>
+
+<p>Skip forward a few years. Ever since that incident, his mother divorced his father, and his father eventually landed himself in jail after a freak car crash accident. They never saw him again after that. His mother, now having some sense of freedom, spent more time with him, and Tony's mental health slowly improved year by year. His mother could now slowly guide Tony through his academics, where his grades slowly rose, but his mother received a job offer at a higher-paying private school down south. The only thing was, it was extremely far away. Faced with this tough decision, his mother eventually left Tony with her aunt and uncle.</p>
+
+<p>Tony's uncle had no desire to care for him just like his father; however, at least he cared for his education. His aunt was more similar to his mother. His aunt worked 2 jobs, which left her with minimal time to care for Tony. Tony grew up just fine, but his education slowly declined. Tony's uncle had a heart disease which worsened right after his arrival at the household, which reduced the time he had to care for him. Even so, he still tried his best in school. Yet still, even there he faced more and more hardships. Tony was bullied by his classmates for his weak arms and thin build, and was constantly made fun of because his father was an alcohol addict and he now lived in his uncle's house. And to make things worse, the teachers couldn't care less since the bullies' parents were bribing them to get higher scores on tests. Because of this, as he grew up, he learned that ignoring his teachers and other authority figures was the best way to manage his stress and all the harassment he'd faced in his life.</p>
+
+<p>During junior high school when he turned 14, he was the shy, timid kid no one talked to, and he also didn't want to talk with anyone, ignoring people when the opportunity arose. He failed multiple classes, yet he didn't care because he had no figure, no person to guide him through his life, and then he remembered his mother. What had happened to her? After the school bell rang, he walked back to his uncle's house, and then he asked: "Uncle," Tony said quietly, setting down his backpack. "Have you heard from my mum?"</p>
+
+<p>His uncle looked up, his face pale and tired. "She called last week while you were at school. Says the new job is keeping her busy, longer hours than she expected."</p>
+
+<p>"When is she coming back?"</p>
+
+<p>His uncle's expression softened slightly. "I don't know, kid. She's trying to save up enough money to get you both a decent place. Says the pay is good but..." He trailed off, coughing.</p>
+
+<p>"But what?"</p>
+
+<p>"But it might be a while."</p>
+
+<p>"..."</p>
+
+<p>Tony considered what his uncle just said, but his curiosity dimmed. He said in his mind, "Sigh, the only one who really ever cared for me can't even do the job they're supposed to do. Life is useless. I might as well enjoy it as I can."</p>
+
+<p>The next day, an interesting man approached him. "Hey kid, you seem like you need a job. Wanna have a try at janitorial duties...?" He was bored, but he was dying to earn whatever meagre wage he could so he could at least afford some snacks he could enjoy at school.</p>
+
+<p>"Yeah, sure, old geezer," he responded.</p>
+
+<p>"Alright, duty starts next week. Meet me at the library Saturday, 6:00 AM sharp."</p>
+
+<p>That Saturday morning, Tony dragged himself to the library expecting another disappointing experience. The man handed him the janitorial uniform and a set of professional cleaning tools. "Welcome to the team, Tony! I'm Frank."</p>
+
+<p>He pondered, "That's the first time ever that someone has greeted me with their first name." As Frank showed him the supply closet organised with military precision and explained how each tool had its purpose, Tony felt something unexpected, a small flutter of interest. The work seemed... methodical. Peaceful, even. No teachers ignoring him, no bullies around, just him and the simple satisfaction of making something clean.</p>
+
+<p>"This... this actually isn't that bad," Tony said under his breath, surprised by his own reaction.</p>
+
+<p>Frank smiled. "Most people don't get it, but there's something honest about this work."</p>
+
+<p>Skip forward when he turns 20. Frank and Tony had a close-knit relationship. For the first time ever, Tony had a person whom he could truly call a "friend". They tidied up the library, and the librarian even gave them some time to enjoy and read some books, since she had a good impression of both of them. Over the years, Tony and Frank grew an interest in hunting and camping. They read and read, slowly growing their now insatiable desire to do at least one camping trip together. Luckily for them, over the years Tony and Frank had access to the library's numerous books and survival guides, and through sheer mental memorisation and passion, they learned how to make a fire by going to the woods, creating embers, finding birch, and setting up a small fire in the winter. They learned how to use firearms via the widespread YouTube tutorials and gun guides in the library, and even found a survival guide by John "Lofty" Wiseman on the SAS survival guide, quite a crazy find in their opinion.</p>
+
+<p>Tony said to Frank, "Hey, 4 years of minimum wage, it's enough to get us a handgun and at least some mags. How about you say we try camping in the nearby forest during the winter?"</p>
+
+<p>Frank responded, "Oh yeah, sounds amazing bro. The problem is, you got a gun licence...?"</p>
+
+<p>Tony muttered, "Oh nah, don't worry bro, we'll just bribe the gunsmith. What's the worst that can happen?"</p>
+
+<p>After years of preparing, they finally decided on a 1-week camping trip in the nearby forest in winter. Tony buys the gun, while Frank buys the camping equipment. The equipment they bought wasn't exactly tip-top quality, but what works, works. Finally, the faint and gentle drop of snowflakes fell on their area, and once it had built up, they went on their way. Before Tony left, he told his uncle, "Hey uncle, I'm gonna go camping with my friend Frank. You know how long I've been preparing for this. I'll see you in 3 days!" Although his uncle hesitated, in his mind he silently said, "That kid's got steel. It seems he's finally found what he wants in life."</p>
+
+<p>Tony met Frank at an unpatched strip of land in the middle of the forest. Knowing what to do, they both quickly set up camp near a pine tree, made a small fire which they used to cook a squirrel Tony had trapped, and both slowly headed to sleep as they dozed off due to the fatigue they'd just had. But then suddenly, there was a noise coming from the nearby bushes. Something was moving fast, quick, its steps rapid like a wolf, however as light as a chicken. Both Frank and Tony jumped up, their survival instincts kicking in. Tony grabbed the Glock 19, a light firearm capable of punching a decent-sized hole through any adversary. Frank rushed to the bowie knife he'd kept in his bag, holding a ready stance while Tony swung his Glock 19, trying to identify the location of the animal. But then the sound stopped, it vanished, disappearing into thin air. Still, Frank and Tony went into alert mode the entire night. They were too paranoid to even catch a single minute of sleep, worrying that the creature which they feared was a pack of wolves was waiting for the right moment to strike.</p>
+
+<p>"What the hell was that?!" Frank whispered to Tony.</p>
+
+<p>"I have no idea. The steps were so light I could barely hear it."</p>
+
+<p>"A wolf maybe? But no... a wolf wouldn't have steps as silent as that, and it would go in a pack, but this one sounded like it was alone.... And the noise it made wasn't anything similar to a wolf...."</p>
+
+<p>During the morning, Frank and Tony bravely gathered the courage to exit the tent. Frank went first since he had the knife; Tony would cover since he had the gun. However, they only saw footsteps that resembled an avian's, but much larger.</p>
+
+<p>"This area is giving me the creeps now. I think we should go..." mumbled Tony.</p>
+
+<p>They slowly unpacked their camp and moved to a more hidden location within the woods, where they cautiously camped for the next 2 days, finally deciding to return on the third day as planned. However, this time, they'd report the incident to local authorities, since no normal bird would leave a footprint that big...</p>
+
+<p>Tony invited Frank to come to his uncle's house, but on their way there, they noticed that the town was eerie, quiet, forcefully hushed... Doors were left open as if the people living inside their houses tried to escape in a panic, but there was no trace of violence... No trace of anything... not even a single car had moved. As Tony and Frank grew ever closer to his uncle's house, this eerie quiet grew to an ever more anxious weight pressing down on their chests. The silence wasn't just absence of sound, it was wrong, like the air itself had been drained of life. Frank's footsteps echoed too loudly on the empty pavement, each step seeming to mock the eerie stillness.</p>
+
+<p>"Tony," he whispered, his voice cracking even despite his effort to stay calm, "has the town always been this empty?"</p>
+
+<p>Their uncle's door was left open, and as they drew closer, they heard an unnatural sound coming from within, like an animal eating its delicious prey... Tony raged, he cried, he felt an emotion so new he couldn't describe it in one word. Someone that at least supported him in his childhood was just... brutally murdered... eaten... What was left were bones and meat, to the point where you could no longer distinguish if it had been a person. He screamed, screamed so loud the entire neighbourhood could've heard him. This continued for a few minutes, until his eyes had no emotion left, no cry, no pride, just the hollow depth of black within his pupils.</p>
+
+<p>"WHY? WHY? WHY? WHY? WHY? WHY? WHY? WHY?" The words reverberated in his mind. His mind began to fracture. Thump… Thump… Thump… His heart began racing, chest pounding, mind fracturing. His hands began to shake. The Glock felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. He can feel tears dropping out of his pupils, his hand began to numb, slowly the control over his own body started to sway. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness.</p>
+
+<p>Frank told him, "We HAVE TO GO. If there are more of them, we're dead meat!" Yet all he heard was the sombre silence. He said to Tony, "Tony, are you here with me? Tony! WE HAVE TO GO." Then Tony's body collapsed, "TONY!? ARE YOU OK? TONY?"</p>
+
+<p>Out of options, he frantically searched for somewhere to hide them both, checking every door in the building one after the other, but found nothing. When all hope seemed lost, he heard a sound from above him, he'd hoped it was god, but it seems even god couldn't protect them at this very moment. Then, hope stirred in his mind, "What? What is that?" He'd grab a chair and touch the ceiling, and a ladder magically dropped, as if it was waiting for their very arrival. Frank rushed downstairs as he'd dragged Tony and whatever supplies he could get his hands on, it felt impossibly heavy, but through sheer perseverance and adrenaline, he'd manage to pull everything inside, as he finally pulled the ladder back into the attic.</p>`
+            },
+            {
+                title: "CHAPTER 2: TRIALS",
+                content: `<p>Tony woke up in a dark room, hollow of life, then he heard a voice, it wasn't Frank's voice, no it couldn't be, it was too thin, too innocent to be Frank's voice, then he regained himself. It's hers. "I'll come back for you Tony. I promise." The memory hit him hard. He was eight years old again, standing in the same doorway watching his mother pack her suitcase. Her back turned to him, always her back turned to him. "The new job will be good for us, sweetheart. I'll save up money and we'll have our own place." But she never came back.</p>
+
+<p>"Did she ever think about me? Did she ever wonder if I was okay? Did she know about the abuse, the loneliness, the bullying, did she know about ANYTHING?" Tony's the type of person that is unaware of his environment, when a murder sprouts up in his local news channel, he'd never react like he was scared, he'd just continue wandering aimlessly or playing with his toys, just showing off an indifferent shrug. But this time, it's different. The questions he'd try to bury for years clawed their way back to the surface. Every Christmas I wait for that gift. Every birthday waiting for that call. Every night he'd spent wondering if he'd done something wrong, if he was unlovable, if everyone would just abandon him like she did.</p>
+
+<p>"Uncle's dead. Frank's the only one left. And he'll leave too. Everyone always leaves me alone."</p>
+
+<p>Frank's voice cuts through the memory. "Tony, Tony? You're awake! Thank God."</p>
+
+<p>Skip forward to Frank and Tony's hiding. A few days after Tony woke up, they decided they'll stay here until rescue arrives. They chilled for a while, eating bags of crisps and instant ramen using the one burner they had. But Tony acted differently, his hands started shaking all day until he slept. Whenever they finished eating, he'd just corner himself and look down at the floor, sometimes Frank could swear he heard cries when he was trying to sleep. Finally, Frank gathered up the courage to talk to Tony whilst they were eating together.</p>
+
+<p>"Tony… Are you ok?" Frank whispered to him. Tony didn't reply.</p>
+
+<p>"Tony, I know things haven't been going your way lately, and I understand." Frank said once more.</p>
+
+<p>Tony stopped for a bit, then he set his spoon down into the empty ramen cup. He set it down slowly, still not looking up. "Do you?" His voice could barely be heard. "Do you really understand?"</p>
+
+<p>Frank tried to reply, "I, I know losing your uncle was..."</p>
+
+<p>Tony's cut pierced through the air, "Do you really know? Do you know what I've been through? It's not just him. It's everyone. Everyone always leaves me."</p>
+
+<p>They both staggered for a bit, then Frank said softly, "Do you remember that first day at the library? You called me an 'old geezer'." Despite everything that's just unfolded, Tony twitched slightly. "You were so angry at the world, so angry at everything, really." Frank continued on. "Yet you still showed up, every Saturday morning. Six AM sharp. Even when you didn't want to."</p>
+
+<p>Tony finally looked up, his eyes were red. "That was different."</p>
+
+<p>"Was it, really?" Frank patted his back. "You'd thought I'd be just another disappointment. Another adult who'd just let you down. But I kept showing up too, didn't I? I kept showing up with a smile even when my body seemed to give up, even when my uniform was still not dried."</p>
+
+<p>Frank carried on, "Remember what I told you that very first day? 'There's something honest about this work.' Clean something dirty, make it better. Simple. Maybe that's what we do, Tony. Clean up the world, clean up the mess people start, no matter how insignificant or useless it might be. One piece at a time."</p>
+
+<p>"We could start here," Frank said in his usual monotonal voice. "This attic. Make it feel less like we're hiding and more like well… like we're living in it. What do you say?"</p>
+
+<p>Skip 3 weeks. The attic, once full of cobwebs and rot and abandoned items, was finally looking like a place to live in. Every time Tony cleaned a patch of dust, it felt like his memories were being cleared up, like a window in his life he'd never seen before. The trauma he'd just faced felt more natural. As he wiped away years of accumulated dust and abandoned memorabilia, Tony realised something profound. This dust has been ignored for so long, pushed aside with no one to take care of it, forgotten, left to settle in the dark corners of the earth where no one had bothered to search for it. Just like the pain people carry in their day-to-day lives. Just like his own buried memories of abandonment and abuse. Every speck of dust had once been something, pieces of the world that had broken down, destroyed, burnt and eventually drifted all the way here to be forgotten. Yet even in the most neglected corners of earth, the memories and events that people pretend never existed, eventually demand attention, just like anything else would. The dust, the trauma, the hate, the anger, the rage, the eagerness for revenge. It doesn't disappear if you just ignore it. It accumulates, weighs down the air, makes your breath slow, your lungs gasping for air, and your heart boils. People are the same way. They sweep trauma under thick rugs and blankets, shove their pain into mental corners like a prison's solitary confinement, convince themselves if it doesn't exist, if it's buried deep as a fossil within the earth, if it would never be found again if you throw it in the ocean, if it had never happened, if it wasn't possible, it isn't there. But eventually, just like this attic, just like every corner, every patch of dust, every microcosm and every bacterium, everything needs to be cleaned, turned into something else. The ignored parts of life, the dusty corners of the human heart, they all require someone to finally pick up a cloth and do the hard work of making things clear again, make things as clear as a window after a heavy rain. The trauma he'd just faced felt more natural, and even death felt natural, not something to fear, but something to accept and clean around, like dust that gathers in every corner of existence. Frank was right. There was something honest about this work.</p>
+
+<p>Suddenly they noticed military Humvees strolling down the street. They thought it was an emergency rescue, so they rushed out and asked for help since their water supply had run out. The driver said they were on a military mission and couldn't stop. Tony and Frank decided to move into the town south of the city. There were people, just not that many. He remembered there being way more people in the town, since both had visited it on a school trip. He and Frank convinced themselves they were just crazy and tried to find food. By June 2025, his town had been covered by plant growth within the year. Their temporary shelter was only powered by the backup generators since the solar panels had gone dusty and no one knew how to repair them. Suddenly another armoured truck came down the street, this time stopping.</p>
+
+<p>The armoured truck had no military insignia or emblem, nevertheless the driver stepped out, and told Frank and Tony that they were being transferred to a more "safe" location. During the journey to aforementioned location, the security officer in the truck interviewed both of them:</p>
+
+<p>The Security Officer coughed, "Ahem, so Gentlemen, are you both named Tony Johnson and… Frank …Phipps?"</p>
+
+<p>Tony replied, "Slight pause doubting why they were here. Yes… we are."</p>
+
+<p>"Great! Both of you are getting a job, get in. We've been monitoring you very closely the past year." mumbled the Officer.</p>
+
+<p>Frank replied, "Why have you been monitoring us…?"</p>
+
+<p>"Oh, that's nothing, we just found that you had some… excellent expertise in.. Janitorial duties, yes!" the Officer muttered.</p>
+
+<p>"That's beside the point anyway" the Officer added.</p>
+
+<p>The Security Officer continued, "Well then… Since none of you are talking… You both will be getting a janitor position here then. You have no military experience, Tony, you're a dropout and.. Frank was it? You got the lowest grade in the entirety of your class, and you didn't even finish high school. This is all we can do."</p>
+
+<p>Tony curiously asked, "Will it pay better than the old job? Will it have free food?"</p>
+
+<p>The officer replied, "Ahem… Yes, it will!"</p>
+
+<p>Finally the officer questioned, "Do you accept this position?"</p>
+
+<p>Frank whispered to Tony, "You in?"</p>
+
+<p>Tony replied to Frank, "Whatever gets me the hell out of that mess."</p>
+
+<p>Both finally say, "Deal."</p>
+
+<p>The GOC's real interest was in him terminating an anomaly, what the Foundation called SCP-3199. The GOC expected some sort of experienced military combat, considering the deep gashes, bullet wounds, and a precise targeted shot on an artery. He thought to himself, they'd be decent janitors, at least they know how to handle a gun, when push comes to shove.</p>
+
+<p>"Hello?" "Hello?" The camera flickers to life "Yea so uhm, we've been stuck on this site of theirs for quite a while and there's nothing really of interest here except some basic military training they've provided us. I can't really remember how we got here, my head feels so all over the place, but from what I can recall, we arrived as soon as we entered the armoured vehicle, so I think we're still near Nova Scotia, or at least, Canada." Maybe it had just been a coincidence, but every day the air around them was as heavy as a lorry; they could barely even breathe properly.</p>
+
+<p>The recording continued, "We've also been assigned these boring janitorial positions, and all we've been doing is cleaning some questionable looking red paintings on the wall, they said it was just some crazy artist's work but I digress. Can't really say much here anyway." He paused slightly, then continued, "So the reason I've started this little recording today was because I've been told that I will be transferred to a military arm of theirs as a scout, they say I'd be useful because of my past experiences, they called it PHYSICS or whatever, I always found that name absurd." The recording went on, "Maybe I'd check on this after a few years, I'll just upload it to the terminal because I've no place to upload it other than there. Oh yea, Frank, he's been doing alright, he got transferred to a secret Island somewhere in the Atlantic, I don't think I'm supposed to know that but, who cares, I'm just a simple little janitor, right?"</p>
+
+<p>As he said, the day was obnoxiously bland, like every single day at the site. It was the usual: cleaning up the "waste", basic military combat, and even some live-fire practice from time to time. Today he'd been introduced to the PHYSICS Entrees Examination, where they examined his psychological and physical capabilities to assess compatibility and probable efficiency in UNGOC's PHYSICS Division. He said it went quite well, he passed most of the tests including the live-fire examination with ease, the instructor even said he'd a knack for a best-shot. Over the course of several days, he was examined and taught to perform basic scouting duties including: camouflage, positioning, intelligence, and infiltration. It was.. "Alright" he mumbled, he'd always look exhausted after those specific examinations.</p>
+
+<p>The scene cut back to Tony, "Ah well, It doesn't really matter I presume, maybe I'd check up on this little thing of mine when I'm out of this hell" he laughs, the little window he had on his room allowed a small gleam of light, man."</p>
+
+<p>Skip forward a few years. The unending rolling of the armoured vehicle tyres grinds to a halt, everything looked so monotonous after everything, the cold reality of inevitable existence hit him hard. He'd open the side door, unholstering his weapon. "What's the mission now?" He'd mumble through the black balaclava.</p>
+
+<p>"Kill."</p>
+
+<p>A grand church in the middle of absolutely bloody nowhere. "Why the hell would they make such a useless church?" Tony pondered to himself. They slowly approached through the dense bushes, weapons at the ready, and halted on a nearby incline where they could see the entire plain. Him and his fellow operative hunkered down there whilst they waited for the main unit to arrive.</p>
+
+<p>"How's the weather? Pretty cold ain't it?"</p>
+
+<p>"Why do you always talk about the weather, it's the middle of the night blimey." Tony Responded.</p>
+
+<p>"Can't you see I'm trying to lighten the mood? Always with that Tony." The man in a balaclava let out a small chuckle.</p>
+
+<p>The dullness of the night was halted by a flame lit in the church, "Oh come on, we'd actually have to act now?" Whilst he was scanning the perimeter, he saw an owl, a pale-white owl that was almost indistinguishable from the snow that covered the region. Tony pointed at it, "Doesn't it look like a lotus?"</p>
+
+<p>"I don't know, I'm not a flower maniac."</p>
+
+<p>"You don't need to be a flower maniac to know what a lotus is" The owl then opened its wings, gliding through the dense forest with utmost ease. It even showed a small glance at Tony.</p>
+
+<p>"Weird."</p>
+
+<p>Then, the cracks of branches catch their attention. Tony's weapon slings to his right. "The hell is that?"</p>
+
+<p>"Seems they've finally arrived." He responded.</p>
+
+<p>The main convoy of the PHYSICS Division arrived, "It's time to engage." The stomps of heavy boots came to their attention, that's the signal. Tony and the other Operative followed in pursuit, guarding their flanks as the main breach unit entered.</p>
+
+<p>"Night Vision on."</p>
+
+<p>Suddenly, the unit in front of them vanished into complete darkness, even in the light-lit room. "Bravo, do you copy? Bravo, where the hell did you go?" Only silence responded. Both operatives approached slowly, awaiting an answer. Then that same darkness swallowed them whole.</p>
+
+<p>Tony entered a gothic-era enclosure, the ones you'd only see in stories and films. His partner was right behind him, guarding the rear. A plea, a cry, a scream of desperation filled the room, then an unending chorus in an unknown language. "What the fuck is happening?" He'd mumble, "Like I'd bloody know?" The operative responded. They'd turn the corner. A cold sweat came from both operatives. "What. The. Hell." Devilish paintings, blood, it was a summoning ritual. Every step revealed a new horror they didn't expect. Crack, crack. Choked. "I can't. Move." A nun came into view, but she didn't look like a nun, she looked like something else. The face then revealed itself. Their heads turned up, and both let out an unholy scream.</p>
+
+<p>It turned out they were the bait.</p>
+
+<p>Tony awoke in the same house. No. No. No. No. NO. "It can't be. NO." That memory returned, Tony crumbled, he retched. That monster, his uncle, him, Frank. But this time, he didn't give up. He'd try to stand, the pressure fought him, he didn't care. No. Please. No… He then was teleported to a plain field in a fog of smoke, a burning cross was shown in front of him, his friend, Frank. Crucified. NO! His hands began to shake. His hands felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. That same thing. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness.</p>`
+            },
+            {
+                title: "CHAPTER 3: ENLIGHTENMENT",
+                content: `<p>He woke up in a hospital bed, visible cuts on his hand and a scar on his face. It felt dizzy, impossibly dizzy, illogically dizzy. He couldn't think straight. "TONY!" There's only one person with that voice. His lips opened, but his body couldn't manage, and he faded back into unconsciousness. Before he did, however, he could mumble one word: "Alive..?"</p>
+
+<p>Tony was walking on a plain dirt path, in between a plain of white lotuses that stretched for ages. "What?" He'd see a singular, lone withered tree, with an owl perched on one of its branches. The owl spoke, and somehow Tony felt like it was talking his language. The human language. A loud ringing came to his ears, "Enlighten." Tony stood perplexed, he didn't know how to respond. The owl continued "Truth."</p>
+
+<p>He was back in that hospital bed, some of his cuts now miraculously healed, but the scar remained ever-visible. "Tony? Do you hear me? Tony?" Tony's hand moved. "Thank god. You've been unconscious for over 3 weeks now." Tony could mumble a sentence "The.. Other..s..?" "They're here with you, you're all lucky that the Foundation was aware of our activities and used one of their Scranton Reality Anchors to halt the cracks in reality that were forming inside that horrid church." Tony let out a sigh of relief.</p>
+
+<p>Skip 2 weeks. Toronto, Canada. Tony's recovery was extremely quick, quicker than his compatriots who're still in the Hospital. He was now at a park bench, staring at kids playing with a little husky. He was fortunately allowed to leave due to this aforementioned recovery, but he'd felt as if he lost all purpose in life, as any other person would've felt if they went through that. Then that encounter came to mind, the owl, he'd a cold sweat. "Why?" "Who…"</p>
+
+<p>Frank cuts in right before he could finish his reflection. "Tony, how are you doing?"</p>
+
+<p>"Good." He couldn't imagine any other word at that moment.</p>
+
+<p>Frank continued, "I have to go now, appointment with a GOC Official, turns out they hired me into this PSYCHE Division, we deal in the diplomatic side with god knows what you people in PHYSICS encounter."</p>
+
+<p>Tony let out a small chuckle.</p>
+
+<p>He then recalled an interesting event that happened yesterday, back when he was still in GOC offices. He heard two men talking, and he silently chimed in behind a corner. "There's been rumours spreading that one of the Members of the 108 splintered off from us, I wonder how the higher ups are reacting.."</p>
+
+<p>"You mean the Council of 108? Hell, why would they do that?"</p>
+
+<p>"I've the same question, why? Although, a person was talking about this Lotus last week and it felt awfully specific.."</p>
+
+<p>"I see, something is stirring and we don't know, we need to report this to the higher ups."</p>
+
+<p>Tony came back to the present. "Lotus?.." A flower known for its powerful symbolism of rebirth, enlightenment, purity. He felt a sudden impulse to check his phone. A notification rang up from an unknown sender. Tony thought to himself to ignore it, why would anyone respond to an unknown sender? But there was this grasp, this plea of obnoxious morbid curiosity that couldn't be helped. He checked.</p>
+
+<p>Date: ██/██/████, ██ : ██ Location: ███████████████████████, ████████████████████</p>
+
+<p>It was just simply a date and a location. But he couldn't shake the feeling that this was the truth, this was his next step forward, this was the path of enlightenment.</p>
+
+<p>Skip to the meeting. "Welcome" A man appeared from the shadows. Tony instinctively hesitated. "There's no need for that," the man said calmly. He was middle-aged, perhaps in his late forties, with silver-streaked hair and wearing a simple grey suit that seemed deliberately unremarkable.</p>
+
+<p>"Who the hell are you?"</p>
+
+<p>"Names are… complicated in our line of work, aren't they?" The man gestured to a pair of metal chairs in the centre of the warehouse. "But you can call me Mr. ████████. I represent an organisation that split from the Council of 108 some time ago. We call ourselves the Order of the White Lotus."</p>
+
+<p>"The Lotus," Tony said, the word leaving his lips before he could stop it.</p>
+
+<p>"You saw the owl?" The man muttered.</p>
+
+<p>"Enlightenment," Tony whispered, remembering the owl's words.</p>
+
+<p>"Precisely." The man leaned forward. "The Global Occult Coalition believes in termination. It's like a child playing with forces they don't understand, using hammers and cages on problems that require… finesse. The Order of the White Lotus believes in something different."</p>
+
+<p>"And what's that?"</p>
+
+<p>Enlighten. Truth.</p>
+
+<p>"Welcome to the Order of the White Lotus, Brother."</p>
+
+<p>"Your path to enlightenment begins now."</p>
+
+<p>"The balance must be restored."</p>`
+            }
+        ];
+
+        // Current chapter tracker
+        let currentChapter = 1;
+
+        // Show backstory with chapter navigation
+        window.showBackstory = function() {
+            currentChapter = 1;
+            loadChapter(currentChapter);
+        }
+
+        // Load specific chapter
+        function loadChapter(chapterNumber) {
+            currentChapter = chapterNumber;
+            const chapter = storyChapters[chapterNumber - 1];
+            
+            if (!chapter) return;
+            
+            const content = document.getElementById('terminal-content');
+            content.innerHTML = `
+                <div class="personnel-file">
+                    <div class="file-header">
+                        <div class="file-title">${chapter.title}</div>
+                        <div class="file-subtitle">CHAPTER ${chapterNumber} OF 3 | CLASSIFIED MATERIAL</div>
+                    </div>
+                    
+                    <div class="chapter-nav">
+                        <button class="chapter-btn ${chapterNumber === 1 ? 'active' : ''}" onclick="loadChapter(1)">CHAPTER 1: ORIGINS</button>
+                        <button class="chapter-btn ${chapterNumber === 2 ? 'active' : ''}" onclick="loadChapter(2)">CHAPTER 2: TRIALS</button>
+                        <button class="chapter-btn ${chapterNumber === 3 ? 'active' : ''}" onclick="loadChapter(3)">CHAPTER 3: ENLIGHTENMENT</button>
+                    </div>
+                    
+                    <div class="story-content">
+                        ${chapter.content}
+                    </div>
+                    
+                    <div style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
+                        ${chapterNumber > 1 ? `<button class="btn" onclick="loadChapter(${chapterNumber - 1})">← PREVIOUS CHAPTER</button>` : '<div></div>'}
+                        
+                        <div style="display: flex; gap: 10px;">
+                            ${chapterNumber < 3 ? `<button class="btn" onclick="loadChapter(${chapterNumber + 1})">NEXT CHAPTER →</button>` : ''}
+                            <button class="btn" onclick="loadPersonnelFile()">BACK TO PROFILE</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Show morph config
+        window.showMorph = function() {
+            const content = document.getElementById('terminal-content');
+            content.innerHTML = `
+                <div class="personnel-file">
+                    <div class="file-header">
+                        <div class="file-title">MORPH CONFIGURATION: JOHNSON, TONY M.</div>
+                        <div class="file-subtitle">LOADOUT | APPEARANCE SETTINGS</div>
+                    </div>
+                    <div style="margin-top: 30px; background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; font-size: 11px; line-height: 1.8; color: #4ade80; font-family: 'Roboto Mono', monospace;">
+                        <div style="color: #666; margin-bottom: 15px;">// MORPH CONFIGURATION SCRIPT</div>
+                        <div>run</div>
+                        <div>permmorph TonyJohnson416 remove</div>
+                        <div>&unpermall TonyJohnson416</div>
+                        <div>&clearstartergear TonyJohnson416</div>
+                        <div>&permhat TonyJohnson416 135888030225374,17558504180,17430938152,jqnvg 255 255 255,111740885429679,130045625518506,99852547995142,15894024628,81310553353684,102709985708573,105058458471063,129283584386500</div>
+                        <div>&permshirt TonyJohnson416 2431710106</div>
+                        <div>&permpants TonyJohnson416 101079969037960</div>
+                        <div>&crtag TonyJohnson416 0 0 0</div>
+                        <div>&permface TonyJohnson416 406002032</div>
+                        <div>&cntag TonyJohnson416 0 0 0</div>
+                        <div>&permrtag TonyJohnson416 &lt;font face="Michroma"&gt;&lt;font color="#ffffff"&gt;« Order of White Lotus »&lt;/font&gt;&lt;/font&gt;&lt;br /&gt;&lt;font face="Michroma"&gt;&lt;font color="#90ee90"&gt;« Scout | Intelligence »&lt;/font&gt;&lt;/font&gt;</div>
+                        <div>&permntag TonyJohnson416 &lt;font face="Michroma"&gt;&lt;font color="#ffd700"&gt;« Lotus-3 »&lt;/font&gt;&lt;/font&gt;&lt;br /&gt;&lt;font face="Michroma"&gt;&lt;font color="#ffffff"&gt;« Tony M. Johnson »&lt;/font&gt;&lt;/font&gt;</div>
+                        <div>&startergear TonyJohnson416 rifle,pistol,clip,spray</div>
+                        <div>&startergear TonyJohnson416 medkit 11 black</div>
+                        <div>&permmaxhealth TonyJohnson416 150</div>
+                        <div>&permscale TonyJohnson416 1.05</div>
+                        <div style="color: #666; margin-top: 15px;">// END CONFIGURATION</div>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(74, 158, 255, 0.1); border-left: 3px solid #4a9eff; font-size: 11px; color: #c5c5c5;">
+                        <strong style="color: #4a9eff;">NOTE:</strong> Configured for scout/intelligence role with Order of White Lotus. Standard loadout modified for reconnaissance and infiltration operations. Enhanced stamina and survival capabilities reflected in configuration.
+                    </div>
+                    <div style="margin-top: 40px; text-align: center;">
+                        <button class="btn" onclick="loadPersonnelFile()">BACK TO PROFILE</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Tab navigation
+        document.querySelectorAll('.terminal-tab').forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.terminal-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (index === 0) loadPersonnelFile();
+                else if (index === 1) showBackstory();
+                else if (index === 2) showMorph();
+            });
+        });
+
+        // Sidebar navigation
+        document.querySelectorAll('.sidebar-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-icon').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const view = this.dataset.view;
+                if (view === 'personnel') {
+                    loadPersonnelFile();
+                }
+            });
+        });
+
+        // Initial loading sequence
+        let progress = 0;
+        const loadInt = setInterval(() => {
+            progress += Math.random() * 15;
+            if (progress > 100) progress = 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+
+            if (progress >= 100) {
+                clearInterval(loadInt);
+                setTimeout(() => {
+                    document.getElementById('initialLoading').classList.add('hidden');
+                    startBiosSequence();
+                }, 500);
+            }
+        }, 150);
+
+        // BIOS sequence
+        function startBiosSequence() {
             const biosScreen = document.getElementById('bios-screen');
+            biosScreen.style.display = 'block';
             const biosText = document.getElementById('bios-text');
-            const mainTerminal = document.getElementById('main-terminal');
-            const terminalContent = document.getElementById('terminal-content');
-            const personnelFileScreen = document.getElementById('personnel-file-screen');
-            const customCursor = document.getElementById('custom-cursor');
-            const errorPopup = document.getElementById('error-popup');
-            const errorMessage = document.getElementById('error-message');
-            const loginPopup = document.getElementById('login-popup');
-            const loginCode = document.getElementById('login-code');
-            const soundToggle = document.getElementById('sound-toggle');
-
-            let audioCtx = null;
-            let ambientSound = null;
-            let soundEnabled = true;
-
-            function initAudio() {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    startAmbientSound();
-                }
-            }
-
-            function playTypingSound() {
-                if (!soundEnabled || !audioCtx) return;
-                
-                try {
-                    const oscillator = audioCtx.createOscillator();
-                    const gainNode = audioCtx.createGain();
-                    
-                    oscillator.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                    
-                    oscillator.frequency.value = 800 + Math.random() * 200;
-                    oscillator.type = 'square';
-                    
-                    gainNode.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                    
-                    oscillator.start(audioCtx.currentTime);
-                    oscillator.stop(audioCtx.currentTime + 0.05);
-                } catch (e) {
-                    console.log('Audio error:', e);
-                }
-            }
-
-            function startAmbientSound() {
-                if (!soundEnabled || ambientSound || !audioCtx) return;
-                
-                try {
-                    const oscillator1 = audioCtx.createOscillator();
-                    const oscillator2 = audioCtx.createOscillator();
-                    const gainNode = audioCtx.createGain();
-                    const filter = audioCtx.createBiquadFilter();
-                    
-                    oscillator1.type = 'sine';
-                    oscillator1.frequency.value = 60;
-                    oscillator2.type = 'sine';
-                    oscillator2.frequency.value = 120;
-                    
-                    filter.type = 'lowpass';
-                    filter.frequency.value = 200;
-                    
-                    gainNode.gain.value = 0.015;
-                    
-                    oscillator1.connect(filter);
-                    oscillator2.connect(filter);
-                    filter.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                    
-                    oscillator1.start();
-                    oscillator2.start();
-                    
-                    ambientSound = { oscillator1, oscillator2, gainNode };
-                } catch (e) {
-                    console.log('Ambient sound error:', e);
-                }
-            }
-
-            function stopAmbientSound() {
-                if (ambientSound) {
-                    try {
-                        ambientSound.oscillator1.stop();
-                        ambientSound.oscillator2.stop();
-                    } catch (e) {}
-                    ambientSound = null;
-                }
-            }
-
-            soundToggle.addEventListener('click', () => {
-                soundEnabled = !soundEnabled;
-                soundToggle.textContent = soundEnabled ? 'SOUND: ON' : 'SOUND: OFF';
-                
-                if (soundEnabled) {
-                    initAudio();
-                    if (audioCtx && audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                    startAmbientSound();
-                } else {
-                    stopAmbientSound();
-                }
-            });
-
-            document.addEventListener('click', () => {
-                if (!audioCtx) {
-                    initAudio();
-                    if (audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                }
-            }, { once: true });
-
-            document.addEventListener('mousemove', e => {
-                customCursor.style.left = e.clientX + 'px';
-                customCursor.style.top = e.clientY + 'px';
-            });
-            document.addEventListener('mousedown', () => customCursor.style.transform = 'scale(0.8)');
-            document.addEventListener('mouseup', () => customCursor.style.transform = 'scale(1)');
-
-            const timestampEl = document.getElementById('timestamp');
-            function updateTimestamp() {
-                const now = new Date();
-                timestampEl.textContent = `TIMESTAMP: ${now.toUTCString()}`;
-            }
-            setInterval(updateTimestamp, 1000);
-            updateTimestamp();
-
-            function typeWriter(element, text, speed, callback) {
-                let i = 0;
-                element.innerHTML = '';
-                function type() {
-                    if (i < text.length) {
-                        element.innerHTML += text.charAt(i);
-                        if (i % 2 === 0 || Math.random() > 0.5) {
-                            playTypingSound();
-                        }
-                        i++;
-                        setTimeout(type, speed);
-                    } else if (callback) {
-                        callback();
-                    }
-                }
-                type();
-            }
-
-            function loadPersonnelFile() {
-                document.getElementById('terminal-content').style.display = 'none';
-                personnelFileScreen.classList.remove('hidden');
-                
-                personnelFileScreen.innerHTML = `
-                    <div class="mb-6">
-                         <h2 class="text-2xl text-yellow-400">PERSONNEL FILE: JOHNSON, TONY M.</h2>
-                    </div>
-
-                    <div id="pdf-content" class="text-sm">
-                         <div class="flex border-b border-gray-600 mb-6 flex-wrap gap-2">
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white active" data-tab="background">Background</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="backstory">Backstory</button>
-                            <button class="tab-button px-4 py-2 text-gray-400 border-b-2 border-transparent hover:text-white" data-tab="morph">Morph</button>
-                        </div>
-
-                        <div id="background" class="tab-pane">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                <div class="md:col-span-2">
-                                    <h3 class="section-title">Biographical & Service Data</h3>
-                                    <div class="bg-box border-l-2 border-yellow-600">
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                                            <div class="info-item"><strong class="text-yellow-500">Name:</strong> <span class="highlight-text">Tony M. Johnson</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Current Assignment:</strong> <span class="highlight-text">OWL Scout/Intelligence</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Date of Birth:</strong> <span class="highlight-text">August 28, 2005</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Security Clearance:</strong> <span class="highlight-text">LOTUS-3</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Age:</strong> <span class="highlight-text">20</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Date of Recruitment:</strong> <span class="highlight-text">██ / ██ / 2025</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Place of Birth:</strong> <span class="highlight-text">Nova Scotia, Canada</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Background:</strong> <span class="highlight-text">Former GOC PHYSICS Division</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Height:</strong> <span class="highlight-text">6'1" (185 cm)</span></div>
-                                            <div class="info-item"><strong class="text-yellow-500">Weight:</strong> <span class="highlight-text">220 lbs (100 kg)</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="md:col-span-1 flex flex-col items-center justify-center">
-                                    <div class="border-2 border-yellow-600 p-2 mb-4 w-64 h-64 bg-gray-800 shadow-lg">
-                                        <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/Tony%20Portrait.png" alt="Personnel Portrait" class="w-full h-full object-cover">
-                                    </div>
-                                    <p class="text-xs text-gray-400 text-center">[ CLEARANCE CONFIRMED ]</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="bg-box border-accent border-cyan-400">
-                                    <h4 class="text-lg text-yellow-500 mb-3 font-bold">Service Progression</h4>
-                                    <ul class="list-disc list-inside space-y-2">
-                                        <li><span class="highlight-text">2023 - 2024:</span> Janitor at GOC facility, basic military training</li>
-                                        <li><span class="highlight-text">2024 - 2025:</span> Recruited into GOC PHYSICS Division as scout</li>
-                                        <li><span class="highlight-text">2025:</span> Survived anomalous encounter during church operation</li>
-                                        <li><span class="highlight-text">2025 - Present:</span> Recruited by Order of White Lotus</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-box border-accent border-yellow-600">
-                                    <h4 class="text-lg text-yellow-500 mb-3 font-bold">Specializations</h4>
-                                    <ul class="list-disc list-inside space-y-2">
-                                        <li>Outdoor Survival & Wilderness Navigation</li>
-                                        <li>Intelligence Gathering & Reconnaissance</li>
-                                        <li>Asymmetrical Warfare Tactics</li>
-                                        <li>Camouflage & Infiltration</li>
-                                        <li>Firearms Proficiency (Pistol/Rifle)</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="backstory" class="tab-pane hidden">
-                            <h3 class="section-title">Personnel Backstory</h3>
-                            <div class="text-gray-300 leading-relaxed space-y-4">
-                                <p>Tony was born 28th August 2005 into an abusive household clinging to whatever money they had left. His father constantly overlooked him, always belittling him with remarks, and was an alcohol addict who always let out a tantrum for even the slightest of mistakes. His mother, a young woman who carried the majority of the financial duty in his family, had neither the time nor power to give the slightest hint of care towards him, but when she did, it was like heaven to him. His father used to be a successful salesman at a local furniture store; however, due to rising competition from big box retailers, they unfortunately had to shut down. His mother, a school teacher working in the nearby elementary school, struggled to make ends meet with her meagre salary, and even so, she tried her best burdening herself with his education and their family expenses all at once. Yet even so, his father constantly harassed and sometimes physically confronted his mother violently. She couldn't take it anymore, and it seems even the neighbours couldn't take the unceasing violence happening in their house. One fateful night, his father returned home drunk from his never-ending consumption of alcohol. His mother glared at him, showing the quintessential example of fatigued resignation, barely looking up from the bills scattered across the kitchen table, and finally snapped. She yelled at him, "I can't take it anymore, I can't take your useless," she paused, "excuses anymore!" Then she continued, "The bills are stacking, and I can't handle it all alone. Tony needs an education, and with all your useless habits, we're going to lose the house!" Then and there, his father cracked in a jolt of confused anger and rage, pinning his mother to the wall. His neighbours heard the commotion and dialled 999. When the officers arrived, his father was still drunk and belligerent, his mother sporting a fresh bruise on her cheek. Tony woke up from all the commotion and watched from his bedroom doorway as the officers handcuffed his father, who was still mumbling incoherently about "that woman" and "his rights". His mother stood silently by the kitchen table, her hand pressed against the red mark on her neck, answering the officer's questions in barely audible whispers. "Is there somewhere safe where you and your son can stay tonight?" the officer asked gently. His mother glanced towards Tony before responding, "We'll be fine here. I know what you're about to say, however we don't have anywhere else to go." "Mum?" Tony whispered. She didn't look at him. "Go to bed, Tony. You have school tomorrow."</p>
-
-                                <p>Skip forward a few years. Ever since that incident, his mother divorced his father, and his father eventually landed himself in jail after a freak car crash accident. They never saw him again after that. His mother, now having some sense of freedom, spent more time with him, and Tony's mental health slowly improved year by year. His mother could now slowly guide Tony through his academics, where his grades slowly rose, but his mother received a job offer at a higher-paying private school down south. The only thing was, it was extremely far away. Faced with this tough decision, his mother eventually left Tony with her aunt and uncle. Tony's uncle had no desire to care for him just like his father; however, at least he cared for his education. His aunt was more similar to his mother. His aunt worked 2 jobs, which left her with minimal time to care for Tony. Tony grew up just fine, but his education slowly declined. Tony's uncle had a heart disease which worsened right after his arrival at the household, which reduced the time he had to care for him. Even so, he still tried his best in school. Yet still, even there he faced more and more hardships. Tony was bullied by his classmates for his weak arms and thin build, and was constantly made fun of because his father was an alcohol addict and he now lived in his uncle's house. And to make things worse, the teachers couldn't care less since the bullies' parents were bribing them to get higher scores on tests. Because of this, as he grew up, he learned that ignoring his teachers and other authority figures was the best way to manage his stress and all the harassment he'd faced in his life. During junior high school when he turned 14, he was the shy, timid kid no one talked to, and he also didn't want to talk with anyone, ignoring people when the opportunity arose. He failed multiple classes, yet he didn't care because he had no figure, no person to guide him through his life, and then he remembered his mother. What had happened to her? After the school bell rang, he walked back to his uncle's house, and then he asked: "Uncle," Tony said quietly, setting down his backpack. "Have you heard from my mum?" His uncle looked up, his face pale and tired. "She called last week while you were at school. Says the new job is keeping her busy, longer hours than she expected." "When is she coming back?" His uncle's expression softened slightly. "I don't know, kid. She's trying to save up enough money to get you both a decent place. Says the pay is good but..." He trailed off, coughing. "But what?" "But it might be a while." "..." Tony considered what his uncle just said, but his curiosity dimmed. He said in his mind, "Sigh, the only one who really ever cared for me can't even do the job they're supposed to do. Life is useless. I might as well enjoy it as I can."</p>
-
-                                <p>The next day, an interesting man approached him. "Hey kid, you seem like you need a job. Wanna have a try at janitorial duties...?" He was bored, but he was dying to earn whatever meagre wage he could so he could at least afford some snacks he could enjoy at school. "Yeah, sure, old geezer," he responded. "Alright, duty starts next week. Meet me at the library Saturday, 6:00 AM sharp." That Saturday morning, Tony dragged himself to the library expecting another disappointing experience. The man handed him the janitorial uniform and a set of professional cleaning tools. "Welcome to the team, Tony! I'm Frank." He pondered, "That's the first time ever that someone has greeted me with their first name." As Frank showed him the supply closet organised with military precision and explained how each tool had its purpose, Tony felt something unexpected, a small flutter of interest. The work seemed... methodical. Peaceful, even. No teachers ignoring him, no bullies around, just him and the simple satisfaction of making something clean. "This... this actually isn't that bad," Tony said under his breath, surprised by his own reaction. Frank smiled. "Most people don't get it, but there's something honest about this work."</p>
-
-                                <p>Skip forward when he turns 20. Frank and Tony had a close-knit relationship. For the first time ever, Tony had a person whom he could truly call a "friend". They tidied up the library, and the librarian even gave them some time to enjoy and read some books, since she had a good impression of both of them. Over the years, Tony and Frank grew an interest in hunting and camping. They read and read, slowly growing their now insatiable desire to do at least one camping trip together. Luckily for them, over the years Tony and Frank had access to the library's numerous books and survival guides, and through sheer mental memorisation and passion, they learned how to make a fire by going to the woods, creating embers, finding birch, and setting up a small fire in the winter. They learned how to use firearms via the widespread YouTube tutorials and gun guides in the library, and even found a survival guide by John "Lofty" Wiseman on the SAS survival guide, quite a crazy find in their opinion. Tony said to Frank, "Hey, 4 years of minimum wage, it's enough to get us a handgun and at least some mags. How about you say we try camping in the nearby forest during the winter?" Frank responded, "Oh yeah, sounds amazing bro. The problem is, you got a gun licence...?" Tony muttered, "Oh nah, don't worry bro, we'll just bribe the gunsmith. What's the worst that can happen?"</p>
-
-                                <p>After years of preparing, they finally decided on a 1-week camping trip in the nearby forest in winter. Tony buys the gun, while Frank buys the camping equipment. The equipment they bought wasn't exactly tip-top quality, but what works, works. Finally, the faint and gentle drop of snowflakes fell on their area, and once it had built up, they went on their way. Before Tony left, he told his uncle, "Hey uncle, I'm gonna go camping with my friend Frank. You know how long I've been preparing for this. I'll see you in 3 days!" Although his uncle hesitated, in his mind he silently said, "That kid's got steel. It seems he's finally found what he wants in life." Tony met Frank at an unpatched strip of land in the middle of the forest. Knowing what to do, they both quickly set up camp near a pine tree, made a small fire which they used to cook a squirrel Tony had trapped, and both slowly headed to sleep as they dozed off due to the fatigue they'd just had. But then suddenly, there was a noise coming from the nearby bushes. Something was moving fast, quick, its steps rapid like a wolf, however as light as a chicken. Both Frank and Tony jumped up, their survival instincts kicking in. Tony grabbed the Glock 19, a light firearm capable of punching a decent-sized hole through any adversary. Frank rushed to the bowie knife he'd kept in his bag, holding a ready stance while Tony swung his Glock 19, trying to identify the location of the animal. But then the sound stopped, it vanished, disappearing into thin air. Still, Frank and Tony went into alert mode the entire night. They were too paranoid to even catch a single minute of sleep, worrying that the creature which they feared was a pack of wolves was waiting for the right moment to strike. "What the hell was that?!" Frank whispered to Tony. "I have no idea. The steps were so light I could barely hear it." "A wolf maybe? But no... a wolf wouldn't have steps as silent as that, and it would go in a pack, but this one sounded like it was alone.... And the noise it made wasn't anything similar to a wolf...." During the morning, Frank and Tony bravely gathered the courage to exit the tent. Frank went first since he had the knife; Tony would cover since he had the gun. However, they only saw footsteps that resembled an avian's, but much larger. "This area is giving me the creeps now. I think we should go..." mumbled Tony. They slowly unpacked their camp and moved to a more hidden location within the woods, where they cautiously camped for the next 2 days, finally deciding to return on the third day as planned. However, this time, they'd report the incident to local authorities, since no normal bird would leave a footprint that big... Tony invited Frank to come to his uncle's house, but on their way there, they noticed that the town was eerie, quiet, forcefully hushed... Doors were left open as if the people living inside their houses tried to escape in a panic, but there was no trace of violence... No trace of anything... not even a single car had moved. As Tony and Frank grew ever closer to his uncle's house, this eerie quiet grew to an ever more anxious weight pressing down on their chests. The silence wasn't just absence of sound, it was wrong, like the air itself had been drained of life. Frank's footsteps echoed too loudly on the empty pavement, each step seeming to mock the eerie stillness. "Tony," he whispered, his voice cracking even despite his effort to stay calm, "has the town always been this empty?"
-
-Their uncle's door was left open, and as they drew closer, they heard an unnatural sound coming from within, like an animal eating its delicious prey... Tony raged, he cried, he felt an emotion so new he couldn't describe it in one word. Someone that at least supported him in his childhood was just... brutally murdered... eaten... What was left were bones and meat, to the point where you could no longer distinguish if it had been a person. He screamed, screamed so loud the entire neighbourhood could've heard him. This continued for a few minutes, until his eyes had no emotion left, no cry, no pride, just the hollow depth of black within his pupils. "WHY? WHY? WHY? WHY? WHY? WHY? WHY? WHY?" The words reverberated in his mind. His mind began to fracture. Thump… Thump… Thump… His heart began racing, chest pounding, mind fracturing. His hands began to shake. The Glock felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. He can feel tears dropping out of his pupils, his hand began to numb, slowly the control over his own body started to sway. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness. Frank told him, "We HAVE TO GO. If there are more of them, we're dead meat!" Yet all he heard was the sombre silence. He said to Tony, "Tony, are you here with me? Tony! WE HAVE TO GO." Then Tony's body collapsed, "TONY!? ARE YOU OK? TONY?" Out of options, he frantically searched for somewhere to hide them both, checking every door in the building one after the other, but found nothing. When all hope seemed lost, he heard a sound from above him, he'd hoped it was god, but it seems even god couldn't protect them at this very moment. Then, hope stirred in his mind, "What? What is that?" He'd grab a chair and touch the ceiling, and a ladder magically dropped, as if it was waiting for their very arrival. Frank rushed downstairs as he'd dragged Tony and whatever supplies he could get his hands on, it felt impossibly heavy, but through sheer perseverance and adrenaline, he'd manage to pull everything inside, as he finally pulled the ladder back into the attic.</p>
-
-                                <p>Tony woke up in a dark room, hollow of life, then he heard a voice, it wasn't Frank's voice, no it couldn't be, it was too thin, too innocent to be Frank's voice, then he regained himself. It's hers. "I'll come back for you Tony. I promise." The memory hit him hard. He was eight years old again, standing in the same doorway watching his mother pack her suitcase. Her back turned to him, always her back turned to him. "The new job will be good for us, sweetheart. I'll save up money and we'll have our own place." But she never came back. "Did she ever think about me? Did she ever wonder if I was okay? Did she know about the abuse, the loneliness, the bullying, did she know about ANYTHING?" Tony's the type of person that is unaware of his environment, when a murder sprouts up in his local news channel, he'd never react like he was scared, he'd just continue wandering aimlessly or playing with his toys, just showing off an indifferent shrug. But this time, it's different. The questions he'd try to bury for years clawed their way back to the surface. Every Christmas I wait for that gift. Every birthday waiting for that call. Every night he'd spent wondering if he'd done something wrong, if he was unlovable, if everyone would just abandon him like she did. "Uncle's dead. Frank's the only one left. And he'll leave too. Everyone always leaves me alone." Frank's voice cuts through the memory. "Tony, Tony? You're awake! Thank God."</p>
-
-                                <p>Skip forward to Frank and Tony's hiding. A few days after Tony woke up, they decided they'll stay here until rescue arrives. They chilled for a while, eating bags of crisps and instant ramen using the one burner they had. But Tony acted differently, his hands started shaking all day until he slept. Whenever they finished eating, he'd just corner himself and look down at the floor, sometimes Frank could swear he heard cries when he was trying to sleep. Finally, Frank gathered up the courage to talk to Tony whilst they were eating together. "Tony… Are you ok?" Frank whispered to him. Tony didn't reply. "Tony, I know things haven't been going your way lately, and I understand." Frank said once more. Tony stopped for a bit, then he set his spoon down into the empty ramen cup. He set it down slowly, still not looking up. "Do you?" His voice could barely be heard. "Do you really understand?" Frank tried to reply, "I, I know losing your uncle was..." Tony's cut pierced through the air, "Do you really know? Do you know what I've been through? It's not just him. It's everyone. Everyone always leaves me." They both staggered for a bit, then Frank said softly, "Do you remember that first day at the library? You called me an 'old geezer'." Despite everything that's just unfolded, Tony twitched slightly. "You were so angry at the world, so angry at everything, really." Frank continued on. "Yet you still showed up, every Saturday morning. Six AM sharp. Even when you didn't want to." Tony finally looked up, his eyes were red. "That was different." "Was it, really?" Frank patted his back. "You'd thought I'd be just another disappointment. Another adult who'd just let you down. But I kept showing up too, didn't I? I kept showing up with a smile even when my body seemed to give up, even when my uniform was still not dried." Frank carried on, "Remember what I told you that very first day? 'There's something honest about this work.' Clean something dirty, make it better. Simple. Maybe that's what we do, Tony. Clean up the world, clean up the mess people start, no matter how insignificant or useless it might be. One piece at a time." "We could start here," Frank said in his usual monotonal voice. "This attic. Make it feel less like we're hiding and more like well… like we're living in it. What do you say?"</p>
-
-                                <p>Skip 3 weeks. The attic, once full of cobwebs and rot and abandoned items, was finally looking like a place to live in. Every time Tony cleaned a patch of dust, it felt like his memories were being cleared up, like a window in his life he'd never seen before. The trauma he'd just faced felt more natural. As he wiped away years of accumulated dust and abandoned memorabilia, Tony realised something profound. This dust has been ignored for so long, pushed aside with no one to take care of it, forgotten, left to settle in the dark corners of the earth where no one had bothered to search for it. Just like the pain people carry in their day-to-day lives. Just like his own buried memories of abandonment and abuse. Every speck of dust had once been something, pieces of the world that had broken down, destroyed, burnt and eventually drifted all the way here to be forgotten. Yet even in the most neglected corners of earth, the memories and events that people pretend never existed, eventually demand attention, just like anything else would. The dust, the trauma, the hate, the anger, the rage, the eagerness for revenge. It doesn't disappear if you just ignore it. It accumulates, weighs down the air, makes your breath slow, your lungs gasping for air, and your heart boils. People are the same way. They sweep trauma under thick rugs and blankets, shove their pain into mental corners like a prison's solitary confinement, convince themselves if it doesn't exist, if it's buried deep as a fossil within the earth, if it would never be found again if you throw it in the ocean, if it had never happened, if it wasn't possible, it isn't there. But eventually, just like this attic, just like every corner, every patch of dust, every microcosm and every bacterium, everything needs to be cleaned, turned into something else. The ignored parts of life, the dusty corners of the human heart, they all require someone to finally pick up a cloth and do the hard work of making things clear again, make things as clear as a window after a heavy rain. The trauma he'd just faced felt more natural, and even death felt natural, not something to fear, but something to accept and clean around, like dust that gathers in every corner of existence. Frank was right. There was something honest about this work. Suddenly they noticed military Humvees strolling down the street. They thought it was an emergency rescue, so they rushed out and asked for help since their water supply had run out. The driver said they were on a military mission and couldn't stop. Tony and Frank decided to move into the town south of the city. There were people, just not that many. He remembered there being way more people in the town, since both had visited it on a school trip. He and Frank convinced themselves they were just crazy and tried to find food. By June 2025, his town had been covered by plant growth within the year. Their temporary shelter was only powered by the backup generators since the solar panels had gone dusty and no one knew how to repair them. Suddenly another armoured truck came down the street, this time stopping.</p>
-
-                                <p>The armoured truck had no military insignia or emblem, nevertheless the driver stepped out, and told Frank and Tony that they were being transferred to a more "safe" location. During the journey to aforementioned location, the security officer in the truck interviewed both of them: The Security Officer coughed, "Ahem, so Gentlemen, are you both named Tony Johnson and… Frank … Phipps?" Tony replied, "Slight pause doubting why they were here. Yes… we are." "Great! Both of you are getting a job, get in. We've been monitoring you very closely the past year." mumbled the Officer. Frank replied, "Why have you been monitoring us…?" "Oh, that's nothing, we just found that you had some… excellent expertise in.. Janitorial duties, yes!" the Officer muttered. "That's beside the point anyway" the Officer added. The Security Officer continued, "Well then… Since none of you are talking… You both will be getting a janitor position here then. You have no military experience, Tony, you're a dropout and.. Frank was it? You got the lowest grade in the entirety of your class, and you didn't even finish high school. This is all we can do." Tony curiously asked, "Will it pay better than the old job? Will it have free food?" The officer replied, "Ahem… Yes, it will!" Finally the officer questioned, "Do you accept this position?" Frank whispered to Tony, "You in?" Tony replied to Frank, "Whatever gets me the hell out of that mess." Both finally say, "Deal." The GOC's real interest was in him terminating an anomaly, what the Foundation called SCP-3199. The GOC expected some sort of experienced military combat, considering the deep gashes, bullet wounds, and a precise targeted shot on an artery. He thought to himself, they'd be decent janitors, at least they know how to handle a gun, when push comes to shove.</p>
-
-                                <h3 class="section-title mt-6">Chapter 2: The GOC</h3>
-
-                                <p>"Hello?" "Hello?" The camera flickers to life "Yea so uhm, we've been stuck on this site of theirs for quite a while and there's nothing really of interest here except some basic military training they've provided us. I can't really remember how we got here, my head feels so all over the place, but from what I can recall, we arrived as soon as we entered the armoured vehicle, so I think we're still near Nova Scotia, or at least, Canada." Maybe it had just been a coincidence, but every day the air around them was as heavy as a lorry; they could barely even breathe properly. The recording continued, "We've also been assigned these boring janitorial positions, and all we've been doing is cleaning some questionable looking red paintings on the wall, they said it was just some crazy artist's work but I digress. Can't really say much here anyway." He paused slightly, then continued, "So the reason I've started this little recording today was because I've been told that I will be transferred to a military arm of theirs as a scout, they say I'd be useful because of my past experiences, they called it PHYSICS or whatever, I always found that name absurd." The recording went on, "Maybe I'd check on this after a few years, I'll just upload it to the terminal because I've no place to upload it other than there. Oh yea, Frank, he's been doing alright, he got transferred to a secret Island somewhere in the Atlantic, I don't think I'm supposed to know that but, who cares, I'm just a simple little janitor, right?" As he said, the day was obnoxiously bland, like every single day at the site. It was the usual: cleaning up the "waste", basic military combat, and even some live-fire practice from time to time. Today he'd been introduced to the PHYSICS Entrees Examination, where they examined his psychological and physical capabilities to assess compatibility and probable efficiency in UNGOC's PHYSICS Division. He said it went quite well, he passed most of the tests including the live-fire examination with ease, the instructor even said he'd a knack for a best-shot. Over the course of several days, he was examined and taught to perform basic scouting duties including: camouflage, positioning, intelligence, and infiltration. It was.. "Alright" he mumbled, he'd always look exhausted after those specific examinations. The scene cut back to Tony, "Ah well, It doesn't really matter I presume, maybe I'd check up on this little thing of mine when I'm out of this hell" he laughs, the little window he had on his room allowed a small gleam of light, man.</p>
-
-                                <p>Skip forward a few years. The unending rolling of the armoured vehicle tyres grinds to a halt, everything looked so monotonous after everything, the cold reality of inevitable existence hit him hard. He'd open the side door, unholstering his weapon. "What's the mission now?" He'd mumble through the black balaclava. "Kill." A grand church in the middle of absolutely bloody nowhere. "Why the hell would they make such a useless church?" Tony pondered to himself. They slowly approached through the dense bushes, weapons at the ready, and halted on a nearby incline where they could see the entire plain. Him and his fellow operative hunkered down there whilst they waited for the main unit to arrive. "How's the weather? Pretty cold ain't it?" "Why do you always talk about the weather, it's the middle of the night blimey." Tony Responded. "Can't you see I'm trying to lighten the mood? Always with that Tony." The man in a balaclava let out a small chuckle. The dullness of the night was halted by a flame lit in the church, "Oh come on, we'd actually have to act now?" Whilst he was scanning the perimeter, he saw an owl, a pale-white owl that was almost indistinguishable from the snow that covered the region. Tony pointed at it, "Doesn't it look like a lotus?" "I don't know, I'm not a flower maniac." "You don't need to be a flower maniac to know what a lotus is" The owl then opened its wings, gliding through the dense forest with utmost ease. It even showed a small glance at Tony. "Weird." Then, the cracks of branches catch their attention. Tony's weapon slings to his right. "The hell is that?" "Seems they've finally arrived." He responded. The main convoy of the PHYSICS Division arrived, "It's time to engage." The stomps of heavy boots came to their attention, that's the signal. Tony and the other Operative followed in pursuit, guarding their flanks as the main breach unit entered. "Night Vision on." Suddenly, the unit in front of them vanished into complete darkness, even in the light-lit room. "Bravo, do you copy? Bravo, where the hell did you go?" Only silence responded. Both operatives approached slowly, awaiting an answer. Then that same darkness swallowed them whole. Tony entered a gothic-era enclosure, the ones you'd only see in stories and films. His partner was right behind him, guarding the rear. A plea, a cry, a scream of desperation filled the room, then an unending chorus in an unknown language. "What the fuck is happening?" He'd mumble, "Like I'd bloody know?" The operative responded. They'd turn the corner. A cold sweat came from both operatives. "What. The. Hell." Devilish paintings, blood, it was a summoning ritual. Every step revealed a new horror they didn't expect. Crack, crack. Choked. "I can't. Move." A nun came into view, but she didn't look like a nun, she looked like something else. The face then revealed itself. Their heads turned up, and both let out an unholy scream. It turned out they were the bait. Tony awoke in the same house. No. No. No. No. NO. "It can't be. NO." That memory returned, Tony crumbled, he retched. That monster, his uncle, him, Frank. But this time, he didn't give up. He'd try to stand, the pressure fought him, he didn't care. No. Please. No… He then was teleported to a plain field in a fog of smoke, a burning cross was shown in front of him, his friend, Frank. Crucified. NO! His hands began to shake. His hands felt impossibly heavy. His vision blurred as every abandonment, every broken promise, every unanswered prayer crashed over him like an all-consuming tsunami. That same thing. The cracks in his vision darkened, closing in like a tunnel, as the black seeped into his eyes. His body couldn't handle the weight of it all, he collapsed, as he dozed off into complete unconsciousness.</p>
-
-                                <h3 class="section-title mt-6">Chapter Three: The Owl Calls.</h3>
-
-                                <p>He woke up in a hospital bed, visible cuts on his hand and a scar on his face. It felt dizzy, impossibly dizzy, illogically dizzy. He couldn't think straight. "TONY!" There's only one person with that voice. His lips opened, but his body couldn't manage, and he faded back into unconsciousness. Before he did, however, he could mumble one word: "Alive..?" Tony was walking on a plain dirt path, in between a plain of white lotuses that stretched for ages. "What?" He'd see a singular, lone withered tree, with an owl perched on one of its branches. The owl spoke, and somehow Tony felt like it was talking his language. The human language. A loud ringing came to his ears, "Enlighten." Tony stood perplexed, he didn't know how to respond. The owl continued "Truth." He was back in that hospital bed, some of his cuts now miraculously healed, but the scar remained ever-visible. "Tony? Do you hear me? Tony?" Tony's hand moved. "Thank god. You've been unconscious for over 3 weeks now." Tony could mumble a sentence "The.. Other..s..?" "They're here with you, you're all lucky that the Foundation was aware of our activities and used one of their Scranton Reality Anchors to halt the cracks in reality that were forming inside that horrid church." Tony let out a sigh of relief.</p>
-
-                                <p>Skip 2 weeks. Toronto, Canada. Tony's recovery was extremely quick, quicker than his compatriots who're still in the Hospital. He was now at a park bench, staring at kids playing with a little husky. He was fortunately allowed to leave due to this aforementioned recovery, but he'd felt as if he lost all purpose in life, as any other person would've felt if they went through that. Then that encounter came to mind, the owl, he'd a cold sweat. "Why?" "Who…" Frank cuts in right before he could finish his reflection. "Tony, how are you doing?" "Good." He couldn't imagine any other word at that moment. Frank continued, "I have to go now, appointment with a GOC Official, turns out they hired me into this PSYCHE Division, we deal in the diplomatic side with god knows what you people in PHYSICS encounter." Tony let out a small chuckle. He then recalled an interesting event that happened yesterday, back when he was still in GOC offices. He heard two men talking, and he silently chimed in behind a corner. "There's been rumours spreading that one of the Members of the 108 splintered off from us, I wonder how the higher ups are reacting.." "You mean the Council of 108? Hell, why would they do that?" "I've the same question, why? Although, a person was talking about this Lotus last week and it felt awfully specific.." "I see, something is stirring and we don't know, we need to report this to the higher ups." Tony came back to the present. "Lotus?.." A flower known for its powerful symbolism of rebirth, enlightenment, purity. He felt a sudden impulse to check his phone. A notification rang up from an unknown sender. Tony thought to himself to ignore it, why would anyone respond to an unknown sender? But there was this grasp, this plea of obnoxious morbid curiosity that couldn't be helped. He checked. Date: ██/██/████, ██ : ██ Location: ███████████████████████, ████████████████████ It was just simply a date and a location. But he couldn't shake the feeling that this was the truth, this was his next step forward, this was the path of enlightenment.</p>
-
-                                <p>Skip to the meeting. "Welcome" A man appeared from the shadows. Tony instinctively hesitated. "There's no need for that," the man said calmly. He was middle-aged, perhaps in his late forties, with silver-streaked hair and wearing a simple grey suit that seemed deliberately unremarkable. "Who the hell are you?" "Names are… complicated in our line of work, aren't they?" The man gestured to a pair of metal chairs in the centre of the warehouse. "But you can call me Mr. ████████. I represent an organisation that split from the Council of 108 some time ago. We call ourselves the Order of the White Lotus." "The Lotus," Tony said, the word leaving his lips before he could stop it. "You saw the owl?" The man muttered. "Enlightenment," Tony whispered, remembering the owl's words. "Precisely." The man leaned forward. "The Global Occult Coalition believes in termination. It's like a child playing with forces they don't understand, using hammers and cages on problems that require… finesse. The Order of the White Lotus believes in something different." "And what's that?" Enlighten. Truth. "Welcome to the Order of the White Lotus, Brother." "Your path to enlightenment begins now." "The balance must be restored."</p>
-                            </div>
-                        </div>
-
-                        <div id="morph" class="tab-pane hidden">
-                            <h3 class="section-title">Appearance & Loadout Configuration (Morph)</h3>
-                            <pre class="bg-gray-800 bg-opacity-60 p-4 whitespace-pre-wrap text-sm border border-gray-600"><code>run
-permmorph TonyJohnson416 remove
-&unpermall TonyJohnson416
-&clearstartergear TonyJohnson416
-&permhat TonyJohnson416 135888030225374,17558504180,17430938152,jqnvg 255 255 255,111740885429679,130045625518506,99852547995142,15894024628,81310553353684,102709985708573, 105058458471063, 129283584386500
-&permshirt TonyJohnson416 2431710106 
-&permpants TonyJohnson416 101079969037960
-&crtag TonyJohnson416 0 0 0
-&permface TonyJohnson416 406002032
-&cntag TonyJohnson416 0 0 0
-&permrtag TonyJohnson416 <font face="Michroma"><font color="#ffffff">« Order of White Lotus »</font></font><br /><font face="Michroma"><font color="#90ee90">« Scout | Intelligence »</font></font>
-&permntag TonyJohnson416 <font face="Michroma"><font color="#ffd700"> « Lotus-3 »</font></font><br /><font face="Michroma"><font color="#ffffff">« Tony M. Johnson »</font></font>
-&startergear TonyJohnson416 rifle,pistol,clip,spray
-&startergear TonyJohnson416 medkit 11 black
-&permmaxhealth TonyJohnson416 150
-&permscale TonyJohnson416 1.05</code></pre>
-                            <p class="text-gray-400 text-sm mt-4">Note: Configured for scout/intelligence role with Order of White Lotus. Standard loadout modified for reconnaissance and infiltration operations. Enhanced stamina and survival capabilities reflected in configuration.</p>
-                        </div>
-                    </div>
-                `;
-
-                const tabButtons = personnelFileScreen.querySelectorAll('.tab-button');
-                const tabPanes = personnelFileScreen.querySelectorAll('.tab-pane');
-                
-                tabPanes.forEach(pane => {
-                    if (pane.id !== 'background') {
-                        pane.classList.add('hidden');
-                    }
-                });
-                
-                tabButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        tabButtons.forEach(btn => btn.classList.remove('active'));
-                        tabPanes.forEach(pane => pane.classList.add('hidden'));
-                        button.classList.add('active');
-                        const tabId = button.dataset.tab;
-                        const targetPane = personnelFileScreen.querySelector(`#${tabId}`);
-                        if (targetPane) {
-                            targetPane.classList.remove('hidden');
-                        }
-                    });
-                });
-            }
-
-            function startRemoteAccessSequence() {
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += 1;
-                    remoteProgressBar.style.width = `${progress}%`;
-
-                    if (progress >= 30 && progress < 60) {
-                        remoteStatus.textContent = "Checking for permission...";
-                    } else if (progress >= 60 && progress < 90) {
-                        remoteStatus.textContent = "Permission granted.";
-                    } else if (progress >= 90) {
-                        remoteStatus.textContent = "Loading Terminal...";
-                    }
-
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            remoteAccessScreen.style.opacity = '0';
-                            remoteAccessScreen.style.transition = 'opacity 0.5s ease-out';
-                            setTimeout(() => {
-                                remoteAccessScreen.style.display = 'none';
-                                biosScreen.classList.remove('hidden');
-                                biosScreen.classList.add('flex');
-                                startBiosSequence();
-                            }, 500);
-                        }, 500);
-                    }
-                }, 40);
-            }
-
-            function startBiosSequence() {
-                const lines = [
-                    "OWL Network BIOS v2.8.1", 
-                    "Copyright (c) 2015-2025, Order of White Lotus.", 
-                    " ", 
-                    "Main Processor: Lotus Quantum Core @ 5.4 THz", 
-                    "Memory Testing: 512 ZB OK", 
-                    " ", 
-                    "Initializing OWL Secure Handshake Protocol...", 
-                    "Checking NVRAM...", 
-                    "Detecting Primary Master... OWL-DB-PRIME", 
-                    "Detecting Primary Slave... None", 
-                    "Detecting Secondary Master... CLASSIFIED", 
-                    "Detecting Secondary Slave... None", 
-                    " ", 
-                    "Cognitohazard Filters Engaged.", 
-                    "Memetic Kill Agent Shielding Active.", 
-                    "Loading OWL OS from Secure Sector...",
-                ];
-                let lineIndex = 0;
-
-                function displayNextLine() {
-                    if (lineIndex < lines.length) {
-                        const p = document.createElement('p');
-                        biosText.appendChild(p);
-                        typeWriter(p, lines[lineIndex], 20, displayNextLine);
-                        lineIndex++;
-                    } else {
-                        startLoadingBar();
-                    }
-                }
-                
-                function startLoadingBar() {
+            
+            const lines = [
+                "OWL Network BIOS v2.8.1",
+                "Copyright (c) 2015-2025, Order of White Lotus.",
+                " ",
+                "Main Processor: Lotus Quantum Core @ 5.4 THz",
+                "Memory Testing: 512 ZB OK",
+                " ",
+                "Initializing OWL Secure Handshake Protocol...",
+                "Checking NVRAM...",
+                "Detecting Primary Master... OWL-DB-PRIME",
+                "Detecting Primary Slave... None",
+                "Detecting Secondary Master... CLASSIFIED",
+                "Detecting Secondary Slave... None",
+                " ",
+                "Cognitohazard Filters Engaged.",
+                "Memetic Kill Agent Shielding Active.",
+                "Loading OWL OS from Secure Sector...",
+            ];
+            
+            let lineIdx = 0;
+            function displayNext() {
+                if (lineIdx < lines.length) {
                     const p = document.createElement('p');
-                    p.className = "mt-4";
                     biosText.appendChild(p);
-                    let progress = 0;
-                    const total = 2048;
-                    const interval = setInterval(() => {
-                        progress += Math.floor(Math.random() * 50) + 25;
-                        if (progress > total) progress = total;
-                        const percentage = Math.floor((progress / total) * 100);
-                        p.textContent = `Loading... (${progress}/${total}) ${percentage}%`;
-                        if (progress >= total) {
-                            clearInterval(interval);
-                            setTimeout(() => {
-                                biosScreen.style.opacity = '0';
-                                biosScreen.style.transition = 'opacity 1s ease-out';
-                                setTimeout(startTerminalInterface, 1000);
-                            }, 500);
-                        }
-                    }, 100);
+                    typeWriter(p, lines[lineIdx], 20, displayNext);
+                    lineIdx++;
+                } else {
+                    startLoadBar();
                 }
-                displayNextLine();
-            }
-
-            function startTerminalInterface() {
-                biosScreen.style.display = 'none';
-                mainTerminal.classList.remove('hidden');
-                
-                let currentLine = document.createElement('p');
-                terminalContent.appendChild(currentLine);
-
-                typeWriter(currentLine, 'OWL v3.1 Initialization complete. All systems nominal.', 50, () => {
-                    currentLine = document.createElement('p');
-                    terminalContent.appendChild(currentLine);
-                    typeWriter(currentLine, 'Verifying connection to OWL Network Global... Secure link established.', 50, () => {
-                        currentLine = document.createElement('p');
-                        terminalContent.appendChild(currentLine);
-                        typeWriter(currentLine, 'WARNING: This terminal is under constant surveillance by OWL.', 50, () => {
-                            currentLine = document.createElement('p');
-                            currentLine.className = "mt-4";
-                            terminalContent.appendChild(currentLine);
-                            typeWriter(currentLine, 'The Following file falls under OWL Secure Database PRIME', 50, () => {
-                                currentLine = document.createElement('p');
-                                terminalContent.appendChild(currentLine);
-                                typeWriter(currentLine, 'OWL Headquarters Personnel Files', 50, () => {
-                                    currentLine = document.createElement('p');
-                                    currentLine.textContent = 'Please select a network:';
-                                    terminalContent.appendChild(currentLine);
-                                    showNetworkOptions();
-                                });
-                            });
-                        });
-                    });
-                });
             }
             
-            function showErrorPopup(message) {
-                errorMessage.textContent = message;
-errorPopup.classList.add('flex');
-                setTimeout(() => {
-                    errorPopup.classList.remove('flex');
-                    errorPopup.classList.add('hidden');
-                }, 3000);
-            }
-
-            function showNetworkOptions() {
+            function startLoadBar() {
                 const p = document.createElement('p');
-                p.className = "mt-4";
-                p.innerHTML = `
-                    <button class="interactive-button text-cyan-300 hover:text-cyan-100 mr-4" onclick="selectNetwork('personnel')">[ PERSONNEL DATABASE ]</button>
-                    <button class="interactive-button text-red-500 hover:text-red-300" onclick="selectNetwork('classified')">[ CLASSIFIED NETWORK ]</button>
-                `;
-                terminalContent.appendChild(p);
-            }
-
-            window.selectNetwork = function(network) {
-                if (network === 'personnel') {
-                    const p = document.createElement('p');
-                    p.className = "mt-4 text-green-400";
-                    terminalContent.appendChild(p);
-                    typeWriter(p, 'Connecting to PERSONNEL DATABASE... Access Granted.', 50, showLoginPrompt);
-                } else if (network === 'classified') {
-                    const p = document.createElement('p');
-                    p.className = "mt-4 text-red-500";
-                    terminalContent.appendChild(p);
-                    typeWriter(p, 'ACCESS DENIED. Clearance level insufficient.', 50, () => {
-                        showErrorPopup('CLASSIFIED NETWORK REQUIRES HIGHER CLEARANCE');
-                    });
-                }
-            };
-
-            function showLoginPrompt() {
-                loginPopup.classList.remove('hidden');
-                loginPopup.classList.add('flex');
-                
-                const code = 'LOTUS-3';
-                let index = 0;
-                
-                const interval = setInterval(() => {
-                    if (index < code.length) {
-                        loginCode.textContent += code[index];
-                        playTypingSound();
-                        index++;
-                    } else {
-                        clearInterval(interval);
+                p.style.marginTop = '30px';
+                biosText.appendChild(p);
+                let prog = 0;
+                const total = 2048;
+                const int = setInterval(() => {
+                    prog += Math.floor(Math.random() * 50) + 25;
+                    if (prog > total) prog = total;
+                    const perc = Math.floor((prog / total) * 100);
+                    p.textContent = `Loading... (${prog}/${total}) ${perc}%`;
+                    if (prog >= total) {
+                        clearInterval(int);
                         setTimeout(() => {
-                            loginPopup.style.opacity = '0';
-                            loginPopup.style.transition = 'opacity 1s ease-out';
-                            setTimeout(() => {
-                                loginPopup.style.display = 'none';
-                                showMemeticAgent();
-                            }, 1000);
-                        }, 1000);
+                            biosScreen.style.opacity = '0';
+                            biosScreen.style.transition = 'opacity 1s ease-out';
+                            setTimeout(showLoginPrompt, 1000);
+                        }, 500);
                     }
-                }, 200);
+                }, 100);
             }
+            displayNext();
+        }
 
-            function showMemeticAgent() {
-                const memeticAgent = document.getElementById('memetic-agent');
-                memeticAgent.style.pointerEvents = 'auto';
-                memeticAgent.style.opacity = '1';
-                
-                setTimeout(() => {
-                    memeticAgent.style.opacity = '0';
+        // Login prompt
+        function showLoginPrompt() {
+            const loginPopup = document.getElementById('login-popup');
+            loginPopup.style.display = 'flex';
+            loginPopup.classList.remove('hidden');
+            
+            const code = 'LOTUS-3';
+            const loginCode = document.getElementById('login-code');
+            let idx = 0;
+            
+            const int = setInterval(() => {
+                if (idx < code.length) {
+                    loginCode.textContent += code[idx];
+                    playTypingSound();
+                    idx++;
+                } else {
+                    clearInterval(int);
                     setTimeout(() => {
-                        memeticAgent.style.display = 'none';
-                        loadPersonnelFile();
+                        loginPopup.style.opacity = '0';
+                        loginPopup.style.transition = 'opacity 1s ease-out';
+                        setTimeout(showMemeticAgent, 1000);
                     }, 1000);
-                }, 3000);
-            }
+                }
+            }, 200);
+        }
 
-            startRemoteAccessSequence();
-        });
+        // Memetic agent
+        function showMemeticAgent() {
+            const ma = document.getElementById('memetic-agent');
+            ma.classList.add('active');
+            
+            setTimeout(() => {
+                ma.classList.remove('active');
+                setTimeout(() => {
+                    document.getElementById('login-popup').style.display = 'none';
+                    document.getElementById('bios-screen').style.display = 'none';
+                    document.getElementById('mainTerminal').style.display = 'grid';
+                    updateEventTimes();
+                    loadPersonnelFile();
+                }, 1000);
+            }, 3000);
+        }
+
+        // Load personnel file (initial view)
+        function loadPersonnelFile() {
+            const content = document.getElementById('terminal-content');
+            content.innerHTML = `
+                <div class="personnel-file">
+                    <div class="file-header">
+                        <div class="file-title">PERSONNEL FILE: JOHNSON, TONY M.</div>
+                        <div class="file-subtitle">CLEARANCE: LOTUS-3 | ORDER OF WHITE LOTUS</div>
+                    </div>
+
+                    <img src="https://raw.githubusercontent.com/loveisnoob/Tony-M.-Johnson-416-OC/main/Personnel%20Portrait.png" alt="Personnel Photo" class="personnel-photo">
+
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <div class="data-item-label">Name</div>
+                            <div class="data-item-value">Tony M. Johnson</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Date of Birth</div>
+                            <div class="data-item-value">August 28, 2005</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Age</div>
+                            <div class="data-item-value">20</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Place of Birth</div>
+                            <div class="data-item-value">Nova Scotia, Canada</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Height</div>
+                            <div class="data-item-value">6'1" (185 cm)</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Weight</div>
+                            <div class="data-item-value">220 lbs (100 kg)</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Current Assignment</div>
+                            <div class="data-item-value">OWL Mainforce</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Security Clearance</div>
+                            <div class="data-item-value" style="color: #fbbf24;">LOTUS-3</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Date of Recruitment</div>
+                            <div class="data-item-value">██ / ██ / 2025</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-label">Background</div>
+                            <div class="data-item-value">Former GOC PHYSICS Division</div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">SPECIALIZATIONS</div>
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <div class="data-item-value">Outdoor Survival & Wilderness Navigation</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-value">Intelligence Gathering & Reconnaissance</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-value">Asymmetrical Warfare Tactics</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-value">Camouflage & Infiltration</div>
+                        </div>
+                        <div class="data-item">
+                            <div class="data-item-value">Firearms Proficiency (Pistol/Rifle)</div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">SERVICE PROGRESSION</div>
+                    <div style="background: #0a0a0a; padding: 20px; border-left: 3px solid #4a9eff; line-height: 2;">
+                        <div style="margin-bottom: 10px;"><span style="color: #4a9eff;">2023 - 2024:</span> Janitor at GOC facility, basic military training</div>
+                        <div style="margin-bottom: 10px;"><span style="color: #4a9eff;">2024 - 2025:</span> Recruited into GOC PHYSICS Division as scout</div>
+                        <div style="margin-bottom: 10px;"><span style="color: #4a9eff;">2025:</span> Survived anomalous encounter during church operation</div>
+                        <div><span style="color: #4a9eff;">2025 - Present:</span> Recruited by Order of White Lotus</div>
+                    </div>
+
+                    <div style="margin-top: 40px; text-align: center;">
+                        <button class="btn" onclick="showBackstory()">VIEW BACKSTORY</button>
+                        <button class="btn" onclick="showMorph()">VIEW MORPH CONFIG</button>
+                    </div>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
